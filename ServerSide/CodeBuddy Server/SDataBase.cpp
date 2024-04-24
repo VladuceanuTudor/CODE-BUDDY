@@ -217,7 +217,14 @@ std::string SDataBase::processRegisterRequest(char request[MAX_BUFFER_LEN])
 std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
 {
     // SQL query
-    SQLWCHAR* selectQuery = (SQLWCHAR*)L"SELECT LessonTitle FROM Lessons WHERE Language = \'cpp\' ORDER BY LessonNumber DESC";
+    std::string selectString = "SELECT LessonTitle FROM Lessons WHERE Language = \'";//cpp\' ORDER BY LessonNumber";
+    selectString += request;
+    selectString += "\' ORDER BY LessonNumber";
+
+    std::wstring selectWstring(selectString.begin(), selectString.end());
+
+    SQLWCHAR * selectQuery = new SQLWCHAR[selectString.size() + 1];
+    wcscpy(selectQuery, selectWstring.c_str());
 
     // Allocate statement handle
     if (SQLAllocHandle(SQL_HANDLE_STMT, this->sqlConnHandle, &this->sqlStmtHandle) != SQL_SUCCESS)
@@ -249,6 +256,8 @@ std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
 
     std::string lessons{};
 
+    lessons = "1#";
+
     // Fetch and display results
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS)
     {
@@ -261,6 +270,8 @@ std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
     //SI AICI DE MODIFICAT CU CLASA CMESSAGE
     buffer += lessons.size();
     buffer += lessons;
+
+    delete[] selectQuery;
 
     return buffer;
 }

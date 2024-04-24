@@ -35,6 +35,8 @@ public:
 
         buff[length+2] = '\0';
         _Message = buff+2;
-
+    }
+    void cutFront(int i){
+        this->_Message = this->_Message.substr(2);
     }
 };

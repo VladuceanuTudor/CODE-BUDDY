@@ -12,6 +12,8 @@
 #include <QDebug>
 #include "climbaj.h"
 
+#define PAYLOAD_DELIM '#'
+
 static TCPClient* client;
 
 namespace Connection{
