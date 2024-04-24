@@ -1,5 +1,6 @@
 #include "CTCPServer.h"
 #include "SDataBase.h"
+#include "CClientHandler.h"
 #include <iostream>
 
 CTCPServer::CTCPServer(short listen_port)
@@ -86,6 +87,7 @@ void CTCPServer::handleClient(SOCKET sock)
 {
     char buffer[1024];
     char responsebuffer[1024]{};
+    CClientHandler ch;
     while (true) {
         int recv_bytes = this->recv(buffer, sizeof(buffer), sock);
         if (recv_bytes <= 0) {

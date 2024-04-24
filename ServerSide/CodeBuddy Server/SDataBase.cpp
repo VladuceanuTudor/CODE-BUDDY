@@ -82,22 +82,25 @@ SDataBase::~SDataBase()
     SQLFreeHandle(SQL_HANDLE_ENV, this->sqlEnvHandle);
 }
 
+
+void SDataBase::AllocPrepare(SQLWCHAR* query)
+{
+    // Allocate statement handle
+    if (SQLAllocHandle(SQL_HANDLE_STMT, SDataBase::sqlConnHandle, &SDataBase::sqlStmtHandle) != SQL_SUCCESS)
+        throw std::exception("Error allocating statement handle");
+    // Prepare the SQL statement
+    if (SQLPrepare(SDataBase::sqlStmtHandle, query, SQL_NTS) != SQL_SUCCESS)
+        throw std::exception("Error preparing SQL statement\n");
+
+}
+
 ServerMessageContainer SDataBase::processLoginRequest(std::string request)
 {
     // SQL query
     SQLWCHAR* selectQuery = (SQLWCHAR*)L"SELECT Password, Email FROM Users";
 
-    // Allocate statement handle
-    if (SQLAllocHandle(SQL_HANDLE_STMT, this->sqlConnHandle, &this->sqlStmtHandle) != SQL_SUCCESS)
-    {
-        throw std::exception("Error allocating statement handle");
-    }
+    SDataBase::AllocPrepare(selectQuery);
 
-    // Prepare the SQL statement
-    if (SQLPrepare(SDataBase::sqlStmtHandle, selectQuery, SQL_NTS) != SQL_SUCCESS)
-    {
-        throw std::exception("Error preparing SQL statement\n");
-    }
     // Execute the SQL statement
     if (SQLExecute(SDataBase::sqlStmtHandle) != SQL_SUCCESS) {
         throw std::exception("Error executing SQL statement\n");
@@ -145,6 +148,7 @@ ServerMessageContainer SDataBase::processLoginRequest(std::string request)
     
 }
 
+
 SDataBase& SDataBase::getInstance()
 {
     if (!SDataBase::instance)
@@ -158,6 +162,30 @@ void SDataBase::destroyInstance()
         delete SDataBase::instance;
     SDataBase::instance = nullptr;
     std::cerr << "Disconnecting Database" << std::endl;
+}
+
+std::string SDataBase::processRequest(char request[MAX_BUFFER_LEN])
+{
+    ServerMessageContainer procRequest(request);
+    ServerMessageContainer sendBuffer;
+    switch (procRequest.getType())
+    {
+    case 'l':
+        sendBuffer = SDataBase::processLoginRequest(procRequest.getMess());
+        //this->userHandler = SDataBase::getUserInfo(procRequest.getMess());
+        break;
+    case 'r':
+        sendBuffer = SDataBase::processRegisterRequest(procRequest.getMess());
+        break;
+    case 'b':
+        sendBuffer = SDataBase::processGetLessonsRequest(procRequest.getMess());
+        break;
+
+    default:
+        ServerMessageContainer errorBuffer('E', "Invalid Option given.");
+        return errorBuffer.getWholeString();
+    }
+    return sendBuffer.getWholeString();
 }
 
 ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
@@ -208,11 +236,11 @@ ServerMessageContainer SDataBase::processGetLessonsRequest(std::string request)
 
     std::wstring selectWstring(selectString.begin(), selectString.end());
 
-    SQLWCHAR * selectQuery = new SQLWCHAR[selectString.size() + 1];
+    SQLWCHAR* selectQuery = new SQLWCHAR[selectString.size() + 1];
     wcscpy(selectQuery, selectWstring.c_str());
 
     // Allocate statement handle
-    if (SQLAllocHandle(SQL_HANDLE_STMT, this->sqlConnHandle, &this->sqlStmtHandle) != SQL_SUCCESS)
+    if (SQLAllocHandle(SQL_HANDLE_STMT, SDataBase::sqlConnHandle, &SDataBase::sqlStmtHandle) != SQL_SUCCESS)
     {
         throw std::exception("Error allocating statement handle");
     }
@@ -234,9 +262,9 @@ ServerMessageContainer SDataBase::processGetLessonsRequest(std::string request)
         throw std::exception("Error binding column 1\n");
 
     std::string lessons{};
-    int a = 1;
-    lessons += a;
-    lessons = "#";//DE MODIFICAT AICI SA IA PRIMUL OCTET DIN BAZA DE DATE ASTFEL INCAT SA IA EXACT LECTIA LA CARE SE AFLA USERUL
+    char a = 2;
+    lessons = a;
+    lessons += "#";//DE MODIFICAT AICI SA IA PRIMUL OCTET DIN BAZA DE DATE ASTFEL INCAT SA IA EXACT LECTIA LA CARE SE AFLA USERUL
 
     // Fetch and display results
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS)
@@ -253,25 +281,39 @@ ServerMessageContainer SDataBase::processGetLessonsRequest(std::string request)
     return ServerMessageContainer('b', lessons);
 }
 
-std::string SDataBase::processRequest(char request[MAX_BUFFER_LEN])
+CUserHandler SDataBase::getUserInfo(std::string request)
 {
-    ServerMessageContainer procRequest(request);
-    ServerMessageContainer sendBuffer;
-    switch (procRequest.getType())
-    {
-    case 'l':
-        sendBuffer = this->processLoginRequest(procRequest.getMess());
-        break;
-    case 'r':
-        sendBuffer = this->processRegisterRequest(procRequest.getMess());
-        break;
-    case 'b':
-        sendBuffer = this->processGetLessonsRequest(procRequest.getMess());
-        break;
-    
-    default:
-        ServerMessageContainer errorBuffer('E', "Invalid Option given.");
-        return errorBuffer.getWholeString();
+    std::vector<std::string> inputs;
+
+    inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+
+    // SQL query
+    std::string selectString = "SELECT Password, Email FROM Users";
+
+    std::wstring selectWstring(selectString.begin(), selectString.end());
+
+    SQLWCHAR* selectQuery = new SQLWCHAR[selectString.size() + 1];
+    wcscpy(selectQuery, selectWstring.c_str());
+
+    SDataBase::AllocPrepare(selectQuery);
+
+    // Execute the SQL statement
+    if (SQLExecute(SDataBase::sqlStmtHandle) != SQL_SUCCESS) {
+        throw std::exception("Error executing SQL statement\n");
     }
-    return sendBuffer.getWholeString();
+
+    // Bind columns to fetch the results
+    SQLCHAR col1[SQL_RESULT_LEN]{};         //DE MODIFICAT SQL_RESULT_LEN {LA FEL SI MAI JOS}
+    SQLCHAR col2[SQL_RESULT_LEN]{};
+
+    // Bind column 1 (Password)
+    if (SQLBindCol(SDataBase::sqlStmtHandle, 1, SQL_C_CHAR, col1, SQL_RESULT_LEN, nullptr) != SQL_SUCCESS)
+        throw std::exception("Error binding column 1\n");
+    // Bind column 2 (Email)
+    if (SQLBindCol(SDataBase::sqlStmtHandle, 2, SQL_C_CHAR, col2, SQL_RESULT_LEN, nullptr) != SQL_SUCCESS)
+        throw std::exception("Error binding column 2\n");
+
+    delete[] selectQuery;
+
+    return CUserHandler();
 }

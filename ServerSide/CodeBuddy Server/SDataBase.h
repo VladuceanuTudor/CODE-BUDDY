@@ -7,6 +7,7 @@
 #include <sqlext.h>
 #include "Constraints.h"
 #include "ServerMessageContainer.h"
+#include "CUserHandler.h"
 
 
 
@@ -40,11 +41,21 @@ private:
 	SDataBase(SDataBase* other) = delete;
 	SDataBase(const SDataBase& other) = delete;
 
-	ServerMessageContainer processLoginRequest(std::string request);
-	ServerMessageContainer processRegisterRequest(std::string request);
-	ServerMessageContainer processGetLessonsRequest(std::string request);
+	static void AllocPrepare(SQLWCHAR* query);
+	
 public:
 	static SDataBase& getInstance();
 	static void destroyInstance();
 	std::string processRequest(char request[MAX_BUFFER_LEN]);
+
+	static ServerMessageContainer processLoginRequest(std::string request);
+	static ServerMessageContainer processRegisterRequest(std::string request);
+	static ServerMessageContainer processGetLessonsRequest(std::string request);
+
+	static CUserHandler getUserInfo(std::string request);
+
+
+	static void updateUserXp(std::string username, int newXp);
+	static void addUserLessonDone(std::string username, int index);
+
 };
