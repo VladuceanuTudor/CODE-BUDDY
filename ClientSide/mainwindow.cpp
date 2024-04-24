@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label_Logo->setPixmap(pix.scaled(w,h, Qt::KeepAspectRatio));
     //ui->label_Logo->setPixmap(pix);
     try{
-    Connection::init_and_start_connection("172.16.39.94", 5520);
+    Connection::init_and_start_connection("172.16.39.93", 5520);
     }catch(char const* error){
         QMessageBox::information(nullptr, "Connerction error", error);
         exit(0);
@@ -74,9 +74,12 @@ void MainWindow::on_CreateAccBTN_clicked()
     Connection::send_register(email, username, passw1, Status);
 
     if(Status==1){
-        hide();
-        startMenuWindow = new StartMenuWindow();
-        startMenuWindow->show();
+        QMessageBox::information(nullptr, "Account created", "Now please login \nin your new account!:)");
+        ui->stackedWidget->setCurrentIndex(0);
+        ui->ToRegisterBTN->hide();
+        // hide();
+        // startMenuWindow = new StartMenuWindow();
+        // startMenuWindow->show();
     }
 }
 

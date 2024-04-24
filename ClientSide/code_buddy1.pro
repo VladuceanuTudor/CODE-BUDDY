@@ -11,6 +11,7 @@ SOURCES += \
     CLectie.cpp \
     ILectie.cpp \
     ServerConnection.cpp \
+    ServerMessageContainer.cpp \
     StartMenuWindow.cpp \
     climbaj.cpp \
     iexercitiu.cpp \

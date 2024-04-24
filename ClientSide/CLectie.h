@@ -10,11 +10,9 @@ private:
     std::vector<IExercitiu*> exercitii;
     std::string curs;
     int _xp;
-    bool completat;
 public:
     CLectie(std::string curs) : curs{ curs } { ; }
     void addExercitiu(IExercitiu* ex);
-    void setCompleted() { completat = true; }
     int getXp() { return _xp; }
     void print() { ; }
 };
