@@ -10,7 +10,6 @@ class ILectie
 public:
     virtual void addExercitiu(IExercitiu* ex) = 0;
     virtual void print() = 0;
-    virtual void setCompleted() = 0;
     virtual int getXp() = 0;
 };
 

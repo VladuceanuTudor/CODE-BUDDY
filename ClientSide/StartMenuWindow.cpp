@@ -3,6 +3,7 @@
 #include <QtGui/QGradient> // Include for qlineargradient
 #include <QPushButton>
 #include <QVBoxLayout> // Assuming vertical layout
+#include <QMessageBox>
 
 StartMenuWindow::StartMenuWindow(QWidget *parent)
     : QDialog(parent)
@@ -56,42 +57,90 @@ StartMenuWindow::~StartMenuWindow()
     delete ui;
 }
 
-void StartMenuWindow::on_pushButton_4_clicked()
+void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* limbaj)
 {
-    CLimbaj cpp("Cpp");
-    Connection::initLimbaj(cpp);
+    if(limbaj->getLessonNrByName(buttonText.toStdString()) > limbaj->getCompleted()){
+        // qDebug() << limbaj->getLessonNrByName(buttonText.toStdString());
+        // qDebug() << limbaj->getCompleted();
+        QMessageBox::information(nullptr, "Indisponibil", "Pentru a putea incepe acea lectie te \nrog completeaza-le pe cale\n anterioare prima data!");
+    }else{
+        ILectie* lectie;
+        Connection::_initLectie(lectie, buttonText.toStdString());
 
-    // cpp.addNumeLectii("Introducere");
-    // cpp.addNumeLectii("Cap1");
-    // cpp.addNumeLectii("cap2");
-    // cpp.addNumeLectii("Cap3");
+    qDebug() << "Button clicked:" << buttonText;
+    }
+}
+
+void deleteLayout(QLayout* currentLayout){
+    if (currentLayout) {
+        // Clear all layout items:
+        while (QLayoutItem* item = currentLayout->takeAt(0)) {
+            if (QWidget* widget = item->widget()) {
+                delete widget;
+            }
+            delete item;  // Delete the layout item
+        }
+        delete currentLayout;
+    }
+}
+
+void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
+
+    QLayout* currentLayout = ui->Language1Page->layout();
+
+    deleteLayout(currentLayout);
+
     QVBoxLayout* buttonLayout = new QVBoxLayout();
 
-    for(const auto &numeLectie : cpp.getNumeLectii()){
+    int done_for_color = 1;
+    for (const auto& numeLectie : limbaj->getNumeLectii()) {
         QPushButton* button = new QPushButton(QString::fromStdString(numeLectie));
-        // Optionally connect the button to a slot for functionality
-        // connect(button, &QPushButton::clicked, this, &YourClass::onButtonClicked);
+
+        // Set button background color based on completion status:
+        if(done_for_color < limbaj->getCompleted())
+            button->setStyleSheet("background-color: lime");
+        if(done_for_color == limbaj->getCompleted())
+            button->setStyleSheet("background-color: yellow");
+
+        // Connect the button to a slot that takes the button text as parameter:
+        connect(button, &QPushButton::clicked, this,
+                [numeLectie, this, limbaj] {  // Capture numeLectie by value
+                    onLessonButtonClicked(numeLectie.c_str(), limbaj);
+                });
+
         buttonLayout->addWidget(button);
+        done_for_color++;
     }
+
     ui->Language1Page->setLayout(buttonLayout);
     ui->stackedWidget->setCurrentIndex(1);
 }
 
+void StartMenuWindow::on_pushButton_4_clicked()
+{
+    CLimbaj* cpp = new CLimbaj("Cpp");
+    Connection::initLimbaj(*cpp);
+    StartMenuWindow::printLimbajLessonsMenu(cpp);
+}
 
 void StartMenuWindow::on_pushButton_5_clicked()
 {
-
+    CLimbaj* csh = new CLimbaj("Csh");
+    Connection::initLimbaj(*csh);
+    StartMenuWindow::printLimbajLessonsMenu(csh);
 }
-
 
 void StartMenuWindow::on_pushButton_6_clicked()
 {
-
+    CLimbaj* java = new CLimbaj("Java");
+    Connection::initLimbaj(*java);
+    StartMenuWindow::printLimbajLessonsMenu(java);
 }
-
 
 void StartMenuWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
+
+
 

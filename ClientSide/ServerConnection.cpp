@@ -81,4 +81,7 @@ namespace Connection{
         }
     }
 
+    void _initLectie(ILectie* lectie, std::string numeLectie){
+        ;
+    }
 }

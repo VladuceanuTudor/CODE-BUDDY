@@ -25,6 +25,10 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void onLessonButtonClicked(const QString& buttonText, CLimbaj* limbaj);
+
+    void printLimbajLessonsMenu(CLimbaj* limbaj);
+
 private:
     Ui::StartMenuWindow *ui;
 };

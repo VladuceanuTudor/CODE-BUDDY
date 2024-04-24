@@ -12,28 +12,18 @@ private:
     int _completed;
 public:
     CLimbaj(std::string nume) : _numeLimbaj { nume } { ; }
-    void addLectie(ILectie* l) {
-        _lectii.push_back(l);
-    }
-    void addNumeLectii(std::string nume){
-        _numeLectii.push_back(nume);
-    }
+    void addLectie(ILectie* l);
+    void addNumeLectii(std::string nume);
 
-    std::vector<std::string> getNumeLectii() const{
-        return this->_numeLectii;
-    }
+    std::vector<std::string> getNumeLectii() const;
 
-    std::string getName(){
-        return this->_numeLimbaj;
-    }
+    std::string getName();
 
-    void setCompleted(int completed){
-        this->_completed = completed;
-    }
+    void setCompleted(int completed);
 
-    int getCompleted() {
-        return this->_completed;
-    }
+    int getCompleted();
+
+    int getLessonNrByName(std::string name);
 };
 
 #endif // CLIMBAJ_H
