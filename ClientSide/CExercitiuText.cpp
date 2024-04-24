@@ -1,0 +1,2 @@
+#include "CExercitiuText.h"
+
