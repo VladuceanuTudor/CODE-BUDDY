@@ -9,7 +9,8 @@ void handleClient(CTCPServer& server, SOCKET sock) {
     server.handleClient(sock);
 }
 
-int main() {
+int main() 
+{
     SDataBase::getInstance();
     sock_init();
 

@@ -7,6 +7,7 @@
   CMessageHandler.cpp
   CPaymentManager.cpp
   CTCPServer.cpp
+<<<<<<< HEAD
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.h(23,22): warning C4114: same type qualifier used more than once
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.cpp(63,33): warning C4114: same type qualifier used more than once
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.cpp(116,64): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
@@ -16,25 +17,53 @@ C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\C
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.h(23,22): warning C4114: same type qualifier used more than once
   SDataBase.cpp
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(137,37): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+=======
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(23,22): warning C4114: same type qualifier used more than once
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.cpp(63,33): warning C4114: same type qualifier used more than once
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.cpp(116,64): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+  CUserManager.cpp
+  ICertificate.cpp
+  Main.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(23,22): warning C4114: same type qualifier used more than once
+  SDataBase.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\SDataBase.cpp(137,37): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+>>>>>>> master
           with
           [
               _Elem=char
           ]
+<<<<<<< HEAD
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(142,33): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+=======
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\SDataBase.cpp(142,33): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+>>>>>>> master
           with
           [
               _Elem=char
           ]
+<<<<<<< HEAD
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(211,33): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+=======
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\SDataBase.cpp(211,33): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+>>>>>>> master
           with
           [
               _Elem=char
           ]
+<<<<<<< HEAD
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(262,29): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+=======
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\SDataBase.cpp(262,29): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+>>>>>>> master
           with
           [
               _Elem=char
           ]
   Utils.cpp
   Generating Code...
+<<<<<<< HEAD
   CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\x64\Debug\CodeBuddy Server.exe
+=======
+  LINK : C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe not found or not built by the last incremental link; performing full link
+  CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe
+>>>>>>> master

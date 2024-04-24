@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\x64\Debug\CodeBuddy Server.exe</FullPath>
+=======
+      <FullPath>C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe</FullPath>
+>>>>>>> master
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
