@@ -61,13 +61,13 @@ void StartMenuWindow::on_pushButton_4_clicked()
     CLimbaj cpp("Cpp");
     Connection::initLimbaj(cpp);
 
-    cpp.addNumeLectii("Introducere");
-    cpp.addNumeLectii("Cap1");
-    cpp.addNumeLectii("cap2");
-    cpp.addNumeLectii("Cap3");
+    // cpp.addNumeLectii("Introducere");
+    // cpp.addNumeLectii("Cap1");
+    // cpp.addNumeLectii("cap2");
+    // cpp.addNumeLectii("Cap3");
     QVBoxLayout* buttonLayout = new QVBoxLayout();
 
-    for(auto numeLectie : cpp.getNumeLectii()){
+    for(const auto &numeLectie : cpp.getNumeLectii()){
         QPushButton* button = new QPushButton(QString::fromStdString(numeLectie));
         // Optionally connect the button to a slot for functionality
         // connect(button, &QPushButton::clicked, this, &YourClass::onButtonClicked);

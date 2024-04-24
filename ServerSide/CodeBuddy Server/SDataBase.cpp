@@ -217,7 +217,7 @@ std::string SDataBase::processRegisterRequest(char request[MAX_BUFFER_LEN])
 std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
 {
     // SQL query
-    SQLWCHAR* selectQuery = (SQLWCHAR*)L"SELECT LessonTitle FROM Lessons WHERE Language = \'cpp\' ORDER BY LessonNumber DESC";
+    SQLWCHAR* selectQuery = (SQLWCHAR*)L"SELECT LessonTitle FROM Lessons WHERE Language = \'cpp\' ORDER BY LessonNumber";
 
     // Allocate statement handle
     if (SQLAllocHandle(SQL_HANDLE_STMT, this->sqlConnHandle, &this->sqlStmtHandle) != SQL_SUCCESS)
@@ -248,6 +248,8 @@ std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
     std::string buffer = "b";
 
     std::string lessons{};
+
+    lessons = "1#";
 
     // Fetch and display results
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS)

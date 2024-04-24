@@ -9,6 +9,7 @@ private:
     std::string _numeLimbaj;
     std::vector<ILectie*> _lectii;
     std::vector<std::string> _numeLectii;
+    int _completed;
 public:
     CLimbaj(std::string nume) : _numeLimbaj { nume } { ; }
     void addLectie(ILectie* l) {
@@ -24,6 +25,14 @@ public:
 
     std::string getName(){
         return this->_numeLimbaj;
+    }
+
+    void setCompleted(int completed){
+        this->_completed = completed;
+    }
+
+    int getCompleted() {
+        return this->_completed;
     }
 };
 
