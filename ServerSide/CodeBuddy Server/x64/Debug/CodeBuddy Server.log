@@ -1,0 +1,40 @@
+﻿  ACertificate.cpp
+  CAsmCertificate.cpp
+  CCCertificate.cpp
+  CChatManager.cpp
+  CCsharpCertificate.cpp
+  CLessonManager.cpp
+  CMessageHandler.cpp
+  CPaymentManager.cpp
+  CTCPServer.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.h(23,22): warning C4114: same type qualifier used more than once
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.cpp(63,33): warning C4114: same type qualifier used more than once
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.cpp(116,64): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+  CUserManager.cpp
+  ICertificate.cpp
+  Main.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\CTCPServer.h(23,22): warning C4114: same type qualifier used more than once
+  SDataBase.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(137,37): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(142,33): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(211,33): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\CodeBuddy Server\SDataBase.cpp(262,29): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+  Utils.cpp
+  Generating Code...
+  CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\x64\Debug\CodeBuddy Server.exe
