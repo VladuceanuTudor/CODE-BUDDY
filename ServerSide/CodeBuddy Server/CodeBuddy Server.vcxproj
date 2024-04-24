@@ -137,6 +137,7 @@
     <ClCompile Include="CPaymentManager.cpp" />
     <ClCompile Include="CTCPServer.cpp" />
     <ClCompile Include="CUserManager.cpp" />
+    <ClCompile Include="CWordSeparator.cpp" />
     <ClCompile Include="ICertificate.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SDataBase.cpp" />
@@ -154,8 +155,10 @@
     <ClInclude Include="CPaymentManager.h" />
     <ClInclude Include="CTCPServer.h" />
     <ClInclude Include="CUserManager.h" />
+    <ClInclude Include="CWordSeparator.h" />
     <ClInclude Include="ICertificate.h" />
     <ClInclude Include="SDataBase.h" />
+    <ClInclude Include="ServerMessageContainer.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>

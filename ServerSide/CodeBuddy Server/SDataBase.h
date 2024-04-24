@@ -6,6 +6,7 @@
 #include <sql.h>
 #include <sqlext.h>
 #include "Constraints.h"
+#include "ServerMessageContainer.h"
 
 
 
@@ -39,9 +40,9 @@ private:
 	SDataBase(SDataBase* other) = delete;
 	SDataBase(const SDataBase& other) = delete;
 
-	std::string processLoginRequest(char request[MAX_BUFFER_LEN]);
-	std::string processRegisterRequest(char request[MAX_BUFFER_LEN]);
-	std::string processGetLessonsRequest(char request[MAX_BUFFER_LEN]);
+	ServerMessageContainer processLoginRequest(std::string request);
+	ServerMessageContainer processRegisterRequest(std::string request);
+	ServerMessageContainer processGetLessonsRequest(std::string request);
 public:
 	static SDataBase& getInstance();
 	static void destroyInstance();
