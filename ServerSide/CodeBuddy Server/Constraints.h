@@ -5,4 +5,4 @@
 
 #define MAX_BUFFER_LEN 1024
 
-#define PAYLOAD_DELIM "#"
+#define PAYLOAD_DELIM '#'

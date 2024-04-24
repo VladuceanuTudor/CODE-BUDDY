@@ -1,5 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include "SDataBase.h"
+#include "CWordSeparator.h"
 #include <iostream>
 
 SDataBase* SDataBase::instance = nullptr;
@@ -81,7 +82,7 @@ SDataBase::~SDataBase()
     SQLFreeHandle(SQL_HANDLE_ENV, this->sqlEnvHandle);
 }
 
-std::string SDataBase::processLoginRequest(char request[MAX_BUFFER_LEN])
+ServerMessageContainer SDataBase::processLoginRequest(std::string request)
 {
     // SQL query
     SQLWCHAR* selectQuery = (SQLWCHAR*)L"SELECT Password, Email FROM Users";
@@ -114,14 +115,13 @@ std::string SDataBase::processLoginRequest(char request[MAX_BUFFER_LEN])
         throw std::exception("Error binding column 2\n");
 
     bool found{ false };
-    char* password{}, *email{};
-    email = strtok(_strdup(request), PAYLOAD_DELIM);
-    password = strtok(NULL, PAYLOAD_DELIM);
+    std::vector<std::string> inputs;
+    inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
     // Fetch and display results
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS)
     {
-        if (strcmp(password, (char*)col1) == 0 && strcmp(email, (char*)col2) == 0)
+        if (inputs[0] == std::string(reinterpret_cast<char*>(col1)) && inputs[1] == std::string(reinterpret_cast<char*>(col2)))
         {
             found = true;
         }
@@ -130,20 +130,18 @@ std::string SDataBase::processLoginRequest(char request[MAX_BUFFER_LEN])
     // Eliberarea resurselor asociate statement-ului SQL
     SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
 
-    std::string buffer = "l";
+    std::string message{};
 
     if (found)
     {
-        buffer += strlen("accepted");
-        buffer += "accepted";
+        message = "accepted";
     }
     else
     {
-        buffer += strlen("fail");
-        buffer += "fail";
+        message = "fail";
     }
 
-    return buffer;
+    return ServerMessageContainer('l', message);
     
 }
 
@@ -160,28 +158,19 @@ void SDataBase::destroyInstance()
         delete SDataBase::instance;
     SDataBase::instance = nullptr;
     std::cerr << "Disconnecting Database" << std::endl;
-    SQLDisconnect(SDataBase::sqlConnHandle);
-    SQLFreeHandle(SQL_HANDLE_DBC, SDataBase::sqlConnHandle);
-    SQLFreeHandle(SQL_HANDLE_ENV, SDataBase::sqlEnvHandle);
 }
 
-std::string SDataBase::processRegisterRequest(char request[MAX_BUFFER_LEN])
+ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
 {
-    std::string buffer = "r";
-
     // Allocate statement handle
     if (SQLAllocHandle(SQL_HANDLE_STMT, SDataBase::sqlConnHandle, &SDataBase::sqlStmtHandle) != SQL_SUCCESS)
     {
         throw std::exception("Error allocating statement handle");
     }
 
-    std::string username = "";
-    std::string email = "";
-    std::string password = "";
+    std::vector<std::string> inputs;
 
-    username = strtok(request, PAYLOAD_DELIM);
-    email = strtok(NULL, PAYLOAD_DELIM);
-    password = strtok(NULL, PAYLOAD_DELIM);
+    inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
     // Bind parameter values to the prepared statement
     SQLWCHAR* sqlQuery = (SQLWCHAR*)L"INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)";
@@ -193,9 +182,9 @@ std::string SDataBase::processRegisterRequest(char request[MAX_BUFFER_LEN])
     }
 
     // Bind parameter values to the prepared statement
-    if (SQLBindParameter(sqlStmtHandle, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, username.length(), 0, (SQLPOINTER)username.c_str(), 0, NULL) != SQL_SUCCESS ||
-        SQLBindParameter(sqlStmtHandle, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, email.length(), 0, (SQLPOINTER)email.c_str(), 0, NULL) != SQL_SUCCESS ||
-        SQLBindParameter(sqlStmtHandle, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, password.length(), 0, (SQLPOINTER)password.c_str(), 0, NULL) != SQL_SUCCESS)
+    if (SQLBindParameter(sqlStmtHandle, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, inputs[0].length(), 0, (SQLPOINTER)inputs[0].c_str(), 0, NULL) != SQL_SUCCESS ||
+        SQLBindParameter(sqlStmtHandle, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, inputs[1].length(), 0, (SQLPOINTER)inputs[1].c_str(), 0, NULL) != SQL_SUCCESS ||
+        SQLBindParameter(sqlStmtHandle, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, inputs[2].length(), 0, (SQLPOINTER)inputs[2].c_str(), 0, NULL) != SQL_SUCCESS)
     {
         SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
         throw std::exception("Error binding parameter values");
@@ -207,14 +196,10 @@ std::string SDataBase::processRegisterRequest(char request[MAX_BUFFER_LEN])
         throw std::exception("Error executing SQL query");
     }
 
-    //
-    buffer += strlen("accepted");
-    buffer += "accepted";
-
-    return buffer;
+    return ServerMessageContainer('r', "accepted");
 }
 
-std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
+ServerMessageContainer SDataBase::processGetLessonsRequest(std::string request)
 {
     // SQL query
     std::string selectString = "SELECT LessonTitle FROM Lessons WHERE Language = \'";//cpp\' ORDER BY LessonNumber";
@@ -243,20 +228,15 @@ std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
     }
 
     // Bind columns to fetch the results
-    SQLCHAR col1[SQL_RESULT_LEN]{};         //DE MODIFICAT SQL_RESULT_LEN {LA FEL SI MAI JOS}
+    SQLCHAR col1[SQL_RESULT_LEN]{};         //DE MODIFICAT SQL_RESULT_LEN 
 
     if (SQLBindCol(SDataBase::sqlStmtHandle, 1, SQL_C_CHAR, col1, SQL_RESULT_LEN, nullptr) != SQL_SUCCESS)
         throw std::exception("Error binding column 1\n");
 
-    char* password{}, * email{};
-    email = strtok(_strdup(request), PAYLOAD_DELIM);
-    password = strtok(NULL, PAYLOAD_DELIM);
-
-    std::string buffer = "b";
-
     std::string lessons{};
-
-    lessons = "1#";
+    int a = 1;
+    lessons += a;
+    lessons = "#";//DE MODIFICAT AICI SA IA PRIMUL OCTET DIN BAZA DE DATE ASTFEL INCAT SA IA EXACT LECTIA LA CARE SE AFLA USERUL
 
     // Fetch and display results
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS)
@@ -267,38 +247,31 @@ std::string SDataBase::processGetLessonsRequest(char request[MAX_BUFFER_LEN])
 
     // Eliberarea resurselor asociate statement-ului SQL
     SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
-    //SI AICI DE MODIFICAT CU CLASA CMESSAGE
-    buffer += lessons.size();
-    buffer += lessons;
 
     delete[] selectQuery;
 
-    return buffer;
+    return ServerMessageContainer('b', lessons);
 }
 
 std::string SDataBase::processRequest(char request[MAX_BUFFER_LEN])
 {
-    std::string buffer{};
-    short endIndex = request[1];
-    request[endIndex + 2] = '\0';      //Punem \0 acolo unde este nevoie
-    strcpy(request + 1, request + 2); //Stergem caracterul cu lungime
-    switch (request[0])
+    ServerMessageContainer procRequest(request);
+    ServerMessageContainer sendBuffer;
+    switch (procRequest.getType())
     {
     case 'l':
-        buffer = this->processLoginRequest(request + 1);
+        sendBuffer = this->processLoginRequest(procRequest.getMess());
         break;
     case 'r':
-        buffer = this->processRegisterRequest(request + 1);
+        sendBuffer = this->processRegisterRequest(procRequest.getMess());
         break;
     case 'b':
-        buffer = this->processGetLessonsRequest(request + 1);
+        sendBuffer = this->processGetLessonsRequest(procRequest.getMess());
         break;
     
     default:
-        buffer = "E" + strlen("Invalid Option given.");
-        buffer += "Invalid Option given.(";
-        buffer += request;
-        buffer += ").";
+        ServerMessageContainer errorBuffer('E', "Invalid Option given.");
+        return errorBuffer.getWholeString();
     }
-    return buffer;
+    return sendBuffer.getWholeString();
 }
