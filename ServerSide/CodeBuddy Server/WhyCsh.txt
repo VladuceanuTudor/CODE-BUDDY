@@ -1,0 +1,2 @@
+Curious about the benefits of Csharp? 
+This lesson dives into the reasons why C# is a popular choice for developers, exploring its features and applications.

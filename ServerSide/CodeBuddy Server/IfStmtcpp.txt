@@ -1,0 +1,1 @@
+Decision-making is crucial in programming. Here, you'll master the power of if statements in C++, allowing your programs to react to different conditions and execute code accordingly.

@@ -94,7 +94,6 @@ void CTCPServer::handleClient(SOCKET sock)
             std::cout << "Client disconnected on socket " << sock << std::endl;
             break;
         }
-        //Decriptare
         std::cout << "Socket " << sock << ": ";
         fwrite(buffer, 1, recv_bytes, stderr);
         std::cout << std::endl;
@@ -113,7 +112,6 @@ void CTCPServer::handleClient(SOCKET sock)
         std::cout << "Response socket " << sock << ": ";
         std::cout << responsebuffer << std::endl;
 
-        //Criptare
         this->send(responsebuffer, strlen(responsebuffer), sock);
     }
 }

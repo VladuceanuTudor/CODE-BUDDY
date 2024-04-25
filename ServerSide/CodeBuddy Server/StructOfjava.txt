@@ -1,0 +1,2 @@
+Every well-built program needs a foundation. 
+This lesson delves into the basic structure of Java programs, including classes, objects, and methods, forming the backbone of your Java code.

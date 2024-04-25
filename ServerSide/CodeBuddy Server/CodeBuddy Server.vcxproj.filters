@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Cpp">
+      <UniqueIdentifier>{41ecc9ec-f3a0-4880-9134-57740f5f7816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Csh">
+      <UniqueIdentifier>{88e6497e-3ce5-446c-981b-3a01f08f5546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Java">
+      <UniqueIdentifier>{d6e4fee3-8f28-46e4-bb26-0a9d49b04f85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -51,9 +60,6 @@
     <ClCompile Include="CPaymentManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CMessageHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CWordSeparator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -61,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CUserHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CFileHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,9 +107,6 @@
     <ClInclude Include="CPaymentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CMessageHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Constraints.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -116,25 +122,82 @@
     <ClInclude Include="CUserHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CFileHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CExercice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Introduction.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="Intcpp.txt">
+      <Filter>Resource Files\Cpp</Filter>
     </Text>
-    <Text Include="file.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="Basicscpp.txt">
+      <Filter>Resource Files\Cpp</Filter>
     </Text>
-    <Text Include="file2.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="DecVarcpp.txt">
+      <Filter>Resource Files\Cpp</Filter>
     </Text>
-    <Text Include="file_ex.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="IfStmtcpp.txt">
+      <Filter>Resource Files\Cpp</Filter>
     </Text>
-    <Text Include="file2_ex.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="LoopStmtcpp.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="Basicscpp_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="DecVarcpp_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="IfStmtcpp_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="LoopStmtcpp_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="Intcpp_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="BasicsCsh_ex.txt">
+      <Filter>Resource Files\Csh</Filter>
+    </Text>
+    <Text Include="InitCsh_ex.txt">
+      <Filter>Resource Files\Csh</Filter>
+    </Text>
+    <Text Include="InitCsh.txt">
+      <Filter>Resource Files\Csh</Filter>
+    </Text>
+    <Text Include="WhyCsh.txt">
+      <Filter>Resource Files\Csh</Filter>
+    </Text>
+    <Text Include="BasicsCsh.txt">
+      <Filter>Resource Files\Csh</Filter>
+    </Text>
+    <Text Include="WhyCsh_ex.txt">
+      <Filter>Resource Files\Csh</Filter>
+    </Text>
+    <Text Include="FirstJava_ex.txt">
+      <Filter>Resource Files\Java</Filter>
+    </Text>
+    <Text Include="Intjava.txt">
+      <Filter>Resource Files\Java</Filter>
+    </Text>
+    <Text Include="StructOfjava.txt">
+      <Filter>Resource Files\Java</Filter>
+    </Text>
+    <Text Include="FirstJava.txt">
+      <Filter>Resource Files\Java</Filter>
+    </Text>
+    <Text Include="Intjava_ex.txt">
+      <Filter>Resource Files\Java</Filter>
+    </Text>
+    <Text Include="StructOfjava_ex.txt">
+      <Filter>Resource Files\Java</Filter>
     </Text>
   </ItemGroup>
 </Project>

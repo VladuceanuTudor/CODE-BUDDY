@@ -1,0 +1,2 @@
+Let's lay the groundwork for Csharp development! 
+We'll cover the fundamental concepts of Csharp, including variables, data types, operators, and control flow, preparing you to write effective Csharp code.
