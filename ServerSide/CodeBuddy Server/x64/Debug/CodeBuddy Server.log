@@ -1,4 +1,4 @@
-﻿  SDataBase.cpp
+﻿  CClientHandler.cpp
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
           with
           [

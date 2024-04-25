@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "ServerMessageContainer.h"
+
 class CUserHandler
 {
 private:
@@ -19,5 +21,6 @@ public:
 	std::string getUsername() const;
 	int getXp() const;
 	int getLessonDone(int i) const;
+	ServerMessageContainer getSendResponseForLogin();
 };
 

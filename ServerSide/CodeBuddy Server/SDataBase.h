@@ -43,16 +43,16 @@ private:
 
 	static void AllocPrepare(SQLWCHAR* query);
 	
+	bool checkIfInDatabase(std::string table, std::string columnName, std::string value);
 public:
 	static SDataBase& getInstance();
 	static void destroyInstance();
-	std::string processRequest(char request[MAX_BUFFER_LEN]);
 
-	static ServerMessageContainer processLoginRequest(std::string request);
-	static ServerMessageContainer processRegisterRequest(std::string request);
-	static ServerMessageContainer processGetLessonsRequest(std::string request);
+	bool processLoginRequest(std::string request);
+	ServerMessageContainer processRegisterRequest(std::string request);
+	ServerMessageContainer processGetLessonsTitleRequest(std::string request);
 
-	static CUserHandler getUserInfo(std::string request);
+	CUserHandler getUserInfo(std::string request);
 
 
 	static void updateUserXp(std::string username, int newXp);

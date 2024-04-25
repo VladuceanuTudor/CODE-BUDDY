@@ -5,18 +5,24 @@
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
     ServerMessageContainer procRequest(request);
-    ServerMessageContainer sendBuffer;
+    ServerMessageContainer sendBuffer('E', "FailHandle");   //In cazul in care sendBuffer nu se modifica, inseamnca ca a aparut o problema
     switch (procRequest.getType())
     {
     case 'l':
-        sendBuffer = SDataBase::processLoginRequest(procRequest.getMess());
-        this->userHandler = SDataBase::getUserInfo(procRequest.getMess());
+    {
+        bool logged = SDataBase::getInstance().processLoginRequest(procRequest.getMess());
+        if (logged)
+        {
+            this->userHandler = SDataBase::getInstance().getUserInfo(procRequest.getMess());
+            sendBuffer = this->userHandler.getSendResponseForLogin();
+        }
+    }
         break;
     case 'r':
-        sendBuffer = SDataBase::processRegisterRequest(procRequest.getMess());
+        sendBuffer = SDataBase::getInstance().processRegisterRequest(procRequest.getMess());
         break;
     case 'b':
-        sendBuffer = SDataBase::processGetLessonsRequest(procRequest.getMess());
+        sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess());
         break;
 
     default:

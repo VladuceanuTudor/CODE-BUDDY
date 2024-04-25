@@ -101,12 +101,11 @@ void CTCPServer::handleClient(SOCKET sock)
         std::string message{};
         try
         {
-            message = SDataBase::getInstance().processRequest(buffer);
+            message = ch.handleRequest(buffer);
         }
         catch (const std::exception& e)
         {
-            message = "E" + strlen("error");
-            message += "error";
+            message = ServerMessageContainer('E', "Error").getWholeString();
             std::cerr << e.what() << std::endl;
         }
         strcpy_s(responsebuffer, message.c_str());
