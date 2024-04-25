@@ -1,0 +1,1 @@
+Let's get coding! In this exciting lesson, you'll write your very first Java program, experiencing the thrill of creating something from scratch.

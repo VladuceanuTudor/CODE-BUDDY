@@ -133,8 +133,8 @@
     <ClCompile Include="CChatManager.cpp" />
     <ClCompile Include="CClientHandler.cpp" />
     <ClCompile Include="CCsharpCertificate.cpp" />
+    <ClCompile Include="CFileHandler.cpp" />
     <ClCompile Include="CLessonManager.cpp" />
-    <ClCompile Include="CMessageHandler.cpp" />
     <ClCompile Include="CPaymentManager.cpp" />
     <ClCompile Include="CTCPServer.cpp" />
     <ClCompile Include="CUserHandler.cpp" />
@@ -151,8 +151,9 @@
     <ClInclude Include="CChatManager.h" />
     <ClInclude Include="CClientHandler.h" />
     <ClInclude Include="CCsharpCertificate.h" />
+    <ClInclude Include="CExercice.h" />
+    <ClInclude Include="CFileHandler.h" />
     <ClInclude Include="CLessonManager.h" />
-    <ClInclude Include="CMessageHandler.h" />
     <ClInclude Include="Constraints.h" />
     <ClInclude Include="CPaymentManager.h" />
     <ClInclude Include="CTCPServer.h" />
@@ -167,7 +168,28 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Introduction.txt" />
+    <Text Include="Intcpp.txt" />
+    <Text Include="DecVarcpp.txt" />
+    <Text Include="IfStmtcpp.txt" />
+    <Text Include="Basicscpp.txt" />
+    <Text Include="LoopStmtcpp.txt" />
+    <Text Include="Intjava.txt" />
+    <Text Include="StructOfjava.txt" />
+    <Text Include="FirstJava.txt" />
+    <Text Include="InitCsh.txt" />
+    <Text Include="Basicscpp_ex.txt" />
+    <Text Include="DecVarcpp_ex.txt" />
+    <Text Include="IfStmtcpp_ex.txt" />
+    <Text Include="LoopStmtcpp_ex.txt" />
+    <Text Include="Intjava_ex.txt" />
+    <Text Include="InitCsh_ex.txt" />
+    <Text Include="StructOfjava_ex.txt" />
+    <Text Include="FirstJava_ex.txt" />
+    <Text Include="WhyCsh_ex.txt" />
+    <Text Include="BasicsCsh_ex.txt" />
+    <Text Include="WhyCsh.txt" />
+    <Text Include="BasicsCsh.txt" />
+    <Text Include="Intcpp_ex.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
