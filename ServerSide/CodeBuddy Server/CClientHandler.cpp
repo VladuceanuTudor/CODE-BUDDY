@@ -16,15 +16,18 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
             this->userHandler = SDataBase::getInstance().getUserInfo(procRequest.getMess());
             sendBuffer = this->userHandler.getSendResponseForLogin();
         }
+        else
+        {
+            sendBuffer = ServerMessageContainer('l', "fail");
+        }
     }
         break;
     case 'r':
         sendBuffer = SDataBase::getInstance().processRegisterRequest(procRequest.getMess());
         break;
     case 'b':
-        sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess());
+        sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess(), this->userHandler.getUsername());
         break;
-
     default:
         ServerMessageContainer errorBuffer('E', "Invalid Option given.");
         return errorBuffer.getWholeString();

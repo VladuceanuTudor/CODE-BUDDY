@@ -13,3 +13,14 @@ std::vector<std::string> CWordSeparator::SeparateWords(std::string source, char 
 
     return output;
 }
+
+std::string CWordSeparator::encapsulateWords(std::vector<std::vector<std::string>> words, int index, char delim)
+{
+    std::string buffer{};
+    for (const auto& it : words)
+    {
+        buffer += it[index];
+        buffer += delim;
+    }
+    return buffer;
+}

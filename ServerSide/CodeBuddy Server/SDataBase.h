@@ -44,13 +44,23 @@ private:
 	static void AllocPrepare(SQLWCHAR* query);
 	
 	bool checkIfInDatabase(std::string table, std::string columnName, std::string value);
+
+	std::vector<std::vector<std::string>> selectFromDatabase(
+		const std::vector<std::string>& selectColumns,
+		const std::string& table,
+		const std::string& whereColumn,
+		const std::string& whereValue,
+		const std::string& orderColumn,
+		bool orderDesc);
+
+	void insertIntoDatabase();
 public:
 	static SDataBase& getInstance();
 	static void destroyInstance();
 
 	bool processLoginRequest(std::string request);
 	ServerMessageContainer processRegisterRequest(std::string request);
-	ServerMessageContainer processGetLessonsTitleRequest(std::string request);
+	ServerMessageContainer processGetLessonsTitleRequest(std::string request, std::string username);
 
 	CUserHandler getUserInfo(std::string request);
 

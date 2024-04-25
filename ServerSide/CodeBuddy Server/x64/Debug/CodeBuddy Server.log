@@ -1,4 +1,4 @@
-﻿  CClientHandler.cpp
+﻿  SDataBase.cpp
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
           with
           [
@@ -10,4 +10,5 @@ C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBud
           [
               _Elem=char
           ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\SDataBase.cpp(164,12): warning C4267: 'argument': conversion from 'size_t' to 'SQLUSMALLINT', possible loss of data
   CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe

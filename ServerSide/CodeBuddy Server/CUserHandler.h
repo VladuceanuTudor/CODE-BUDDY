@@ -18,7 +18,7 @@ public:
 		, lives{lives}
 		, lessonsDone{lessonsDone}
 	{}
-	std::string getUsername() const;
+	std::string getUsername() const { return this->username; }
 	int getXp() const;
 	int getLessonDone(int i) const;
 	ServerMessageContainer getSendResponseForLogin();
