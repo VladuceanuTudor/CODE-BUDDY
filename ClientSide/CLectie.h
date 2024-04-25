@@ -11,7 +11,7 @@ private:
     std::string curs;
     int _xp;
 public:
-    CLectie(std::string curs) : curs{ curs } { ; }
+    CLectie(std::string curs, int xp) : curs{ curs }, _xp{xp} { ; }
     void addExercitiu(IExercitiu* ex);
     int getXp() { return _xp; }
     void print() { ; }

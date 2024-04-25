@@ -17,9 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label_Logo->setPixmap(pix.scaled(w,h, Qt::KeepAspectRatio));
     //ui->label_Logo->setPixmap(pix);
     try{
-    Connection::init_and_start_connection("172.16.39.93", 5520);
+    Connection::init_and_start_connection("172.16.39.94", 5520);
     }catch(char const* error){
-        QMessageBox::information(nullptr, "Connerction error", error);
+        QMessageBox::information(nullptr, "Connection error", error);
         exit(0);
     }
 
@@ -43,10 +43,24 @@ void MainWindow::on_loginBTN_clicked()
     int Status=0;
     Connection::send_login(username.toStdString(), password.toStdString(), Status);
 
+    int correctness = loginCorectnessCheck(username.toStdString(), password.toStdString());
+    switch (correctness){
+    case 1:
+        QMessageBox::information(nullptr, "Incorect email", "Please type a valid email address!");
+        return;
+    case 2:
+        QMessageBox::information(nullptr, "Incorect password", "The password may only contain alphanumeric caracters!");
+        return;
+    default:
+        break;
+    }
+
     if(Status==1){
         hide();
         startMenuWindow = new StartMenuWindow();
         startMenuWindow->show();
+    }else{
+        QMessageBox::information(nullptr, "Login failed", "Incorect credentials used!");
     }
 }
 
@@ -69,7 +83,23 @@ void MainWindow::on_CreateAccBTN_clicked()
     std::string username = ui->usenameRegisterIN->text().toStdString();
     std::string passw1 = ui->Password1IN->text().toStdString();
     std::string passw2 = ui->password2IN->text().toStdString();
-
+    int correctness = registerCorectnessCheck(email, username, passw1, passw2);
+    switch(correctness){
+    case 1:
+        QMessageBox::information(nullptr, "Incorect password", "The first and second password don't match!");
+        return;
+    case 2:
+        QMessageBox::information(nullptr, "Incorect email", "Please type a valid email address!");
+        return;
+    case 3:
+        QMessageBox::information(nullptr, "Incorect username", "The username may only contain alphanumeric caracters or _ !");
+        return;
+    case 4:
+        QMessageBox::information(nullptr, "Incorect password", "The password may only contain alphanumeric caracters!");
+        return;
+    default:
+        break;
+    }
     int Status=0;
     Connection::send_register(email, username, passw1, Status);
 
@@ -80,6 +110,12 @@ void MainWindow::on_CreateAccBTN_clicked()
         // hide();
         // startMenuWindow = new StartMenuWindow();
         // startMenuWindow->show();
+    }else if (Status==2){
+        QMessageBox::information(nullptr, "Register failed!", "This username is already in use!");
+    }else if (Status==3){
+        QMessageBox::information(nullptr, "Register failed!", "This email is already in use!");
+    }else{
+        QMessageBox::information(nullptr, "Register failed!", "Server error!");
     }
 }
 

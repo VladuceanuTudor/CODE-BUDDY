@@ -57,9 +57,11 @@ namespace Connection{
         qDebug() << status;
 
         if(response.getMess() == "accepted")
-            Status=1;
-        else
-            Status=0;
+            Status= 1;
+        else if(response.getMess() == "user")
+            Status = 2;
+        else if(response.getMess() == "email")
+            Status = 3;
     }
 
     void initLimbaj(CLimbaj& limbaj){
@@ -81,7 +83,19 @@ namespace Connection{
         }
     }
 
-    void _initLectie(ILectie* lectie, std::string numeLectie){
-        ;
+    void _initLectie(ILectie* lectie, std::string numeLectie, std::string numeLimbaj){
+        //type:  payload:
+        // -> L numeLectie
+        // <- L content_lectie#xp_lectie#nr_ex_lectie
+        // -> e numeLectie
+        // <- e ex1 ... ex2 ... ex3 ...(while)(tip_ex#cerinta#rasp1#rasp2#rasp3#rasp4#rasp_corect#)
+        ServerMessageContainer getLectieReq('L', numeLectie+'#'+numeLimbaj);
+        client->send(getLectieReq.toSend().c_str(), getLectieReq.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getLectie(buffer);
+
+
     }
 }

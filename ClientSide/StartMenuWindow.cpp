@@ -57,6 +57,10 @@ StartMenuWindow::~StartMenuWindow()
     delete ui;
 }
 
+void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie){
+    ;
+}
+
 void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* limbaj)
 {
     if(limbaj->getLessonNrByName(buttonText.toStdString()) > limbaj->getCompleted()){
@@ -64,10 +68,10 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
         // qDebug() << limbaj->getCompleted();
         QMessageBox::information(nullptr, "Indisponibil", "Pentru a putea incepe acea lectie te \nrog completeaza-le pe cale\n anterioare prima data!");
     }else{
-        ILectie* lectie;
-        Connection::_initLectie(lectie, buttonText.toStdString());
+        ILectie* lectie = nullptr;
+        Connection::_initLectie(lectie, buttonText.toStdString(), limbaj->getName());
 
-    qDebug() << "Button clicked:" << buttonText;
+        qDebug() << "Button clicked:" << buttonText;
     }
 }
 

@@ -26,7 +26,7 @@ void send_register(std::string email, std::string username, std::string password
 
 void initLimbaj(CLimbaj& limbaj);
 
-void _initLectie(ILectie* lectie, std::string numeLectie);
+void _initLectie(ILectie* lectie, std::string numeLectie, std::string numeLimbaj);
 }
 
 #endif // SERVERCONNECTION_H
