@@ -40,10 +40,10 @@ void MainWindow::on_loginBTN_clicked()
 {
     QString username = ui->userIN->text();
     QString password = ui->passwIN->text();
-    int Status=0;
-    Connection::send_login(username.toStdString(), password.toStdString(), Status);
 
     int correctness = loginCorectnessCheck(username.toStdString(), password.toStdString());
+    //for admin bypass
+    if(username.toStdString()=="a")correctness=0;
     switch (correctness){
     case 1:
         QMessageBox::information(nullptr, "Incorect email", "Please type a valid email address!");
@@ -54,7 +54,8 @@ void MainWindow::on_loginBTN_clicked()
     default:
         break;
     }
-
+    int Status=0;
+    Connection::send_login(username.toStdString(), password.toStdString(), Status);
     if(Status==1){
         hide();
         startMenuWindow = new StartMenuWindow();

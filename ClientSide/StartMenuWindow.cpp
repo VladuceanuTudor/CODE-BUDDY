@@ -4,6 +4,8 @@
 #include <QPushButton>
 #include <QVBoxLayout> // Assuming vertical layout
 #include <QMessageBox>
+#include <QTextEdit>
+#include <QListWidget>
 
 StartMenuWindow::StartMenuWindow(QWidget *parent)
     : QDialog(parent)
@@ -57,8 +59,54 @@ StartMenuWindow::~StartMenuWindow()
     delete ui;
 }
 
-void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie){
-    ;
+void deleteLayout(QLayout* currentLayout){
+    if (currentLayout) {
+        // Clear all layout items:
+        while (QLayoutItem* item = currentLayout->takeAt(0)) {
+            if (QWidget* widget = item->widget()) {
+                delete widget;
+            }
+            delete item;  // Delete the layout item
+        }
+        delete currentLayout;
+    }
+}
+
+void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeLectie){
+    QLayout* currentLayout = ui->Language1Page->layout();
+
+    deleteLayout(currentLayout);
+
+    QVBoxLayout* layout = new QVBoxLayout;
+
+    // Add a label for the lesson name
+    QLabel* nameLabel = new QLabel(QString::fromStdString(numeLectie));
+    layout->addWidget(nameLabel);
+
+    // Add a QTextEdit widget to display the lesson text
+    QTextEdit* lessonTextEdit = new QTextEdit;
+    lessonTextEdit->setReadOnly(true); // Set text edit to read-only
+    lessonTextEdit->setText(QString::fromStdString(lectie->getText()));
+    layout->addWidget(lessonTextEdit);
+
+    // Add a label for exercises
+    QLabel* exercisesLabel = new QLabel("Exercises:");
+    layout->addWidget(exercisesLabel);
+
+    // Add a QListWidget to display the exercises
+    QListWidget* exercisesListWidget = new QListWidget;
+    // Populate the list with exercise names or details
+    // for (IExercitiu* exercitiu : lectie->getEx()) {
+    //     exercisesListWidget->addItem(QString::fromStdString("eXERCITIU"));
+    // }
+    for (int i=0; i<4; i++) {
+        exercisesListWidget->addItem(QString::fromStdString("Exercitiu"));
+    }
+    layout->addWidget(exercisesListWidget);
+
+    // Add layout to the widget
+    ui->Language1Page->setLayout(layout);
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* limbaj)
@@ -71,20 +119,9 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
         ILectie* lectie = nullptr;
         Connection::_initLectie(lectie, buttonText.toStdString(), limbaj->getName());
 
-        qDebug() << "Button clicked:" << buttonText;
-    }
-}
+        StartMenuWindow::displayLectie_Exercitii(lectie, buttonText.toStdString());
 
-void deleteLayout(QLayout* currentLayout){
-    if (currentLayout) {
-        // Clear all layout items:
-        while (QLayoutItem* item = currentLayout->takeAt(0)) {
-            if (QWidget* widget = item->widget()) {
-                delete widget;
-            }
-            delete item;  // Delete the layout item
-        }
-        delete currentLayout;
+        qDebug() << "Button clicked:" << buttonText;
     }
 }
 
@@ -122,21 +159,21 @@ void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
 void StartMenuWindow::on_pushButton_4_clicked()
 {
-    CLimbaj* cpp = new CLimbaj("Cpp");
+    CLimbaj* cpp = new CLimbaj("cpp");
     Connection::initLimbaj(*cpp);
     StartMenuWindow::printLimbajLessonsMenu(cpp);
 }
 
 void StartMenuWindow::on_pushButton_5_clicked()
 {
-    CLimbaj* csh = new CLimbaj("Csh");
+    CLimbaj* csh = new CLimbaj("csh");
     Connection::initLimbaj(*csh);
     StartMenuWindow::printLimbajLessonsMenu(csh);
 }
 
 void StartMenuWindow::on_pushButton_6_clicked()
 {
-    CLimbaj* java = new CLimbaj("Java");
+    CLimbaj* java = new CLimbaj("java");
     Connection::initLimbaj(*java);
     StartMenuWindow::printLimbajLessonsMenu(java);
 }

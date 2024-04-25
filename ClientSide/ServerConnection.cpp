@@ -83,7 +83,7 @@ namespace Connection{
         }
     }
 
-    void _initLectie(ILectie* lectie, std::string numeLectie, std::string numeLimbaj){
+    void _initLectie(ILectie*& lectie, std::string numeLectie, std::string numeLimbaj){
         //type:  payload:
         // -> L numeLectie
         // <- L content_lectie#xp_lectie#nr_ex_lectie
@@ -92,9 +92,22 @@ namespace Connection{
         ServerMessageContainer getLectieReq('L', numeLectie+'#'+numeLimbaj);
         client->send(getLectieReq.toSend().c_str(), getLectieReq.getSize());
 
+        lectie = new CLectie("Acesta este contentul de probaal unui curs \njajdnkjkja afoinva nfafjbje \nnafjbae fkjj af naef a", 30);
         char buffer[1024];
         client->recv(buffer, sizeof(buffer));
         ServerMessageContainer getLectie(buffer);
+
+        std::stringstream ss(getLectie.getMess());
+        std::string token;
+
+        std::getline(ss, token, PAYLOAD_DELIM);
+            std::string content_lectie = token;
+        std::getline(ss, token, PAYLOAD_DELIM);
+            int xp_lectie = std::stoi(token);
+        std::getline(ss, token, PAYLOAD_DELIM);
+            int nr_ex_lectie = std::stoi(token);
+
+            lectie = new CLectie(content_lectie, xp_lectie);
 
 
     }

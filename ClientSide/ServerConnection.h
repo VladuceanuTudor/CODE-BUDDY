@@ -11,6 +11,7 @@
 #include "ServerMessageContainer.h"
 #include <QDebug>
 #include "climbaj.h"
+#include "CLectie.h""
 
 #define PAYLOAD_DELIM '#'
 
@@ -26,7 +27,7 @@ void send_register(std::string email, std::string username, std::string password
 
 void initLimbaj(CLimbaj& limbaj);
 
-void _initLectie(ILectie* lectie, std::string numeLectie, std::string numeLimbaj);
+void _initLectie(ILectie*& lectie, std::string numeLectie, std::string numeLimbaj);
 }
 
 #endif // SERVERCONNECTION_H

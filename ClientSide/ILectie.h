@@ -9,7 +9,8 @@ class ILectie
 {
 public:
     virtual void addExercitiu(IExercitiu* ex) = 0;
-    virtual void print() = 0;
+    virtual std::string getText() = 0;
+    virtual std::vector<IExercitiu*> getEx() = 0;
     virtual int getXp() = 0;
 };
 
