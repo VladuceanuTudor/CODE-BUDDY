@@ -167,6 +167,10 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="file.txt" />
+    <Text Include="file2.txt" />
+    <Text Include="file2_ex.txt" />
+    <Text Include="file_ex.txt" />
     <Text Include="Introduction.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

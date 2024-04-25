@@ -61,6 +61,7 @@ public:
 	bool processLoginRequest(std::string request);
 	ServerMessageContainer processRegisterRequest(std::string request);
 	ServerMessageContainer processGetLessonsTitleRequest(std::string request, std::string username);
+	ServerMessageContainer processGetLessonContent(std::string request);
 
 	CUserHandler getUserInfo(std::string request);
 

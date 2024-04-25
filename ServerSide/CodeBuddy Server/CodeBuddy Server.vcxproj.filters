@@ -124,5 +124,17 @@
     <Text Include="Introduction.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="file.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="file2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="file_ex.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="file2_ex.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

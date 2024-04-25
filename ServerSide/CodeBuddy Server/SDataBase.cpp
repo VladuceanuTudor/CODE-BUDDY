@@ -1,7 +1,9 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "SDataBase.h"
 #include "CWordSeparator.h"
+#include <sstream>
 #include <iostream>
+#include <fstream>
 
 SDataBase* SDataBase::instance = nullptr;
 SQLHANDLE SDataBase::sqlConnHandle = nullptr;
@@ -91,30 +93,6 @@ void SDataBase::AllocPrepare(SQLWCHAR* query)
 
 }
 
-bool SDataBase::checkIfInDatabase(std::string table, std::string columnName, std::string value)
-{
-    std::string selectString = "SELECT ";
-    selectString += columnName + " FROM " +  table + " WHERE " + columnName + " = \'" + value + "\'";
-
-    std::wstring selectWstring(selectString.begin(), selectString.end());
-
-    SQLWCHAR* selectQuery = new SQLWCHAR[selectString.size() + 1];
-    wcscpy(selectQuery, selectWstring.c_str());
-
-    this->AllocPrepare(selectQuery);
-
-    // Execute the SQL statement
-    if (SQLExecute(SDataBase::sqlStmtHandle) != SQL_SUCCESS) {
-        throw std::exception("Error executing SQL statement\n");
-    }
-
-    int returnVal = SQLFetch(SDataBase::sqlStmtHandle);
-        // Eliberarea resurselor asociate statement-ului SQL
-    SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
-
-    return returnVal == SQL_SUCCESS;
-}
-
 std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     const std::vector<std::string>& selectColumns,
     const std::string& table,
@@ -186,7 +164,12 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     return result;
 }
 
+bool SDataBase::checkIfInDatabase(std::string table, std::string columnName, std::string value)
+{
+    std::vector<std::string> selects; selects.push_back(columnName);
 
+    return !this->selectFromDatabase(selects, table, columnName, value).empty();
+}
 
 bool SDataBase::processLoginRequest(std::string request)
 {
@@ -210,7 +193,6 @@ bool SDataBase::processLoginRequest(std::string request)
 
     return found;
 }
-
 
 SDataBase& SDataBase::getInstance()
 {
@@ -268,7 +250,7 @@ ServerMessageContainer SDataBase::processGetLessonsTitleRequest(std::string requ
     std::string lessons{};
     
     std::vector<std::string> selects; selects.push_back("LessonTitle");
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language", request);
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language", request, "LessonNumber");
 
     std::string buffer = "LessonsDone" + request;
     selects.clear();
@@ -282,6 +264,43 @@ ServerMessageContainer SDataBase::processGetLessonsTitleRequest(std::string requ
     return ServerMessageContainer('b', lessons);
 }
 
+ServerMessageContainer SDataBase::processGetLessonContent(std::string request)
+{
+    std::vector<std::string> selects = {"Language", "Filename", "XpGiven"};
+    std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle", words[0]);
+
+    for (const auto& it : cols)
+    {
+        if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
+        {
+            cols[0] = it;
+            break;
+        }
+    }
+    
+    std::ifstream f(cols[0][1]);
+    std::stringstream ss;
+    ss << f.rdbuf();
+    f.close();
+
+    std::vector<std::string> buffer = { ss.str() };
+    buffer.push_back(cols[0][2]);
+
+    std::string filename = cols[0][1];
+    filename.erase(filename.size() - 4);
+    filename += "_ex.txt";
+
+    f.open(filename);
+    std::string nrExercices{};
+    std::getline(f, nrExercices);
+    f.close();
+
+    buffer.push_back(nrExercices);
+
+    return ServerMessageContainer('L', CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
+}
+
 CUserHandler SDataBase::getUserInfo(std::string request)
 {
     CUserHandler ch;
@@ -290,51 +309,57 @@ CUserHandler SDataBase::getUserInfo(std::string request)
 
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
-    // SQL query
-    std::string selectString = "SELECT Username, Xp, Lives, LessonsDoneCpp, LessonsDoneCsh, LessonsDoneJava FROM Users WHERE Email = \'"
-        + inputs[0] + "\'";
+    //// SQL query
+    //std::string selectString = "SELECT Username, Xp, Lives, LessonsDoneCpp, LessonsDoneCsh, LessonsDoneJava FROM Users WHERE Email = \'"
+    //    + inputs[0] + "\'";
 
-    std::wstring selectWstring(selectString.begin(), selectString.end());
+    //std::wstring selectWstring(selectString.begin(), selectString.end());
 
-    SQLWCHAR* selectQuery = new SQLWCHAR[selectString.size() + 1];
-    wcscpy(selectQuery, selectWstring.c_str());
+    //SQLWCHAR* selectQuery = new SQLWCHAR[selectString.size() + 1];
+    //wcscpy(selectQuery, selectWstring.c_str());
 
-    SDataBase::AllocPrepare(selectQuery);
+    //SDataBase::AllocPrepare(selectQuery);
 
-    // Execute the SQL statement
-    if (SQLExecute(SDataBase::sqlStmtHandle) != SQL_SUCCESS) 
-        throw std::exception("Error executing SQL statement\n");
+    //// Execute the SQL statement
+    //if (SQLExecute(SDataBase::sqlStmtHandle) != SQL_SUCCESS)
+    //    throw std::exception("Error executing SQL statement\n");
 
-    SQLCHAR strData[SQL_RESULT_LEN]{};
-    SQLINTEGER intData[5]{};
+    //SQLCHAR strData[SQL_RESULT_LEN]{};
+    ////SQLINTEGER intData[5]{};
 
-    // Bind column 1 (Password)
-    if (SQLBindCol(SDataBase::sqlStmtHandle, 1, SQL_C_CHAR, strData, SQL_RESULT_LEN, nullptr) != SQL_SUCCESS)
-        throw std::exception("Error binding column 1\n");
-    
-    // Bind columns 2 to 6 (IntColumn0 to IntColumn5)
-    for (int i = 0; i < 5; ++i) 
-    {
-        if (SQLBindCol(SDataBase::sqlStmtHandle, 2 + i, SQL_C_LONG, &intData[i], 0, nullptr) != SQL_SUCCESS)
-            throw std::exception("Error binding integer column\n");
-    }
+    //// Bind column 1 (Password)
+    //if (SQLBindCol(SDataBase::sqlStmtHandle, 1, SQL_C_CHAR, strData, SQL_RESULT_LEN, nullptr) != SQL_SUCCESS)
+    //    throw std::exception("Error binding column 1\n");
 
-    // Fetch and process the results
-    if (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS) 
-    {
-        std::vector<int> vec;
-        vec.push_back(intData[2]); vec.push_back(intData[3]); vec.push_back(intData[4]);
-        ch = CUserHandler(reinterpret_cast<char*>(strData), intData[0], vec, intData[1]);
-    }
-    else
-    {
-        throw std::exception("Error fetching results\n");
-    }
+    //// Bind columns 2 to 6 (IntColumn0 to IntColumn5)
+    //for (int i = 0; i < 5; ++i)
+    //{
+    //    if (SQLBindCol(SDataBase::sqlStmtHandle, 2 + i, SQL_C_LONG, &intData[i], 0, nullptr) != SQL_SUCCESS)
+    //        throw std::exception("Error binding integer column\n");
+    //}
 
-    // Eliberarea resurselor asociate statement-ului SQL
-    SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
+    //// Fetch and process the results
+    //if (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS)
+    //{
+    //    std::vector<int> vec;
+    //    vec.push_back(intData[2]); vec.push_back(intData[3]); vec.push_back(intData[4]);
+    //    ch = CUserHandler(reinterpret_cast<char*>(strData), intData[0], vec, intData[1]);
+    //}
+    //else
+    //{
+    //    throw std::exception("Error fetching results\n");
+    //}
 
-    delete[] selectQuery;
+    //// Eliberarea resurselor asociate statement-ului SQL
+    //SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
+
+    //delete[] selectQuery;
+
+    std::vector<std::string> selects = { "Username", "Xp", "Lives", "LessonsDoneCpp", "LessonsDoneCsh", "LessonsDoneJava" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Email", inputs[0]);
+
+    std::vector<int> vec = { std::stoi(cols[0][3]), std::stoi(cols[0][4]), std::stoi(cols[0][5])};
+    ch = CUserHandler(cols[0][0], std::stoi(cols[0][1]), vec, std::stoi(cols[0][2]));
 
     return ch;
 }
