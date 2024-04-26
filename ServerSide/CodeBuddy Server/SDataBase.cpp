@@ -137,7 +137,7 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
 
     // Bind columns
     std::vector<SQLCHAR*> colBindings(selectColumns.size());
-    for (size_t i = 0; i < selectColumns.size(); ++i) {
+    for (int i = 0; i < selectColumns.size(); ++i) {
         colBindings[i] = new SQLCHAR[SQL_RESULT_LEN]{}; // Adjust SQL_RESULT_LEN as needed
         if (SQLBindCol(SDataBase::sqlStmtHandle, i + 1, SQL_C_CHAR, colBindings[i], SQL_RESULT_LEN, nullptr) != SQL_SUCCESS) {
             throw std::exception("Error binding column\n");
@@ -148,14 +148,14 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     std::vector<std::vector<std::string>> result;
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS) {
         std::vector<std::string> row;
-        for (size_t i = 0; i < selectColumns.size(); ++i) {
+        for (int i = 0; i < selectColumns.size(); ++i) {
             row.emplace_back(reinterpret_cast<char*>(colBindings[i]));
         }
         result.push_back(row);
     }
 
     // Clean up resources
-    for (size_t i = 0; i < colBindings.size(); ++i) {
+    for (int i = 0; i < colBindings.size(); ++i) {
         delete[] colBindings[i];
     }
     SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
@@ -294,10 +294,22 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request)
     f.open(filename);
     std::string nrExercices{};
     std::getline(f, nrExercices);
-    //
-    f.close();
-
     buffer.push_back(nrExercices);
+
+    std::string line{};
+    std::vector<std::string> exercise;
+
+    for (int i = 0; i < std::stoi(nrExercices); i++)
+    {
+        for (int j = 0; j < 7; j++)
+        {
+            std::getline(f, line);
+            exercise.push_back(line);
+        }
+    }
+    //Trebuie facuta 
+
+    f.close();
 
     return ServerMessageContainer('L', CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
 }
