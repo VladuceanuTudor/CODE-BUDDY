@@ -1,0 +1,1 @@
+Let's dive deeper into the building blocks of C++. We'll learn about essential concepts like data types, operators, expressions, and control flow, equipping you to write simple C++ programs.

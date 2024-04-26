@@ -24,3 +24,15 @@ std::string CWordSeparator::encapsulateWords(std::vector<std::vector<std::string
     }
     return buffer;
 }
+
+std::string CWordSeparator::encapsulateWords(std::vector<std::string> words, char delim)
+{
+    std::string buffer{};
+    for (const auto& it : words)
+    {
+        buffer += it;
+        buffer += delim;
+    }
+    return buffer;
+}
+

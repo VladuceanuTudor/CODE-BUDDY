@@ -1,0 +1,2 @@
+Repetitive tasks are a breeze with loops! 
+This lesson will introduce you to for loops and while loops in C++, enabling you to automate processes and write more efficient code.

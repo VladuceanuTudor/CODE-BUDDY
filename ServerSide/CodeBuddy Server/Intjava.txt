@@ -1,0 +1,1 @@
+Java, another powerhouse language, takes center stage! We'll begin by understanding the core ideas of Java, its applications, and how it differs from C++.

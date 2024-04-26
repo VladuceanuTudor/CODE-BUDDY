@@ -1,0 +1,3 @@
+Ready to explore a new horizon? 
+Csharp awaits! 
+This lesson will introduce you to Csharp, highlighting its similarities to C++ and Java while revealing its unique strengths.
