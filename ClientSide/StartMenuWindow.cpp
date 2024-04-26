@@ -185,3 +185,10 @@ void StartMenuWindow::on_pushButton_clicked()
 
 
 
+
+void StartMenuWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->Title->setFont(QFont("Arial", 16));
+}
+

@@ -31,6 +31,8 @@ private slots:
 
     void displayLectie_Exercitii(ILectie* lectie, std::string numeLectie);
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::StartMenuWindow *ui;
 };
