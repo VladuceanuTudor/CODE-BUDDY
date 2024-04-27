@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "SDataBase.h"
 #include "CWordSeparator.h"
+#include "CClientHandler.h"
 #include <sstream>
 #include <iostream>
 #include <fstream>
