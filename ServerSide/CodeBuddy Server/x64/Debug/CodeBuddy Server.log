@@ -1,6 +1,13 @@
-﻿  LINK : C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe not found or not built by the last incremental link; performing full link
-CClientHandler.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'CClientHandler.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
-CLessonManager.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'CLessonManager.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
-CUserHandler.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'CUserHandler.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
-Utils.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'Utils.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
+﻿  SDataBase.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(23,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(45,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
   CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe

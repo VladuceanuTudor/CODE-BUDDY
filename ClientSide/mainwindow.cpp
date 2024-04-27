@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label_Logo->setPixmap(pix.scaled(w,h, Qt::KeepAspectRatio));
     //ui->label_Logo->setPixmap(pix);
     try{
-    Connection::init_and_start_connection("192.168.0.101", 5520);
+    Connection::init_and_start_connection("25.16.102.33", 5520);
     }catch(char const* error){
         QMessageBox::information(nullptr, "Connection error", error);
         exit(0);

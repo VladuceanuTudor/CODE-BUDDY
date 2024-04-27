@@ -1,4 +1,5 @@
 #include "CLessonHandler.h"
+#include "CFileHandler.h"
 
 const std::string& CLessonHandler::getTitle() const
 {
@@ -25,4 +26,14 @@ const std::string& CLessonHandler::getFilename() const
 void CLessonHandler::setFilename(const std::string& filename)
 {
 	this->filename = filename;
+}
+
+void CLessonHandler::extractExercices()
+{
+	this->exercices = CFileHandler::getExercises(this->filename);
+}
+
+void CLessonHandler::setXp(int xp)
+{
+	this->xp = xp;
 }

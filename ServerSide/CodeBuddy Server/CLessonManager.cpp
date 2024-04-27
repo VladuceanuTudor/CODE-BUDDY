@@ -39,4 +39,5 @@ CLessonHandler& CLessonManager::getLesson(const std::string& lessonName) const
 	for (int i = 0; i < this->lessons.size(); i++)
 		if (this->lessons[i]->getTitle() == lessonName)
 			return *this->lessons[i];
+	exit(-1);
 }
