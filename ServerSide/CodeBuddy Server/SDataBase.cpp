@@ -245,31 +245,47 @@ ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
     return ServerMessageContainer('r', "accepted");
 }
 
-ServerMessageContainer SDataBase::processGetLessonsTitleRequest(std::string request, std::string username)
+std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, int i)
 {
-    std::string lessons{};
-    
-    std::vector<std::string> selects; selects.push_back("LessonTitle");
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language", request, "LessonNumber");
-
-    std::string buffer = "LessonsDone" + request;
-    selects.clear();
-    selects.push_back(buffer);
-    std::string lessonsDone = this->selectFromDatabase(selects, "Users", "Username", username)[0][0];
-    
-    lessons += std::stoi(lessonsDone);
-    lessons += PAYLOAD_DELIM;
-    lessons += CWordSeparator::encapsulateWords(cols, 0, PAYLOAD_DELIM);
-
-    return ServerMessageContainer('b', lessons);
+    std::vector<std::string> column;
+    for (const auto& row : mat) {
+        if (!row.empty()) {
+            column.push_back(row[i]);
+        }
+    }
+    return column;
 }
 
-ServerMessageContainer SDataBase::processGetLessonContent(std::string request)
+ServerMessageContainer SDataBase::processGetLessonsTitleRequest(std::string request, CClientHandler* ch)
 {
-    std::vector<std::string> selects = {"Language", "Filename", "XpGiven"};
-    std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle", words[0]);
+    if (!ch->existsLesson(request))
+    {
 
+        std::vector<std::string> selects; selects.push_back("LessonTitle");
+        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language", request, "LessonNumber");
+
+        std::string buffer = "LessonsDone" + request;
+        selects.clear();
+        selects.push_back(buffer);
+        std::string lessonsDone = this->selectFromDatabase(selects, "Users", "Username", ch->getUserHandler().getUsername())[0][0];
+
+        ch->setLessonTileDone(std::stoi(lessonsDone), getColumn(cols, 0), request);
+    }
+
+    return ch->getLanguage(request).getSendMessageTitles();
+}
+
+ServerMessageContainer SDataBase::processGetLessonContent(std::string request, CClientHandler* ch)
+{
+    std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);   
+
+    if (!ch->getLanguage(words[1]).getLesson(words[1]).getFilename().empty())
+    {
+        ;
+    }
+
+    std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle", words[0]);
     for (const auto& it : cols)
     {
         if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
@@ -278,6 +294,8 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request)
             break;
         }
     }
+
+    ch->getLanguage(words[1]).getLesson(words[1]).setFilename(cols[0][1]);
     
     std::ifstream f(cols[0][1]);
     std::stringstream ss;
@@ -314,19 +332,18 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request)
     return ServerMessageContainer('L', CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
 }
 
-CUserHandler SDataBase::getUserInfo(std::string request)
+CUserHandler* SDataBase::getUserInfo(std::string request)
 {
-    CUserHandler ch;
+    CUserHandler* ch{nullptr};
 
     std::vector<std::string> inputs;
 
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
-    std::vector<std::string> selects = { "Username", "Xp", "Lives", "LessonsDoneCpp", "LessonsDoneCsh", "LessonsDoneJava" };
+    std::vector<std::string> selects = { "Username", "Xp", "Lives"};
     std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Email", inputs[0]);
 
-    std::vector<int> vec = { std::stoi(cols[0][3]), std::stoi(cols[0][4]), std::stoi(cols[0][5])};
-    ch = CUserHandler(cols[0][0], std::stoi(cols[0][1]), vec, std::stoi(cols[0][2]));
+    ch = new CUserHandler(cols[0][0], std::stoi(cols[0][1]), std::stoi(cols[0][2]));
 
     return ch;
 }
