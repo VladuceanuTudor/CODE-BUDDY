@@ -296,10 +296,12 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
             break;
         }
     }
-
-    ch->getLanguage(words[1]).getLesson(words[0]).setFilename(cols[0][1]);
-    ch->getLanguage(words[1]).getLesson(words[0]).extractExercices();
-    ch->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));
+    if(ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
+    {
+        ch->getLanguage(words[1]).getLesson(words[0]).setFilename(cols[0][1]);
+        ch->getLanguage(words[1]).getLesson(words[0]).extractExercices();
+        ch->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));
+    }
 
     return ch->getLanguage(words[1]).getLesson(words[0]).getSendMessage();
 }

@@ -12,6 +12,7 @@ ServerMessageContainer CClientHandler::sendExercices(std::string request)
     for (const auto& it : this->getLanguage(words[1]).getLesson(words[0]).getExercices())
     {
         CTCPServer::sendData(it->getSendData(), this->userSocket);
+        Sleep(100);
     }
     
     return ServerMessageContainer(GET_EXERCICE_CODE, "Done");

@@ -7,7 +7,7 @@
 std::string CExercice::getSendData()
 {
 	std::vector<std::string> buffer;
-	buffer.push_back(std::to_string(this->type));
+	buffer.push_back(std::string(1, this->type));
 	buffer.push_back(this->question);
 	for (const auto& it : this->answers)
 		buffer.push_back(it);
