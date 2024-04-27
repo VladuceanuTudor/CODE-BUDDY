@@ -1,1 +1,8 @@
 1
+G
+Alege varianta corecta:
+Varianta1
+Varianta2
+Varianta3
+Varianta4
+Varianta3

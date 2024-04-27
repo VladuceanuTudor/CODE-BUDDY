@@ -7,7 +7,7 @@
 #include <sqlext.h>
 #include "Constraints.h"
 #include "ServerMessageContainer.h"
-#include "CUserHandler.h"
+#include "CClientHandler.h"
 
 
 
@@ -60,10 +60,10 @@ public:
 
 	bool processLoginRequest(std::string request);
 	ServerMessageContainer processRegisterRequest(std::string request);
-	ServerMessageContainer processGetLessonsTitleRequest(std::string request, std::string username);
-	ServerMessageContainer processGetLessonContent(std::string request);
+	ServerMessageContainer processGetLessonsTitleRequest(std::string request, CClientHandler* ch);
+	ServerMessageContainer processGetLessonContent(std::string request, CClientHandler* ch);
 
-	CUserHandler getUserInfo(std::string request);
+	CUserHandler* getUserInfo(std::string request);
 
 
 	static void updateUserXp(std::string username, int newXp);

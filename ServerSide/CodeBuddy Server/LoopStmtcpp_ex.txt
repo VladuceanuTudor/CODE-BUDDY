@@ -1,1 +1,7 @@
 1
+Numiti o instructiune de loop
+While
+If
+Case
+Return
+While

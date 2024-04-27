@@ -13,9 +13,10 @@ class CTCPServer
 private:
 	short port;
 	struct addrinfo* result = NULL;
-	struct addrinfo hints;
+	struct addrinfo hints{};
 	SOCKET listen_sock = NULL;
 	std::list<SOCKET> client_sock{NULL};
+	//std::list<std::string> emails{};
 
 public:
 	CTCPServer(short listen_port);
