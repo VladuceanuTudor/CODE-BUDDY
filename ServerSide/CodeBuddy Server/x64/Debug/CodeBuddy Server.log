@@ -1,1 +1,6 @@
-﻿  CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe
+﻿  LINK : C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe not found or not built by the last incremental link; performing full link
+CClientHandler.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'CClientHandler.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
+CLessonManager.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'CLessonManager.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
+CUserHandler.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'CUserHandler.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
+Utils.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'Utils.obj' or at 'C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\vc143.pdb'; linking object as if no debug info
+  CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe
