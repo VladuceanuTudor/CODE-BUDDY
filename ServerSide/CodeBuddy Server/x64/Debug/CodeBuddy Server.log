@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  CTCPServer.cpp
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(24,22): warning C4114: same type qualifier used more than once
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
@@ -27,4 +28,7 @@ C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBud
           ]
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(24,22): warning C4114: same type qualifier used more than once
   Generating Code...
+=======
+﻿  LINK : C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe not found or not built by the last incremental link; performing full link
+>>>>>>> ServerWorking
   CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe

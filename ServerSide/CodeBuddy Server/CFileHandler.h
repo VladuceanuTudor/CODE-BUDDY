@@ -1,9 +1,11 @@
 #pragma once
-#include "ServerMessageContainer.h"
+#include <string>
+#include "CExercice.h"
 
 class CFileHandler
 {
 
 public:
-	static ServerMessageContainer getExercices
+	static std::string getContent(const std::string & filename);
+	CExercice* getExercises(const std::string& filename);
 };

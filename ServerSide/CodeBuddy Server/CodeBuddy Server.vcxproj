@@ -134,6 +134,7 @@
     <ClCompile Include="CClientHandler.cpp" />
     <ClCompile Include="CCsharpCertificate.cpp" />
     <ClCompile Include="CFileHandler.cpp" />
+    <ClCompile Include="CLessonHandler.cpp" />
     <ClCompile Include="CLessonManager.cpp" />
     <ClCompile Include="CPaymentManager.cpp" />
     <ClCompile Include="CTCPServer.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="CCsharpCertificate.h" />
     <ClInclude Include="CExercice.h" />
     <ClInclude Include="CFileHandler.h" />
+    <ClInclude Include="CLessonHandler.h" />
     <ClInclude Include="CLessonManager.h" />
     <ClInclude Include="Constraints.h" />
     <ClInclude Include="CPaymentManager.h" />

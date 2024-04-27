@@ -1,1 +1,7 @@
 1
+Ce limbaj am facut?
+Cpp
+Csharp
+Java
+Ruby
+Cpp

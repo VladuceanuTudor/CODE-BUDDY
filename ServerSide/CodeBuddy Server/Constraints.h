@@ -8,3 +8,5 @@
 #define MAX_BUFFER_LEN 1024
 
 #define PAYLOAD_DELIM '#'
+
+#define GET_LESSON_TITLES_CODE 'b'
