@@ -1,7 +1,10 @@
 #include "CTCPServer.h"
 #include "SDataBase.h"
 #include "CClientHandler.h"
+#include "Constraints.h"
 #include <iostream>
+
+CTCPServer* CTCPServer::instance = nullptr;
 
 CTCPServer::CTCPServer(short listen_port)
 {
@@ -61,21 +64,16 @@ void CTCPServer::wait_connection()
     fprintf(stderr, "Connected on socket %llu\n", sock);
 }
 
-int CTCPServer::send(const char const* send_buff, const int size, SOCKET sock) const
+int CTCPServer::send(const char const* send_buff, const int size, SOCKET sock)
 {
     int send_bytes = ::send(sock, send_buff, size, 0);
     return send_bytes;
 }
 
-int CTCPServer::recv(char* recv_buff, const int size, SOCKET sock) const
+int CTCPServer::recv(char* recv_buff, const int size, SOCKET sock)
 {
     int recv_bytes = ::recv(sock, recv_buff, size, 0);
     return recv_bytes;
-}
-
-const short CTCPServer::getPort() const
-{
-    return this->port;
 }
 
 SOCKET CTCPServer::getLastSocket() const
@@ -83,35 +81,44 @@ SOCKET CTCPServer::getLastSocket() const
     return this->client_sock.back();
 }
 
-void CTCPServer::handleClient(SOCKET sock)
+
+
+void CTCPServer::sendData(std::string message, SOCKET sock)
 {
-    char buffer[1024];
     char responsebuffer[1024]{};
-    CClientHandler ch;
-    while (true) {
-        int recv_bytes = this->recv(buffer, sizeof(buffer), sock);
-        if (recv_bytes <= 0) {
-            std::cout << "Client disconnected on socket " << sock << std::endl;
-            break;
-        }
-        std::cout << "Socket " << sock << ": ";
-        fwrite(buffer, 1, recv_bytes, stderr);
-        std::cout << std::endl;
-        std::string message{};
-        try
-        {
-            message = ch.handleRequest(buffer);
-        }
-        catch (const std::exception& e)
-        {
-            message = ServerMessageContainer('E', "Error").getWholeString();
-            std::cerr << e.what() << std::endl;
-        }
-        strcpy_s(responsebuffer, message.c_str());
 
-        std::cout << "Response socket " << sock << ": ";
-        std::cout << responsebuffer << std::endl;
+    strcpy_s(responsebuffer, message.c_str());
 
-        this->send(responsebuffer, strlen(responsebuffer), sock);
+    std::cout << "Response socket " << sock << ": ";
+    std::cout << responsebuffer << std::endl;
+
+    CTCPServer::send(responsebuffer, strlen(responsebuffer), sock);
+}
+
+
+int CTCPServer::recvData(char* buffer, SOCKET sock)
+{
+    int recv_bytes = CTCPServer::recv(buffer, BUFFER_SEND_RECV_SIZE, sock);
+    if (recv_bytes <= 0) {
+        std::cout << "Client disconnected on socket " << sock << std::endl;
+        return -1;
     }
+    std::cout << "Socket " << sock << ": ";
+    fwrite(buffer, 1, recv_bytes, stderr);
+    std::cout << std::endl;
+    return 0;
+}
+
+CTCPServer& CTCPServer::getInstance()
+{
+    if (!CTCPServer::instance)
+        CTCPServer::instance = new CTCPServer(LISTEN_PORT);
+    return *CTCPServer::instance;
+}
+
+void CTCPServer::destroyInstance()
+{
+    if (CTCPServer::instance)
+        delete CTCPServer::instance;
+    CTCPServer::instance = nullptr;
 }

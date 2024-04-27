@@ -1,6 +1,21 @@
 #include "CClientHandler.h"
 #include "ServerMessageContainer.h"
 #include "SDataBase.h"
+#include "CWordSeparator.h"
+#include "CTCPServer.h"
+
+ServerMessageContainer CClientHandler::sendExercices(std::string request)
+{
+    std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+    //words[0] = LessonName
+    //words[1] = Language
+    for (const auto& it : this->getLanguage(words[1]).getLesson(words[0]).getExercices())
+    {
+        CTCPServer::sendData(it->getSendData(), this->userSocket);
+    }
+    
+    return ServerMessageContainer(GET_EXERCICE_CODE, "Done");
+}
 
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
@@ -32,7 +47,7 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
         sendBuffer = SDataBase::getInstance().processGetLessonContent(procRequest.getMess(), this);
         break;
     case 'e':
-        sendBuffer = ServerMessageContainer('e', "To be done...");
+        sendBuffer = this->sendExercices(procRequest.getMess());
         break;
     default:
         ServerMessageContainer errorBuffer('E', "Invalid Option given.");

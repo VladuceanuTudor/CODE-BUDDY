@@ -1,5 +1,6 @@
 #include "CFileHandler.h"
 #include <fstream>
+#include <sstream>
 
 std::list<CExercice*> CFileHandler::getExercises(const std::string& filename)
 {
@@ -35,4 +36,16 @@ std::list<CExercice*> CFileHandler::getExercises(const std::string& filename)
 	f.close();
 
 	return exercices;
+}
+
+std::string CFileHandler::getContent(const std::string& filename)
+{
+	std::ifstream f(filename);
+	std::stringstream ss;
+	ss << f.rdbuf();
+	f.close();
+
+	std::string str = ss.str();
+
+	return str;
 }

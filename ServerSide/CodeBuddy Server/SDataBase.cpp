@@ -282,7 +282,8 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
 
     if (!ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
     {
-        ;
+        ;//De terminat aici in cazul in care am mai trecut prin Acea lectie, sa incarc din clasa, sa nu mai dau select
+
     }
 
     std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
@@ -300,15 +301,7 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
     ch->getLanguage(words[1]).getLesson(words[0]).extractExercices();
     ch->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));
 
-    std::ifstream f(cols[0][1]);
-    std::stringstream ss;
-    ss << f.rdbuf();
-    f.close();
-
-    std::vector<std::string> buffer = { ss.str() };
-    buffer.push_back(cols[0][2]);
-
-    return ServerMessageContainer('L', CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
+    return ch->getLanguage(words[1]).getLesson(words[0]).getSendMessage();
 }
 
 CUserHandler* SDataBase::getUserInfo(std::string request)

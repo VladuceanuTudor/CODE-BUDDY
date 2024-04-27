@@ -1,5 +1,8 @@
 #include "CLessonHandler.h"
 #include "CFileHandler.h"
+#include "Constraints.h"
+#include "CWordSeparator.h"
+#include <vector>
 
 const std::string& CLessonHandler::getTitle() const
 {
@@ -30,10 +33,29 @@ void CLessonHandler::setFilename(const std::string& filename)
 
 void CLessonHandler::extractExercices()
 {
-	this->exercices = CFileHandler::getExercises(this->filename);
+	std::string fileEx = this->filename;
+	fileEx.erase(fileEx.size() - 4);
+	fileEx += "_ex.txt";
+	this->exercices = CFileHandler::getExercises(fileEx);
 }
 
 void CLessonHandler::setXp(int xp)
 {
 	this->xp = xp;
+}
+
+ServerMessageContainer CLessonHandler::getSendMessage()
+{
+	std::vector<std::string> buffer;
+
+	buffer.push_back(CFileHandler::getContent(this->filename));
+	buffer.push_back(std::to_string(this->xp));
+	buffer.push_back(std::to_string(this->exercices.size()));
+
+	return ServerMessageContainer(GET_LESSON_CONTENT, CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
+}
+
+std::list<CExercice*> CLessonHandler::getExercices() const
+{
+	return this->exercices;
 }

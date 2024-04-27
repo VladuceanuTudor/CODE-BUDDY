@@ -6,7 +6,23 @@
 #include "CTCPServer.h"
 
 void handleClient(CTCPServer& server, SOCKET sock) {
-    server.handleClient(sock);
+    char buffer[BUFFER_SEND_RECV_SIZE];
+    CClientHandler ch(sock);
+    while (true) {
+        if (CTCPServer::recvData(buffer, sock) < 0)
+            break;
+        std::string message{};
+        try
+        {
+            message = ch.handleRequest(buffer);
+        }
+        catch (const std::exception& e)
+        {
+            message = ServerMessageContainer('E', "Error").getWholeString();
+            std::cerr << e.what() << std::endl;
+        }
+        CTCPServer::sendData(message, sock);
+    }
 }
 
 int main() 
@@ -14,7 +30,7 @@ int main()
     SDataBase::getInstance();
     sock_init();
 
-    CTCPServer server(5520); // Port number
+    CTCPServer& server = CTCPServer::getInstance();
 
     while (true)
     {

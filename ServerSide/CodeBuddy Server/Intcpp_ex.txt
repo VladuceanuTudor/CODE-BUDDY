@@ -1,4 +1,5 @@
 1
+G
 Ce limbaj am facut?
 Cpp
 Csharp

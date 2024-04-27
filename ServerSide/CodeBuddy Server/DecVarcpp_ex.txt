@@ -1,4 +1,5 @@
 1
+G
 Cum declaram o variabila de tip integer?
 int
 float

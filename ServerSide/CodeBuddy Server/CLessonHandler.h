@@ -2,6 +2,7 @@
 #include <string>
 #include <list>
 #include "CExercice.h"
+#include "ServerMessageContainer.h"
 
 class CLessonHandler
 {
@@ -13,6 +14,8 @@ private:
 public:
 	const std::string& getTitle() const;
 	const std::string& getFilename() const;
+	ServerMessageContainer getSendMessage();
+	std::list<CExercice*> getExercices() const;
 
 	CLessonHandler(const std::string& title);
 	~CLessonHandler();
