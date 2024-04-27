@@ -9,8 +9,9 @@ private:
     std::string raspunsCorect;
 public:
     CExercitiuGrila(std::string cerinta, std::vector<std::string> varRaspuns, std::string raspunsCorect);
-    void printEx() { ; }
-    bool checkAns() { return true; }
+    char getType();
+    std::vector<std::string> getListaRasp();
+    std::string getRaspCorect();
 };
 
 #endif // CEXERCITIUGRILA_H

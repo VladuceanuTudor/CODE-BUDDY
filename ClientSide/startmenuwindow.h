@@ -29,9 +29,11 @@ private slots:
 
     void printLimbajLessonsMenu(CLimbaj* limbaj);
 
-    void displayLectie_Exercitii(ILectie* lectie, std::string numeLectie);
+    void displayLectie_Exercitii(ILectie* lectie, std::string numeLectie, CLimbaj* limbaj);
 
     void on_pushButton_2_clicked();
+
+    void finalizeLectia(ILectie* lectie, CLimbaj* limbaj);
 
 private:
     Ui::StartMenuWindow *ui;

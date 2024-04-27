@@ -9,8 +9,9 @@ private:
     std::string raspunsCorect;
 public:
     CExercitiuBlocuri(std::string cerinta, std::vector<std::string> varBlocuri, std::string raspunsCorect);
-    void printEx() { ; }
-    bool checkAns() { return true; }
+    char getType();
+    std::vector<std::string> getListaRasp();
+    std::string getRaspCorect();
 };
 
 #endif // CEXERCITIUBLOCURI_H

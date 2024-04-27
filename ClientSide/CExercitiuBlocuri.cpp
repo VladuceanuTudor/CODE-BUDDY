@@ -7,3 +7,14 @@ CExercitiuBlocuri::CExercitiuBlocuri(std::string cerinta,
                                      raspunsCorect{ raspunsCorect } {
     ;
 }
+
+std::vector<std::string> CExercitiuBlocuri::getListaRasp(){
+    return this->varBlocuri;
+}
+
+char CExercitiuBlocuri::getType(){
+    return 'B';
+}
+std::string CExercitiuBlocuri::getRaspCorect(){
+    return this->raspunsCorect;
+}

@@ -1,4 +1,7 @@
 #include "ServerConnection.h"
+#include "CExercitiuGrila.h"
+#include "CExercitiuText.h"
+#include "CExercitiuBlocuri.h"
 #include <sstream>
 
 namespace Connection{
@@ -83,16 +86,73 @@ namespace Connection{
         }
     }
 
+    void _initExercitii(std::string numeLectie, std::string numeLimbaj, int nr_ex_lectie, ILectie*& lectie){
+
+        ServerMessageContainer getExReq('e', numeLectie+'#'+numeLimbaj);
+        client->send(getExReq.toSend().c_str(), getExReq.getSize());
+
+        for(int i=0; i<nr_ex_lectie; i++){
+            IExercitiu* ex;
+            char buffer[1024];
+            client->recv(buffer, sizeof(buffer));
+            ServerMessageContainer getExReq(buffer);
+            std::string tip_ex, cerinta, rasp1, rasp2, rasp3, rasp4, rasp_corect;
+
+            std::stringstream ss(getExReq.getMess());
+            std::string token;
+
+            std::getline(ss, token, PAYLOAD_DELIM);
+             tip_ex = token;
+            std::getline(ss, token, PAYLOAD_DELIM);
+             cerinta = token;
+            std::getline(ss, token, PAYLOAD_DELIM);
+             rasp1 = token;
+            std::getline(ss, token, PAYLOAD_DELIM);
+             rasp2 = token;
+            std::getline(ss, token, PAYLOAD_DELIM);
+             rasp3 = token;
+            std::getline(ss, token, PAYLOAD_DELIM);
+             rasp4 = token;
+            std::getline(ss, token, PAYLOAD_DELIM);
+             rasp_corect = token;
+
+            std::vector<std::string> varRaspuns;
+             varRaspuns.push_back(rasp1);
+             varRaspuns.push_back(rasp2);
+             varRaspuns.push_back(rasp3);
+             varRaspuns.push_back(rasp4);
+
+            if(tip_ex == "G")
+            {
+                ex = new CExercitiuGrila(cerinta, varRaspuns, rasp_corect);
+            }
+            else if(tip_ex == "T")
+            {
+                ex = new CExercitiuText(cerinta, rasp_corect);
+            }
+            else if(tip_ex == "B")
+            {
+                ex = new CExercitiuBlocuri(cerinta, varRaspuns, rasp_corect);
+            }
+
+            lectie->addExercitiu(ex);
+
+        }
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+    }
+
     void _initLectie(ILectie*& lectie, std::string numeLectie, std::string numeLimbaj){
         //type:  payload:
         // -> L numeLectie
         // <- L content_lectie#xp_lectie#nr_ex_lectie
-        // -> e numeLectie
+        // -> e limbaj numeLectie
         // <- e ex1 ... ex2 ... ex3 ...(while)(tip_ex#cerinta#rasp1#rasp2#rasp3#rasp4#rasp_corect#)
         ServerMessageContainer getLectieReq('L', numeLectie+'#'+numeLimbaj);
         client->send(getLectieReq.toSend().c_str(), getLectieReq.getSize());
 
-        lectie = new CLectie("Acesta este contentul de probaal unui curs \njajdnkjkja afoinva nfafjbje \nnafjbae fkjj af naef a", 30);
+        //lectie = new CLectie("Acesta este contentul de probaal unui curs \njajdnkjkja afoinva nfafjbje \nnafjbae fkjj af naef a", 30);
         char buffer[1024];
         client->recv(buffer, sizeof(buffer));
         ServerMessageContainer getLectie(buffer);
@@ -109,6 +169,7 @@ namespace Connection{
 
             lectie = new CLectie(content_lectie, xp_lectie);
 
+            _initExercitii(numeLectie, numeLimbaj, nr_ex_lectie, lectie);
 
     }
 }

@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QTextEdit>
 #include <QListWidget>
+#include <QButtonGroup>
+#include <QRadioButton>
 
 StartMenuWindow::StartMenuWindow(QWidget *parent)
     : QDialog(parent)
@@ -72,7 +74,50 @@ void deleteLayout(QLayout* currentLayout){
     }
 }
 
-void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeLectie){
+QWidget* createExerciseWidget(IExercitiu* ex) {
+    QWidget* widget = new QWidget;
+    QVBoxLayout* layout = new QVBoxLayout(widget);
+
+    QLabel* questionLabel = new QLabel(QString::fromStdString(ex->getCerinta()));
+    layout->addWidget(questionLabel);
+
+    QButtonGroup* answerGroup = new QButtonGroup(widget);
+    for (const std::string& answer : ex->getListaRasp()) {
+        QRadioButton* radioButton = new QRadioButton(QString::fromStdString(answer));
+        layout->addWidget(radioButton);
+        answerGroup->addButton(radioButton);
+    }
+
+    QPushButton* verifyButton = new QPushButton("Verify", widget);
+    layout->addWidget(verifyButton);
+
+    QObject::connect(verifyButton, &QPushButton::clicked, [=]() {
+        for (QAbstractButton* abstractButton : answerGroup->buttons()) {
+            QRadioButton* radioButton = qobject_cast
+                <QRadioButton*>(abstractButton);
+            if (radioButton && radioButton->isChecked()) {
+                std::string selectedAnswer = radioButton->text().toStdString();
+                bool isCorrect = (selectedAnswer == ex->getRaspCorect());
+                if(isCorrect == true){
+                    ex->setRezolvat();
+                    widget->setStyleSheet("color: rgb(0, 185, 0)");
+                    deleteLayout(layout);
+                    QVBoxLayout* layout = new QVBoxLayout(widget);
+                    QLabel *label = new QLabel(QString::fromStdString(ex->getCerinta() + "\n" + "Raspunsul corect:  " + ex->getRaspCorect()));
+
+                    layout->addWidget(label);
+
+                }
+                break;
+            }
+        }
+    });
+
+    widget->setLayout(layout);
+    return widget;
+}
+
+void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeLectie, CLimbaj* limbaj){
     QLayout* currentLayout = ui->Language1Page->layout();
 
     deleteLayout(currentLayout);
@@ -95,18 +140,40 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
 
     // Add a QListWidget to display the exercises
     QListWidget* exercisesListWidget = new QListWidget;
-    // Populate the list with exercise names or details
-    // for (IExercitiu* exercitiu : lectie->getEx()) {
-    //     exercisesListWidget->addItem(QString::fromStdString("eXERCITIU"));
-    // }
-    for (int i=0; i<4; i++) {
-        exercisesListWidget->addItem(QString::fromStdString("Exercitiu"));
+    for (IExercitiu* exercitiu : lectie->getEx()) {
+        QListWidgetItem* item = new QListWidgetItem(exercisesListWidget);
+        item->setSizeHint(QSize(200, 200)); // Set the size of each item
+        exercisesListWidget->addItem(item);
+        exercisesListWidget->setItemWidget(item, createExerciseWidget(exercitiu));
     }
+
     layout->addWidget(exercisesListWidget);
+
+    QPushButton* finalizeButton = new QPushButton("Finalizeaza Lectia");
+    finalizeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    layout->addWidget(finalizeButton, 0, Qt::AlignBottom | Qt::AlignRight); // Align button to bottom-right corner
+
+    // Connect button clicked signal to a slot
+    connect(finalizeButton, &QPushButton::clicked, [=]() {
+        finalizeLectia(lectie, limbaj);
+    });
 
     // Add layout to the widget
     ui->Language1Page->setLayout(layout);
     ui->stackedWidget->setCurrentIndex(1);
+}
+
+void StartMenuWindow::finalizeLectia(ILectie* lectie, CLimbaj* limbaj) {
+    bool lectieCompletata = true;
+    for(const auto ex : lectie->getEx()){
+        if(ex->getRezolvat()==false)
+            lectieCompletata = false;
+    }
+
+    //if(lectieCompletata==true)
+        //send msg to server
+
+        StartMenuWindow::printLimbajLessonsMenu(limbaj);
 }
 
 void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* limbaj)
@@ -119,11 +186,12 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
         ILectie* lectie = nullptr;
         Connection::_initLectie(lectie, buttonText.toStdString(), limbaj->getName());
 
-        StartMenuWindow::displayLectie_Exercitii(lectie, buttonText.toStdString());
+        StartMenuWindow::displayLectie_Exercitii(lectie, buttonText.toStdString(), limbaj);
 
-        qDebug() << "Button clicked:" << buttonText;
+        //qDebug() << "Button clicked:" << buttonText;
     }
 }
+
 
 void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
@@ -182,8 +250,6 @@ void StartMenuWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
-
-
 
 
 void StartMenuWindow::on_pushButton_2_clicked()

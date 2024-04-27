@@ -9,8 +9,9 @@ private:
 public:
     CExercitiuText(std::string cerinta,
                    std::string raspunsCorect) : AExercitiu{cerinta}, raspunsCorect{raspunsCorect} {;}
-    void printEx() { ; }
-    bool checkAns() { return true; }
+    char getType();
+    std::vector<std::string> getListaRasp();
+    std::string getRaspCorect();
 };
 
 #endif // CEXERCITIUTEXT_H
