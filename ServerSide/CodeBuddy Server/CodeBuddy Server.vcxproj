@@ -133,6 +133,7 @@
     <ClCompile Include="CChatManager.cpp" />
     <ClCompile Include="CClientHandler.cpp" />
     <ClCompile Include="CCsharpCertificate.cpp" />
+    <ClCompile Include="CExercice.cpp" />
     <ClCompile Include="CFileHandler.cpp" />
     <ClCompile Include="CLessonHandler.cpp" />
     <ClCompile Include="CLessonManager.cpp" />

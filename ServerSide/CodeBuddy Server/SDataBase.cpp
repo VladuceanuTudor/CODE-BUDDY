@@ -38,7 +38,7 @@ int SDataBase::init()
     }
 
     // Connection string
-    SQLWCHAR connectionStr[] = L"DRIVER={SQL SERVER};SERVER=DESKTOP-ROOGGU8;DATABASE=CodeBuddy;UID=Doru;PWD=;Trusted_Connection=Yes;";
+    SQLWCHAR connectionStr[] = L"DRIVER={SQL SERVER};SERVER=25.16.102.33,1433;DATABASE=CodeBuddy;UID=Doru;PWD=;Trusted_Connection=Yes;";
     // Connect to SQL Server
     std::cout << "Connecting to DataBase...\n";
 
@@ -280,9 +280,10 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
 {
     std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);   
 
-    if (!ch->getLanguage(words[1]).getLesson(words[1]).getFilename().empty())
+    if (!ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
     {
-        ;
+        ;//De terminat aici in cazul in care am mai trecut prin Acea lectie, sa incarc din clasa, sa nu mai dau select
+
     }
 
     std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
@@ -295,42 +296,14 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
             break;
         }
     }
-
-    ch->getLanguage(words[1]).getLesson(words[1]).setFilename(cols[0][1]);
-    
-    std::ifstream f(cols[0][1]);
-    std::stringstream ss;
-    ss << f.rdbuf();
-    f.close();
-
-    std::vector<std::string> buffer = { ss.str() };
-    buffer.push_back(cols[0][2]);
-
-    std::string filename = cols[0][1];
-    filename.erase(filename.size() - 4);
-    filename += "_ex.txt";
-
-    f.open(filename);
-    std::string nrExercices{};
-    std::getline(f, nrExercices);
-    buffer.push_back(nrExercices);
-
-    std::string line{};
-    std::vector<std::string> exercise;
-
-    for (int i = 0; i < std::stoi(nrExercices); i++)
+    if(ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
     {
-        for (int j = 0; j < 7; j++)
-        {
-            std::getline(f, line);
-            exercise.push_back(line);
-        }
+        ch->getLanguage(words[1]).getLesson(words[0]).setFilename(cols[0][1]);
+        ch->getLanguage(words[1]).getLesson(words[0]).extractExercices();
+        ch->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));
     }
-    //Trebuie facuta 
 
-    f.close();
-
-    return ServerMessageContainer('L', CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
+    return ch->getLanguage(words[1]).getLesson(words[0]).getSendMessage();
 }
 
 CUserHandler* SDataBase::getUserInfo(std::string request)

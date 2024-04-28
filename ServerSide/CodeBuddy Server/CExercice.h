@@ -17,5 +17,5 @@ public:
 		, answers{answers}
 		, realAnswer{realAnswer}
 	{}
-	ServerMessageContainer getSendMessage();
+	std::string getSendData();
 };
