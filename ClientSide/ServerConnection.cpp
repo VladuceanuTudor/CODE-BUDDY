@@ -187,11 +187,22 @@ namespace Connection{
 
     void send_Inimi_decrease(){
 
-        ServerMessageContainer sendLectieDONE('i', "");
-        client->send(sendLectieDONE.toSend().c_str(), sendLectieDONE.getSize());
+        ServerMessageContainer sendInimiDEC('i', "1");
+        client->send(sendInimiDEC.toSend().c_str(), sendInimiDEC.getSize());
 
         char buffer[1024];
         client->recv(buffer, sizeof(buffer));
+    }
+
+    void _req_Inimi_nr(int& nrInimi, QLabel* label){
+        ServerMessageContainer sendInimiREQ('i', "0");
+        client->send(sendInimiREQ.toSend().c_str(), sendInimiREQ.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getInimi(buffer);
+        nrInimi = std::stoi(getInimi.getMess());
+        label->setText(QString::fromStdString(std::to_string(nrInimi)));
     }
 
 }

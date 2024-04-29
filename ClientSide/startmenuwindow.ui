@@ -28,7 +28,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>880</x>
+      <x>820</x>
       <y>30</y>
       <width>91</width>
       <height>20</height>
@@ -70,6 +70,19 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="nrInimi">
+    <property name="geometry">
+     <rect>
+      <x>920</x>
+      <y>10</y>
+      <width>63</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="LanguageSelectMenu">
