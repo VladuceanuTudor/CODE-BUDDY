@@ -16,6 +16,7 @@ public:
     explicit StartMenuWindow(QWidget *parent = nullptr);
     ~StartMenuWindow();
 
+
 private slots:
     void on_pushButton_4_clicked();
 
@@ -33,10 +34,11 @@ private slots:
 
     void on_pushButton_2_clicked();
 
-    void finalizeLectia(ILectie* lectie, CLimbaj* limbaj);
+    void finalizeLectia(ILectie* lectie, CLimbaj* limbaj, std::string numeLectie);
 
 private:
     Ui::StartMenuWindow *ui;
+    int nrInimi;
 };
 
 #endif // STARTMENUWINDOW_H
