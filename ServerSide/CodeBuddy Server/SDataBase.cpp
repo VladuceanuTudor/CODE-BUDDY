@@ -165,6 +165,47 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     return result;
 }
 
+void SDataBase::insertIntoDatabase(const std::vector<std::string>& insertIntoColumn,
+    const std::string& table,
+    const std::vector<std::string>& values)
+{
+    // Construct the SELECT query
+    std::string insertString = "INSERT INTO " + table + " (";
+    for (int i = 0; i < insertIntoColumn.size(); i++) {
+        insertString += insertIntoColumn[i];
+        if (i < insertIntoColumn.size() - 1) {
+            insertString += ", ";
+        }
+    }
+    insertString += ") VALUES (";
+
+    for (int i = 0; i < values.size(); i++) {
+        insertString += "\'";
+        insertString += values[i];
+        insertString += "\'";
+        if (i < values.size() - 1) {
+            insertString += ", ";
+        }
+    }
+    insertString += ")";
+
+    std::wstring selectWstring(insertString.begin(), insertString.end());
+    SQLWCHAR* insetQuery = new SQLWCHAR[insertString.size() + 1];
+    wcscpy(insetQuery, selectWstring.c_str());
+
+    this->AllocPrepare(insetQuery);
+
+    if (SQLExecDirect(sqlStmtHandle, insetQuery, SQL_NTS) != SQL_SUCCESS)
+    {
+        SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
+        throw std::exception("Error executing SQL query");
+    }
+
+    //Eliberare Resurse StmtHandle
+    SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
+}
+
+
 bool SDataBase::checkIfInDatabase(std::string table, std::string columnName, std::string value)
 {
     std::vector<std::string> selects; selects.push_back(columnName);
@@ -212,7 +253,6 @@ void SDataBase::destroyInstance()
 
 ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
 {
-
     std::vector<std::string> inputs;
 
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
@@ -223,25 +263,8 @@ ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
     if (this->checkIfInDatabase("Users", "Email", inputs[1]))
         return ServerMessageContainer('r', "email");
 
-    // Bind parameter values to the prepared statement
-    SQLWCHAR* sqlQuery = (SQLWCHAR*)L"INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)";
-
-    this->AllocPrepare(sqlQuery);
-
-    // Bind parameter values to the prepared statement
-    if (SQLBindParameter(sqlStmtHandle, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, inputs[0].length(), 0, (SQLPOINTER)inputs[0].c_str(), 0, NULL) != SQL_SUCCESS ||
-        SQLBindParameter(sqlStmtHandle, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, inputs[1].length(), 0, (SQLPOINTER)inputs[1].c_str(), 0, NULL) != SQL_SUCCESS ||
-        SQLBindParameter(sqlStmtHandle, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, inputs[2].length(), 0, (SQLPOINTER)inputs[2].c_str(), 0, NULL) != SQL_SUCCESS)
-    {
-        SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
-        throw std::exception("Error binding parameter values");
-    }
-
-    if (SQLExecDirect(sqlStmtHandle, sqlQuery, SQL_NTS) != SQL_SUCCESS)
-    {
-        SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
-        throw std::exception("Error executing SQL query");
-    }
+    std::vector<std::string> insertColumns = { "Username", "Email", "Password" };
+    this->insertIntoDatabase(insertColumns, "Users", inputs);
 
     return ServerMessageContainer('r', "accepted");
 }
@@ -280,24 +303,19 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
 {
     std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);   
 
-    if (!ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
+    if (ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
     {
-        ;//De terminat aici in cazul in care am mai trecut prin Acea lectie, sa incarc din clasa, sa nu mai dau select
-
-    }
-
-    std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle", words[0]);
-    for (const auto& it : cols)
-    {
-        if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
+        std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
+        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle", words[0]);
+        for (const auto& it : cols)
         {
-            cols[0] = it;
-            break;
+            if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
+            {
+                cols[0] = it;
+                break;
+            }
         }
-    }
-    if(ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
-    {
+
         ch->getLanguage(words[1]).getLesson(words[0]).setFilename(cols[0][1]);
         ch->getLanguage(words[1]).getLesson(words[0]).extractExercices();
         ch->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));

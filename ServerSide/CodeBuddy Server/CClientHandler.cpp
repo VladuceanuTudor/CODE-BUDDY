@@ -21,7 +21,7 @@ ServerMessageContainer CClientHandler::sendExercices(std::string request)
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
     ServerMessageContainer procRequest(request);
-    ServerMessageContainer sendBuffer('E', "FailHandle");   //In cazul in care sendBuffer nu se modifica, inseamnca ca a aparut o problema
+    ServerMessageContainer sendBuffer('E', "FailHandle");   //In cazul in care sendBuffer nu se modifica, inseamna ca a aparut o problema
     switch (procRequest.getType())
     {
     case 'l':
