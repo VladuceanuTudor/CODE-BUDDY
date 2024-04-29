@@ -19,6 +19,7 @@ SOURCES += \
     mainwindow.cpp \
     TCPClient.cpp \
     Utils.cpp #\
+    payment.cpp
     startmenuwindow.cpp
     startmenuwindow.cpp
 

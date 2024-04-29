@@ -172,4 +172,26 @@ namespace Connection{
             _initExercitii(numeLectie, numeLimbaj, nr_ex_lectie, lectie);
 
     }
+
+    void send_Exercitiu_DONE(std::string numeLectie, std::string numeLimbaj){
+        ServerMessageContainer sendLectieDONE('d', numeLimbaj+'#'+numeLectie);
+        client->send(sendLectieDONE.toSend().c_str(), sendLectieDONE.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getACK(buffer);
+        if(getACK.getMess()!="ok"){
+            throw 1;
+        }
+    }
+
+    void send_Inimi_decrease(){
+
+        ServerMessageContainer sendLectieDONE('i', "");
+        client->send(sendLectieDONE.toSend().c_str(), sendLectieDONE.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+    }
+
 }

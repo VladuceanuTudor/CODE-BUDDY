@@ -155,7 +155,7 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
 
     // Connect button clicked signal to a slot
     connect(finalizeButton, &QPushButton::clicked, [=]() {
-        finalizeLectia(lectie, limbaj);
+        finalizeLectia(lectie, limbaj, numeLectie);
     });
 
     // Add layout to the widget
@@ -163,17 +163,30 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
     ui->stackedWidget->setCurrentIndex(1);
 }
 
-void StartMenuWindow::finalizeLectia(ILectie* lectie, CLimbaj* limbaj) {
+void StartMenuWindow::finalizeLectia(ILectie* lectie, CLimbaj* limbaj, std::string numeLectie) {
     bool lectieCompletata = true;
     for(const auto ex : lectie->getEx()){
         if(ex->getRezolvat()==false)
             lectieCompletata = false;
     }
 
-    //if(lectieCompletata==true)
-        //send msg to server
+    if(lectieCompletata==true)
+        try {
+            Connection::send_Exercitiu_DONE(numeLectie, limbaj->getName());
+        } catch (int i) {
+            QMessageBox::information(nullptr, "Server ERROR", "Serverul nu a primit mesajul!");
+    }
 
-        StartMenuWindow::printLimbajLessonsMenu(limbaj);
+    if(limbaj->getName() == "cpp"){
+        delete limbaj;
+        StartMenuWindow::on_pushButton_4_clicked();
+    }else if(limbaj->getName() == "csh"){
+        delete limbaj;
+        StartMenuWindow::on_pushButton_5_clicked();
+    }else{
+        delete limbaj;
+        StartMenuWindow::on_pushButton_6_clicked();
+    }
 }
 
 void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* limbaj)
@@ -191,7 +204,6 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
         //qDebug() << "Button clicked:" << buttonText;
     }
 }
-
 
 void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
