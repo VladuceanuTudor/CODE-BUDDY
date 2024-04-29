@@ -10,6 +10,9 @@
 
 #define MAX_BUFFER_LEN			1024
 
+#define MAX_LIVES				7
+#define LIVES_REGEN_INTERVAL	1
+
 #define PAYLOAD_DELIM			'#'
 
 #define GET_LOGIN_CODE			'l'
@@ -20,3 +23,4 @@
 #define GET_EXERCICE_CODE		'e'
 #define GET_LEADERBOARD_CODE	'a'
 #define LESSON_DONE_CODE		'd'
+#define GET_LIVES_CODE			'i'

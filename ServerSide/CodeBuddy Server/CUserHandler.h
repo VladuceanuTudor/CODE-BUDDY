@@ -17,6 +17,9 @@ public:
 		, lives{lives}
 	{}
 	std::string getUsername() const { return this->username; }
-	int getXp() const;
+	void subtractLives();
+	void addLives(int i);
+	int getLives() const { return this->lives; }
+	int getXp() const { return this->xp; }
 };
 

@@ -18,9 +18,10 @@ Login       l -> l MAIL PASSWORD
 Get lessons	b -> b LIMBAJ
 Lesson		L -> L LIMBAJ LESSON_TITLE
 LessonDone	d -> d LIMBAJ LESSON_TITLE
-Chat        c -> c UNAME1 UNAME2
+Vieti		i -> i 0/1
 leaderboard a -> a g/l	(g -> global, l -> local)
 lb Player   p -> p UNAME
+Chat        c -> c UNAME1 UNAME2
 follow      f -> f UNAME1 UNAME2
 Certificate t -> t UNAME
 Eroare		E
@@ -62,7 +63,8 @@ private:
 		const std::string& table,
 		const std::string& updateColumn, 
 		const std::string& updateValue,
-		const std::string& whereCondition);
+		const std::string& whereCondition,
+		bool command);
 
 	ServerMessageContainer processGlobalRequest(CClientHandler* ch);
 	ServerMessageContainer processLocalRequest(CClientHandler* ch);
@@ -76,6 +78,7 @@ public:
 	ServerMessageContainer processGetLessonsTitleRequest(std::string request, CClientHandler* ch);
 	ServerMessageContainer processGetLessonContent(std::string request, CClientHandler* ch);
 	ServerMessageContainer processLeadearboardRequest(std::string request, CClientHandler* ch);
+	ServerMessageContainer handleLives(const std::string& request, CClientHandler* ch);
 
 	void updateLessonsDone(CClientHandler* ch, std::string language);
 

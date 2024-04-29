@@ -31,6 +31,7 @@ ServerMessageContainer CClientHandler::updateLessonDone(const std::string& reque
     return ServerMessageContainer(LESSON_DONE_CODE, "ok");
 }
 
+
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
     ServerMessageContainer procRequest(request);
@@ -68,6 +69,9 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
         break;
     case GET_LEADERBOARD_CODE:
         sendBuffer = SDataBase::getInstance().processLeadearboardRequest(procRequest.getMess(), this);
+        break;
+    case GET_LIVES_CODE:
+        sendBuffer = SDataBase::getInstance().handleLives(procRequest.getMess(), this);
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");

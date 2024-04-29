@@ -211,9 +211,14 @@ void SDataBase::updateIntoDatabase(
     const std::string& table,
     const std::string& updateColumn,
     const std::string& updateValue,
-    const std::string& whereCondition)
+    const std::string& whereCondition,
+    bool command = false)
 {
-    std::string updateString = "UPDATE " + table + " SET " + updateColumn + " = \'" + updateValue + "\' WHERE " + whereCondition;
+    std::string updateString;
+    if(!command)
+        updateString = "UPDATE " + table + " SET " + updateColumn + " = \'" + updateValue + "\' WHERE " + whereCondition;
+    else
+        updateString = "UPDATE " + table + " SET " + updateColumn + " = " + updateValue + " WHERE " + whereCondition;
 
     std::wstring updateWstring(updateString.begin(), updateString.end());
 
@@ -238,7 +243,7 @@ bool SDataBase::checkIfInDatabase(std::string table, std::string columnName, std
 {
     std::vector<std::string> selects; selects.push_back(columnName);
 
-    return !this->selectFromDatabase(selects, table, columnName, value).empty();
+    return !this->selectFromDatabase(selects, table, columnName + " = \'" + value + "\'").empty();
 }
 
 bool SDataBase::processLoginRequest(std::string request)
@@ -384,11 +389,17 @@ ServerMessageContainer SDataBase::processGlobalRequest(CClientHandler* ch)
     return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }
 
+ServerMessageContainer SDataBase::processLocalRequest(CClientHandler* ch)
+{
+    //De facut
+    return ServerMessageContainer('E', "YOU ARE NOT SUPPOSED TO BE HERE");
+}
+
 ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, CClientHandler* ch)
 {
     if (request == "g")
     {
-        //return this->processGlobalRequest(ch);
+        return this->processGlobalRequest(ch);
     }
     else if (request == "l")
     {
@@ -397,3 +408,35 @@ ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request
     return ServerMessageContainer(ERROR_CODE, "Invalid option for leaderboard request");
 }
 
+ServerMessageContainer SDataBase::handleLives(const std::string& request, CClientHandler* ch)
+{
+    std::vector<std::string> selects = { "Lives", "DATEDIFF(MINUTE, LivesTimeLost, GETDATE()) AS Minutes" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username = \'"
+        + ch->getUserHandler().getUsername() + "\'");
+
+    ServerMessageContainer message{};
+    while (std::stoi(cols[0][0]) < MAX_LIVES &&
+            std::stoi(cols[0][1]) <= LIVES_REGEN_INTERVAL)
+    {
+        ch->getUserHandler().addLives(1);
+    }
+    
+    if (request == "0")
+    {
+        message = ServerMessageContainer(GET_LIVES_CODE, cols[0][0]);
+    }
+    else if (request == "1")
+    {
+        if (std::stoi(cols[0][0]) == MAX_LIVES)
+        {
+            this->updateIntoDatabase("Users", "LivesTimeLost", "GETDATE()", "Username = \'" + ch->getUserHandler().getUsername() + "\'", true);
+        }
+        ch->getUserHandler().subtractLives();
+
+        message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(ch->getUserHandler().getLives()));
+    }
+    this->updateIntoDatabase("Users", "Lives", std::to_string(ch->getUserHandler().getLives()),
+        "Username = \'" + ch->getUserHandler().getUsername() + "\'");
+
+    return message;
+}
