@@ -1,2 +1,6 @@
 #ignore build file
 build-*
+
+#ignore .pro.user
+ClientSide/code_buddy1.pro.use*
+ClientSide/code_buddy1.pro.user
