@@ -386,13 +386,34 @@ ServerMessageContainer SDataBase::processGlobalRequest(CClientHandler* ch)
 {
     std::vector<std::string> selects = {"TOP(10) Xp", "Username"};
     std::vector<std::vector<std::string>> cols = SDataBase::selectFromDatabase(selects, "Users", "", "Xp", true);
+
+    selects.clear();
+    for (const auto& it : cols)
+    {
+        selects.push_back(it[1]);
+        selects.push_back(it[0]);
+    }
     return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }
 
 ServerMessageContainer SDataBase::processLocalRequest(CClientHandler* ch)
 {
-    //De facut
-    return ServerMessageContainer('E', "YOU ARE NOT SUPPOSED TO BE HERE");
+    std::vector<std::string> selects = { "Xp", "Username" };
+    std::vector<std::vector<std::string>> currentUserCols = SDataBase::selectFromDatabase(selects, "Users",
+        "Username = \'" + ch->getUserHandler().getUsername() + "\'");
+    selects = { "TOP(9) Xp", "Username" };
+    std::vector<std::vector<std::string>> othersCols = SDataBase::selectFromDatabase(selects, "Users",
+        "Xp <= " + std::to_string(ch->getUserHandler().getXp()) + " AND Username != \'" + ch->getUserHandler().getUsername() + "\'");
+
+    selects.clear();
+    selects.push_back(currentUserCols[0][1]);
+    selects.push_back(currentUserCols[0][0]);
+    for (const auto& it : othersCols)
+    {
+        selects.push_back(it[1]);
+        selects.push_back(it[0]);
+    }
+    return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }
 
 ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, CClientHandler* ch)
@@ -403,7 +424,7 @@ ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request
     }
     else if (request == "l")
     {
-        //return this->processLocalRequest(ch);
+        return this->processLocalRequest(ch);
     }
     return ServerMessageContainer(ERROR_CODE, "Invalid option for leaderboard request");
 }
@@ -414,20 +435,23 @@ ServerMessageContainer SDataBase::handleLives(const std::string& request, CClien
     std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username = \'"
         + ch->getUserHandler().getUsername() + "\'");
 
+    int minutes = std::stoi(cols[0][1]);
+
     ServerMessageContainer message{};
-    while (std::stoi(cols[0][0]) < MAX_LIVES &&
-            std::stoi(cols[0][1]) <= LIVES_REGEN_INTERVAL)
+    while (ch->getUserHandler().getLives() < MAX_LIVES &&
+            minutes >= LIVES_REGEN_INTERVAL)
     {
         ch->getUserHandler().addLives(1);
+        minutes -= LIVES_REGEN_INTERVAL;
     }
     
     if (request == "0")
     {
-        message = ServerMessageContainer(GET_LIVES_CODE, cols[0][0]);
+        message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(ch->getUserHandler().getLives()));
     }
     else if (request == "1")
     {
-        if (std::stoi(cols[0][0]) == MAX_LIVES)
+        if (ch->getUserHandler().getLives() == MAX_LIVES)
         {
             this->updateIntoDatabase("Users", "LivesTimeLost", "GETDATE()", "Username = \'" + ch->getUserHandler().getUsername() + "\'", true);
         }
@@ -439,4 +463,18 @@ ServerMessageContainer SDataBase::handleLives(const std::string& request, CClien
         "Username = \'" + ch->getUserHandler().getUsername() + "\'");
 
     return message;
+}
+
+int SDataBase::getLastDayLogin(const std::string& username)
+{
+    std::vector<std::string> selects = { "DATEDIFF(DAY, LastLoggedIn, GETDATE())" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username = \'" + username + "\'");
+    this->updateIntoDatabase("Users", "LastLoggedIn", "GETDATE()", "Username = \'" + username + "\'", true);
+
+    return std::stoi(cols[0][0]);
+}
+
+void SDataBase::updateUserXp(std::string username, int newXp)
+{
+    this->updateIntoDatabase("Users", "Xp", std::to_string(newXp), "Username = \'" + username + "\'");
 }

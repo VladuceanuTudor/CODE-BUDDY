@@ -17,10 +17,9 @@ Register    r -> r UNAME MAIL PASSWORD
 Login       l -> l MAIL PASSWORD
 Get lessons	b -> b LIMBAJ
 Lesson		L -> L LIMBAJ LESSON_TITLE
-LessonDone	d -> d LIMBAJ LESSON_TITLE
+Add Xp		x -> x XP
 Vieti		i -> i 0/1
 leaderboard a -> a g/l	(g -> global, l -> local)
-lb Player   p -> p UNAME
 Chat        c -> c UNAME1 UNAME2
 follow      f -> f UNAME1 UNAME2
 Certificate t -> t UNAME
@@ -80,12 +79,14 @@ public:
 	ServerMessageContainer processLeadearboardRequest(std::string request, CClientHandler* ch);
 	ServerMessageContainer handleLives(const std::string& request, CClientHandler* ch);
 
+	int getLastDayLogin(const std::string& username);
+
 	void updateLessonsDone(CClientHandler* ch, std::string language);
 
 	CUserHandler* getUserInfo(std::string request);
 
 
-	static void updateUserXp(std::string username, int newXp);
-	static void addUserLessonDone(std::string username, int index);
+	void updateUserXp(std::string username, int newXp);
+	void addUserLessonDone(std::string username, int index);
 
 };

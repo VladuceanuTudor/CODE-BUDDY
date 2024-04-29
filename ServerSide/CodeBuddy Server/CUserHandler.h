@@ -20,6 +20,7 @@ public:
 	void subtractLives();
 	void addLives(int i);
 	int getLives() const { return this->lives; }
+	void addXP(int xp);
 	int getXp() const { return this->xp; }
 };
 

@@ -44,6 +44,7 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
         if (logged)
         {
             this->userHandler = SDataBase::getInstance().getUserInfo(procRequest.getMess());
+            this->processDailyLogin();
             sendBuffer = ServerMessageContainer(GET_LOGIN_CODE, "accepted");
         }
         else
@@ -111,4 +112,15 @@ bool CClientHandler::existsLesson(const std::string& language)
 void CClientHandler::setLessonTileDone(int LessonsDone, std::vector<std::string> lessonTitles, const std::string& language)
 {
     this->lessons[language] = new CLessonManager(LessonsDone, lessonTitles);
+}
+
+void CClientHandler::processDailyLogin()
+{
+    int lastDaysLogin = SDataBase::getInstance().getLastDayLogin(this->userHandler->getUsername());
+
+    if (lastDaysLogin > 0)
+    {
+        this->userHandler->addXP(DAILY_XP_GIVEN);
+        SDataBase::getInstance().updateUserXp(this->userHandler->getUsername(), this->userHandler->getXp());
+    }
 }

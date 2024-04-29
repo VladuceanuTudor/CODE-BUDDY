@@ -13,6 +13,8 @@
 #define MAX_LIVES				7
 #define LIVES_REGEN_INTERVAL	1
 
+#define DAILY_XP_GIVEN			10
+
 #define PAYLOAD_DELIM			'#'
 
 #define GET_LOGIN_CODE			'l'

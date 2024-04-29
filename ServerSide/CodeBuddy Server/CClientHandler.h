@@ -13,6 +13,8 @@ private:
 	std::map<std::string, CLessonManager*> lessons;	//[LIMBAJ] = LessonManager
 
 	ServerMessageContainer updateLessonDone(const std::string& request);
+
+	void processDailyLogin();
 public:
 	CClientHandler(SOCKET sock) : userSocket(sock) {}
 	~CClientHandler();
