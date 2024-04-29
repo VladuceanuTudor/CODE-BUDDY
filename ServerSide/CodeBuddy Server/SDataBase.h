@@ -53,6 +53,10 @@ private:
 		const std::string& orderColumn,
 		bool orderDesc);
 
+	void insertIntoDatabase(const std::vector<std::string>& insertIntoColumn,
+		const std::string& table,
+		const std::vector<std::string>& values);
+
 	void insertIntoDatabase();
 public:
 	static SDataBase& getInstance();
