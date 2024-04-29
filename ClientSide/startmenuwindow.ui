@@ -18,26 +18,13 @@
     <rect>
      <x>0</x>
      <y>10</y>
-     <width>1051</width>
+     <width>1091</width>
      <height>80</height>
     </rect>
    </property>
    <property name="title">
     <string/>
    </property>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>30</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Inimi ramase:</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
@@ -74,10 +61,36 @@
    <widget class="QLabel" name="nrInimi">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>10</y>
-      <width>63</width>
-      <height>61</height>
+      <x>970</x>
+      <y>30</y>
+      <width>16</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>30</y>
+      <width>88</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Inimi ramase:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="imagine_inima">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>20</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -102,7 +115,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>991</width>
+      <width>1031</width>
       <height>561</height>
      </rect>
     </property>
@@ -113,7 +126,7 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>300</x>
+        <x>320</x>
         <y>210</y>
         <width>401</width>
         <height>121</height>
@@ -145,7 +158,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="Language1Page"/>
-    <widget class="QWidget" name="page">
+    <widget class="QWidget" name="LeaderBoard">
      <widget class="QLabel" name="Title">
       <property name="geometry">
        <rect>

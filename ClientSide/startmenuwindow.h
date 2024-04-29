@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "ServerConnection.h"
+#include "leaderboard.h"
 
 namespace Ui {
 class StartMenuWindow;
