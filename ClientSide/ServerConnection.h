@@ -12,6 +12,7 @@
 #include <QDebug>
 #include "climbaj.h"
 #include "CLectie.h"
+#include <QLabel>
 
 #define PAYLOAD_DELIM '#'
 
@@ -32,6 +33,8 @@ void _initLectie(ILectie*& lectie, std::string numeLectie, std::string numeLimba
 void send_Exercitiu_DONE(std::string numeLectie, std::string numeLimbaj);
 
 void send_Inimi_decrease();
+
+void _req_Inimi_nr(int& nrInimi, QLabel* label);
 }
 
 #endif // SERVERCONNECTION_H

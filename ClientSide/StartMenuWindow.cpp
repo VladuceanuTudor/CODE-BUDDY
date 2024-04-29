@@ -9,6 +9,8 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 
+int nrInimi=0;
+
 StartMenuWindow::StartMenuWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::StartMenuWindow)
@@ -18,6 +20,7 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
     // Set background color using linear gradient
     QString styleSheet = "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(85, 85, 85, 255), stop:1 rgba(64, 64, 64, 255));";
     ui->menuNavbar->setStyleSheet(styleSheet);
+
 
 
     // Style buttons within menuNavbar (assuming they are QPushButtons)
@@ -52,8 +55,8 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
         buttonCount++;
         button->setStyleSheet(buttonStyle);
     }
-    // Remove unused variable (optional)
-    // delete menuBarButton;
+
+    Connection::_req_Inimi_nr(nrInimi,ui->nrInimi);
 }
 
 StartMenuWindow::~StartMenuWindow()
@@ -74,7 +77,7 @@ void deleteLayout(QLayout* currentLayout){
     }
 }
 
-QWidget* createExerciseWidget(IExercitiu* ex) {
+QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
     QWidget* widget = new QWidget;
     QVBoxLayout* layout = new QVBoxLayout(widget);
 
@@ -107,6 +110,13 @@ QWidget* createExerciseWidget(IExercitiu* ex) {
 
                     layout->addWidget(label);
 
+                }else{
+                    Connection::send_Inimi_decrease();
+                    Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+                    if(nrInimi==0){
+                        QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
+                        StartMenuWindow::on_pushButton_clicked();
+                    }
                 }
                 break;
             }
@@ -195,7 +205,10 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
         // qDebug() << limbaj->getLessonNrByName(buttonText.toStdString());
         // qDebug() << limbaj->getCompleted();
         QMessageBox::information(nullptr, "Indisponibil", "Pentru a putea incepe acea lectie te \nrog completeaza-le pe cale\n anterioare prima data!");
-    }else{
+    } else if(nrInimi==0){
+        QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
+    }
+    else{
         ILectie* lectie = nullptr;
         Connection::_initLectie(lectie, buttonText.toStdString(), limbaj->getName());
 
@@ -207,6 +220,7 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
 
 void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
+    Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
     QLayout* currentLayout = ui->Language1Page->layout();
 
     deleteLayout(currentLayout);
@@ -261,6 +275,7 @@ void StartMenuWindow::on_pushButton_6_clicked()
 void StartMenuWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
 }
 
 
