@@ -18,7 +18,7 @@ void handleClient(CTCPServer& server, SOCKET sock) {
         }
         catch (const std::exception& e)
         {
-            message = ServerMessageContainer('E', "Error").getWholeString();
+            message = ServerMessageContainer(ERROR_CODE, "Error").getWholeString();
             std::cerr << e.what() << std::endl;
         }
         CTCPServer::sendData(message, sock);

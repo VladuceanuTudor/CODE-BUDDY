@@ -97,8 +97,7 @@ void SDataBase::AllocPrepare(SQLWCHAR* query)
 std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     const std::vector<std::string>& selectColumns,
     const std::string& table,
-    const std::string& whereColumn = "",
-    const std::string& whereValue = "",
+    const std::string& whereCondition = "",
     const std::string& orderColumn = "",
     bool orderDesc = false)
 {
@@ -112,8 +111,8 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     }
     selectString += " FROM " + table;
 
-    if (!whereColumn.empty()) {
-        selectString += " WHERE " + whereColumn + " = '" + whereValue + "'";
+    if (!whereCondition.empty()) {
+        selectString += " WHERE " + whereCondition;
     }
 
     if (!orderColumn.empty()) {
@@ -198,11 +197,40 @@ void SDataBase::insertIntoDatabase(const std::vector<std::string>& insertIntoCol
     if (SQLExecDirect(sqlStmtHandle, insetQuery, SQL_NTS) != SQL_SUCCESS)
     {
         SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
+        delete[] insetQuery;
         throw std::exception("Error executing SQL query");
     }
 
     //Eliberare Resurse StmtHandle
     SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
+    delete[] insetQuery;
+}
+
+
+void SDataBase::updateIntoDatabase(
+    const std::string& table,
+    const std::string& updateColumn,
+    const std::string& updateValue,
+    const std::string& whereCondition)
+{
+    std::string updateString = "UPDATE " + table + " SET " + updateColumn + " = \'" + updateValue + "\' WHERE " + whereCondition;
+
+    std::wstring updateWstring(updateString.begin(), updateString.end());
+
+    SQLWCHAR* updateQuery = new SQLWCHAR[updateWstring.size() + 1];
+    wcscpy(updateQuery, updateWstring.c_str());
+
+    this->AllocPrepare(updateQuery);
+
+    if (SQLExecDirect(sqlStmtHandle, updateQuery, SQL_NTS) != SQL_SUCCESS)
+    {
+        SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
+        delete[] updateQuery; 
+        throw std::exception("Error executing SQL query");
+    }
+
+    SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
+    delete[] updateQuery;
 }
 
 
@@ -258,15 +286,15 @@ ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
     if(this->checkIfInDatabase("Users", "Username", inputs[0]))
-        return ServerMessageContainer('r', "user");
+        return ServerMessageContainer(REGISTER_CODE, "user");
 
     if (this->checkIfInDatabase("Users", "Email", inputs[1]))
-        return ServerMessageContainer('r', "email");
+        return ServerMessageContainer(REGISTER_CODE, "email");
 
     std::vector<std::string> insertColumns = { "Username", "Email", "Password" };
     this->insertIntoDatabase(insertColumns, "Users", inputs);
 
-    return ServerMessageContainer('r', "accepted");
+    return ServerMessageContainer(REGISTER_CODE, "accepted");
 }
 
 std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, int i)
@@ -280,18 +308,27 @@ std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, in
     return column;
 }
 
+void SDataBase::updateLessonsDone(CClientHandler* ch, std::string language)
+{
+    std::string updateColumn = "LessonsDone" + language;
+
+    this->updateIntoDatabase("Users", updateColumn, std::to_string(ch->getLanguage(language).getLessonsDone()),
+        "Username = \'" + ch->getUserHandler().getUsername() + "\'");
+}
+
+
 ServerMessageContainer SDataBase::processGetLessonsTitleRequest(std::string request, CClientHandler* ch)
 {
     if (!ch->existsLesson(request))
     {
 
         std::vector<std::string> selects; selects.push_back("LessonTitle");
-        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language", request, "LessonNumber");
+        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language = \'" + request + "\'", "LessonNumber");
 
         std::string buffer = "LessonsDone" + request;
         selects.clear();
         selects.push_back(buffer);
-        std::string lessonsDone = this->selectFromDatabase(selects, "Users", "Username", ch->getUserHandler().getUsername())[0][0];
+        std::string lessonsDone = this->selectFromDatabase(selects, "Users", "Username = \'" + ch->getUserHandler().getUsername() + "\'")[0][0];
 
         ch->setLessonTileDone(std::stoi(lessonsDone), getColumn(cols, 0), request);
     }
@@ -306,7 +343,7 @@ ServerMessageContainer SDataBase::processGetLessonContent(std::string request, C
     if (ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
     {
         std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
-        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle", words[0]);
+        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle = \'" + words[0] + "\'");
         for (const auto& it : cols)
         {
             if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
@@ -333,9 +370,30 @@ CUserHandler* SDataBase::getUserInfo(std::string request)
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
     std::vector<std::string> selects = { "Username", "Xp", "Lives"};
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Email", inputs[0]);
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Email = \'" +  inputs[0] + "\'");
 
     ch = new CUserHandler(cols[0][0], std::stoi(cols[0][1]), std::stoi(cols[0][2]));
 
     return ch;
 }
+
+ServerMessageContainer SDataBase::processGlobalRequest(CClientHandler* ch)
+{
+    std::vector<std::string> selects = {"TOP(10) Xp", "Username"};
+    std::vector<std::vector<std::string>> cols = SDataBase::selectFromDatabase(selects, "Users", "", "Xp", true);
+    return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
+}
+
+ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, CClientHandler* ch)
+{
+    if (request == "g")
+    {
+        //return this->processGlobalRequest(ch);
+    }
+    else if (request == "l")
+    {
+        //return this->processLocalRequest(ch);
+    }
+    return ServerMessageContainer(ERROR_CODE, "Invalid option for leaderboard request");
+}
+

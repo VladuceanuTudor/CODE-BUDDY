@@ -16,9 +16,10 @@
 Register    r -> r UNAME MAIL PASSWORD
 Login       l -> l MAIL PASSWORD
 Get lessons	b -> b LIMBAJ
-Lesson		s -> s LIMBAJ LESSON_NUMBER
+Lesson		L -> L LIMBAJ LESSON_TITLE
+LessonDone	d -> d LIMBAJ LESSON_TITLE
 Chat        c -> c UNAME1 UNAME2
-leaderboard b -> b
+leaderboard a -> a g/l	(g -> global, l -> local)
 lb Player   p -> p UNAME
 follow      f -> f UNAME1 UNAME2
 Certificate t -> t UNAME
@@ -48,16 +49,24 @@ private:
 	std::vector<std::vector<std::string>> selectFromDatabase(
 		const std::vector<std::string>& selectColumns,
 		const std::string& table,
-		const std::string& whereColumn,
-		const std::string& whereValue,
+		const std::string& whereCondition,
 		const std::string& orderColumn,
 		bool orderDesc);
 
-	void insertIntoDatabase(const std::vector<std::string>& insertIntoColumn,
+	void insertIntoDatabase(
+		const std::vector<std::string>& insertIntoColumn,
 		const std::string& table,
 		const std::vector<std::string>& values);
 
-	void insertIntoDatabase();
+	void updateIntoDatabase(
+		const std::string& table,
+		const std::string& updateColumn, 
+		const std::string& updateValue,
+		const std::string& whereCondition);
+
+	ServerMessageContainer processGlobalRequest(CClientHandler* ch);
+	ServerMessageContainer processLocalRequest(CClientHandler* ch);
+
 public:
 	static SDataBase& getInstance();
 	static void destroyInstance();
@@ -66,6 +75,9 @@ public:
 	ServerMessageContainer processRegisterRequest(std::string request);
 	ServerMessageContainer processGetLessonsTitleRequest(std::string request, CClientHandler* ch);
 	ServerMessageContainer processGetLessonContent(std::string request, CClientHandler* ch);
+	ServerMessageContainer processLeadearboardRequest(std::string request, CClientHandler* ch);
+
+	void updateLessonsDone(CClientHandler* ch, std::string language);
 
 	CUserHandler* getUserInfo(std::string request);
 

@@ -1,4 +1,4 @@
-﻿  SDataBase.cpp
+﻿  CClientHandler.cpp
 C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
           with
           [
@@ -10,4 +10,46 @@ C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBud
           [
               _Elem=char
           ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(21,29): warning C4114: same type qualifier used more than once
+  CTCPServer.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(21,29): warning C4114: same type qualifier used more than once
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(23,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(45,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.cpp(67,33): warning C4114: same type qualifier used more than once
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.cpp(95,66): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+  Main.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(23,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(45,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\CTCPServer.h(21,29): warning C4114: same type qualifier used more than once
+  SDataBase.cpp
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(18,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(23,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(45,1): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+  Generating Code...
   CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe

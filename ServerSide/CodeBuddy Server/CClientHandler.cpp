@@ -18,40 +18,59 @@ ServerMessageContainer CClientHandler::sendExercices(std::string request)
     return ServerMessageContainer(GET_EXERCICE_CODE, "Done");
 }
 
+ServerMessageContainer CClientHandler::updateLessonDone(const std::string& request)
+{
+    //request = LIMBAJ TITLU_LECTIE
+    std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+    if (this->lessons[inputs[0]]->getLesson(this->lessons[inputs[0]]->getLessonsDone() - 1).getTitle() == inputs[1])
+    {
+        this->lessons[inputs[0]]->addLessonDone();
+        SDataBase::getInstance().updateLessonsDone(this, inputs[0]);
+    }
+
+    return ServerMessageContainer(LESSON_DONE_CODE, "ok");
+}
+
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
     ServerMessageContainer procRequest(request);
-    ServerMessageContainer sendBuffer('E', "FailHandle");   //In cazul in care sendBuffer nu se modifica, inseamna ca a aparut o problema
+    ServerMessageContainer sendBuffer(ERROR_CODE, "FailHandle");   //In cazul in care sendBuffer nu se modifica, inseamna ca a aparut o problema
     switch (procRequest.getType())
     {
-    case 'l':
+    case GET_LOGIN_CODE:
     {
         bool logged = SDataBase::getInstance().processLoginRequest(procRequest.getMess());
         if (logged)
         {
             this->userHandler = SDataBase::getInstance().getUserInfo(procRequest.getMess());
-            sendBuffer = this->userHandler->getSendResponseForLogin();
+            sendBuffer = ServerMessageContainer(GET_LOGIN_CODE, "accepted");
         }
         else
         {
-            sendBuffer = ServerMessageContainer('l', "fail");
+            sendBuffer = ServerMessageContainer(GET_LOGIN_CODE, "fail");
         }
     }
         break;
-    case 'r':
+    case REGISTER_CODE:
         sendBuffer = SDataBase::getInstance().processRegisterRequest(procRequest.getMess());
         break;
-    case 'b':
+    case GET_LESSON_TITLES_CODE:
         sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess(), this);
         break;
-    case 'L':
+    case GET_LESSON_CONTENT:
         sendBuffer = SDataBase::getInstance().processGetLessonContent(procRequest.getMess(), this);
         break;
-    case 'e':
+    case GET_EXERCICE_CODE:
         sendBuffer = this->sendExercices(procRequest.getMess());
         break;
+    case LESSON_DONE_CODE:
+        sendBuffer = this->updateLessonDone(procRequest.getMess());
+        break;
+    case GET_LEADERBOARD_CODE:
+        sendBuffer = SDataBase::getInstance().processLeadearboardRequest(procRequest.getMess(), this);
+        break;
     default:
-        ServerMessageContainer errorBuffer('E', "Invalid Option given.");
+        ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");
         return errorBuffer.getWholeString();
     }
     return sendBuffer.getWholeString();

@@ -18,6 +18,5 @@ public:
 	{}
 	std::string getUsername() const { return this->username; }
 	int getXp() const;
-	ServerMessageContainer getSendResponseForLogin();
 };
 

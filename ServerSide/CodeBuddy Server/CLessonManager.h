@@ -8,13 +8,17 @@ class CLessonManager
 {
 private:
 	std::vector<CLessonHandler*> lessons;
-	char lessonsDone;
+	int lessonsDone;
 public:
 	CLessonManager(char lessonsDone, std::vector<std::string> titles);
 
 	CLessonHandler& getLesson(const std::string& lessonName) const;
+	CLessonHandler& getLesson(int index) const;
+	int getLessonsDone() const;
 
 	ServerMessageContainer getSendMessageTitles();
+
+	void addLessonDone();
 
 	~CLessonManager();
 };

@@ -20,6 +20,7 @@ std::list<CExercice*> CFileHandler::getExercises(const std::string& filename)
 
 	for (int i = 0; i < exercises; i++)
 	{
+		answers.clear();
 		std::getline(f, line);
 		type = line[0];
 		std::getline(f, question);

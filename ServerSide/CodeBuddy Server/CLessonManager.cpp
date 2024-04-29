@@ -41,3 +41,19 @@ CLessonHandler& CLessonManager::getLesson(const std::string& lessonName) const
 			return *this->lessons[i];
 	exit(-1);
 }
+
+CLessonHandler& CLessonManager::getLesson(int index) const
+{
+	return *this->lessons[index];
+}
+
+int CLessonManager::getLessonsDone() const
+{
+	return this->lessonsDone;
+}
+
+
+void CLessonManager::addLessonDone()
+{
+	this->lessonsDone++;
+}

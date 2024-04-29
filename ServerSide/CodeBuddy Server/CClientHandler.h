@@ -11,6 +11,8 @@ private:
 	SOCKET userSocket;
 	CUserHandler* userHandler{nullptr};
 	std::map<std::string, CLessonManager*> lessons;	//[LIMBAJ] = LessonManager
+
+	ServerMessageContainer updateLessonDone(const std::string& request);
 public:
 	CClientHandler(SOCKET sock) : userSocket(sock) {}
 	~CClientHandler();
