@@ -28,9 +28,17 @@ ServerMessageContainer CClientHandler::updateLessonDone(const std::string& reque
         SDataBase::getInstance().updateLessonsDone(this, inputs[0]);
     }
 
+    this->userHandler->addXP(this->lessons[inputs[0]]->getLesson(inputs[1]).getXp());
+    SDataBase::getInstance().updateUserXp(this->userHandler->getUsername(), this->userHandler->getXp());
+
     return ServerMessageContainer(LESSON_DONE_CODE, "ok");
 }
 
+ServerMessageContainer CClientHandler::successLogin()
+{
+    std::vector<std::string> sendData = { "accepted", this->userHandler->getUsername() };
+    return ServerMessageContainer(GET_LOGIN_CODE, CWordSeparator::encapsulateWords(sendData, PAYLOAD_DELIM));
+}
 
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
@@ -45,7 +53,7 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
         {
             this->userHandler = SDataBase::getInstance().getUserInfo(procRequest.getMess());
             this->processDailyLogin();
-            sendBuffer = ServerMessageContainer(GET_LOGIN_CODE, "accepted");
+            sendBuffer = this->successLogin();
         }
         else
         {

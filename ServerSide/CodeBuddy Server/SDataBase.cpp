@@ -403,7 +403,8 @@ ServerMessageContainer SDataBase::processLocalRequest(CClientHandler* ch)
         "Username = \'" + ch->getUserHandler().getUsername() + "\'");
     selects = { "TOP(9) Xp", "Username" };
     std::vector<std::vector<std::string>> othersCols = SDataBase::selectFromDatabase(selects, "Users",
-        "Xp <= " + std::to_string(ch->getUserHandler().getXp()) + " AND Username != \'" + ch->getUserHandler().getUsername() + "\'");
+        "Xp <= " + std::to_string(ch->getUserHandler().getXp()) + " AND Username != \'" + ch->getUserHandler().getUsername() + "\'", 
+        "Xp", true);
 
     selects.clear();
     selects.push_back(currentUserCols[0][1]);

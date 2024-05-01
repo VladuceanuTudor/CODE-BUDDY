@@ -12,13 +12,6 @@ public:
         _type = type;
         _Message = Message;
     }
-    std::string toSend(){
-        std::string readyMess;
-        readyMess += _type;
-        readyMess += _Message.size();
-        readyMess+= _Message;
-        return readyMess;
-    }
     int getSize(){
         return _Message.size()+2;
     }

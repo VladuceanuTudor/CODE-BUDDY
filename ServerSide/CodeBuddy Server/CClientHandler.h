@@ -15,6 +15,7 @@ private:
 	ServerMessageContainer updateLessonDone(const std::string& request);
 
 	void processDailyLogin();
+	ServerMessageContainer successLogin();
 public:
 	CClientHandler(SOCKET sock) : userSocket(sock) {}
 	~CClientHandler();
