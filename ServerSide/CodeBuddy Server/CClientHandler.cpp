@@ -40,6 +40,157 @@ ServerMessageContainer CClientHandler::successLogin()
     return ServerMessageContainer(GET_LOGIN_CODE, CWordSeparator::encapsulateWords(sendData, PAYLOAD_DELIM));
 }
 
+std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, int i)
+{
+    std::vector<std::string> column;
+    for (const auto& row : mat) {
+        if (!row.empty()) {
+            column.push_back(row[i]);
+        }
+    }
+    return column;
+}
+
+ServerMessageContainer CClientHandler::processGetLessonsTitleRequest(std::string request)
+{
+    SDataBase& DB = SDataBase::getInstance();
+    if (!this->existsLesson(request))
+    {
+
+        std::vector<std::string> selects; selects.push_back("LessonTitle");
+        std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Lessons", "Language = \'" + request + "\'", "LessonNumber");
+
+        std::string buffer = "LessonsDone" + request;
+        selects.clear();
+        selects.push_back(buffer);
+        std::string lessonsDone = DB.selectFromDatabase(selects, "Users", "Username = \'" + this->getUserHandler().getUsername() + "\'")[0][0];
+
+        this->setLessonTileDone(std::stoi(lessonsDone), getColumn(cols, 0), request);
+    }
+
+    return this->getLanguage(request).getSendMessageTitles();
+}
+
+ServerMessageContainer CClientHandler::processGetLessonContent(std::string request)
+{
+    SDataBase& DB = SDataBase::getInstance();
+    std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+
+    if (this->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
+    {
+        std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
+        std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Lessons", "LessonTitle = \'" + words[0] + "\'");
+        for (const auto& it : cols)
+        {
+            if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
+            {
+                cols[0] = it;
+                break;
+            }
+        }
+
+        this->getLanguage(words[1]).getLesson(words[0]).setFilename(cols[0][1]);
+        this->getLanguage(words[1]).getLesson(words[0]).extractExercices();
+        this->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));
+    }
+
+    return this->getLanguage(words[1]).getLesson(words[0]).getSendMessage();
+}
+
+ServerMessageContainer CClientHandler::handleLives(const std::string& request)
+{
+    if (this->userHandler->isPremium())
+    {
+        return ServerMessageContainer(GET_LIVES_CODE, std::to_string(MAX_LIVES + 1));
+    }
+
+    SDataBase& DB = SDataBase::getInstance();
+    std::vector<std::string> selects = { "Lives", "DATEDIFF(MINUTE, LivesTimeLost, GETDATE()) AS Minutes" };
+    std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users", "Username = \'"
+        + this->userHandler->getUsername() + "\'");
+
+    int minutes = std::stoi(cols[0][1]);
+
+    ServerMessageContainer message{};
+    while (this->userHandler->getLives() < MAX_LIVES &&
+        minutes >= LIVES_REGEN_INTERVAL)
+    {
+        this->userHandler->addLives(1);
+        minutes -= LIVES_REGEN_INTERVAL;
+    }
+
+    if (request == "0")
+    {
+        message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(this->userHandler->getLives()));
+    }
+    else if (request == "1")
+    {
+        if (this->userHandler->getLives() == MAX_LIVES)
+        {
+            DB.updateIntoDatabase("Users", "LivesTimeLost", "GETDATE()", "Username = \'" + this->userHandler->getUsername() + "\'", true);
+        }
+        this->userHandler->subtractLives();
+
+        message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(this->userHandler->getLives()));
+    }
+    DB.updateIntoDatabase("Users", "Lives", std::to_string(this->userHandler->getLives()),
+        "Username = \'" + this->userHandler->getUsername() + "\'");
+
+    return message;
+}
+
+ServerMessageContainer CClientHandler::handlePremiumPayment(const std::string& request)
+{
+    SDataBase& DB = SDataBase::getInstance();
+    switch (DB.processPremiumPayment(request, this->userHandler->getUsername()))
+    {
+    case 0:
+        this->userHandler->makePremium();
+        return ServerMessageContainer(GET_PAYMENT_CODE, "success");
+    case 1:
+        return ServerMessageContainer(GET_PAYMENT_CODE, "Insufficient Funds");
+    case 2:
+        return ServerMessageContainer(GET_PAYMENT_CODE, "Incorrect Data");
+    }
+}
+
+ServerMessageContainer CClientHandler::processLoginRequest(const std::string& request)
+{
+    //request = EMAIL PASSWORD
+    SDataBase& DB = SDataBase::getInstance();
+
+    bool found{ false };
+    std::vector<std::string> inputs;
+    inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+
+    if (CTCPServer::getInstance().existsMail(inputs[0]))//Verificam daca exista deja utilizatorul conectat
+    {
+        return ServerMessageContainer(GET_LOGIN_CODE, "User Already Connected");
+    }
+
+    CTCPServer::getInstance().addMail(this->userSocket, inputs[0]);
+
+    std::vector<std::string> selects = { "Email", "Password" };
+    std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users");
+
+    for (const auto& it : cols)
+    {
+        if (it[0] == inputs[0] && it[1] == inputs[1])
+        {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        return ServerMessageContainer(GET_LOGIN_CODE, "Invalid Credentials");
+    }
+    this->userHandler = SDataBase::getInstance().getUserInfo(inputs[0]);
+    this->processDailyLogin();
+    return this->successLogin();
+}
+
 std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
     ServerMessageContainer procRequest(request);
@@ -47,28 +198,18 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
     switch (procRequest.getType())
     {
     case GET_LOGIN_CODE:
-    {
-        bool logged = SDataBase::getInstance().processLoginRequest(procRequest.getMess());
-        if (logged)
-        {
-            this->userHandler = SDataBase::getInstance().getUserInfo(procRequest.getMess());
-            this->processDailyLogin();
-            sendBuffer = this->successLogin();
-        }
-        else
-        {
-            sendBuffer = ServerMessageContainer(GET_LOGIN_CODE, "fail");
-        }
-    }
+        sendBuffer = this->processLoginRequest(procRequest.getMess());
         break;
     case REGISTER_CODE:
         sendBuffer = SDataBase::getInstance().processRegisterRequest(procRequest.getMess());
         break;
     case GET_LESSON_TITLES_CODE:
-        sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess(), this);
+        //sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess(), this);
+        sendBuffer = this->processGetLessonsTitleRequest(procRequest.getMess());
         break;
     case GET_LESSON_CONTENT:
-        sendBuffer = SDataBase::getInstance().processGetLessonContent(procRequest.getMess(), this);
+        //sendBuffer = SDataBase::getInstance().processGetLessonContent(procRequest.getMess(), this);
+        sendBuffer = this->processGetLessonContent(procRequest.getMess());
         break;
     case GET_EXERCICE_CODE:
         sendBuffer = this->sendExercices(procRequest.getMess());
@@ -77,10 +218,14 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
         sendBuffer = this->updateLessonDone(procRequest.getMess());
         break;
     case GET_LEADERBOARD_CODE:
-        sendBuffer = SDataBase::getInstance().processLeadearboardRequest(procRequest.getMess(), this);
+        sendBuffer = SDataBase::getInstance().processLeadearboardRequest(procRequest.getMess(), this->userHandler->getUsername(), this->userHandler->getXp());
         break;
     case GET_LIVES_CODE:
-        sendBuffer = SDataBase::getInstance().handleLives(procRequest.getMess(), this);
+        //sendBuffer = SDataBase::getInstance().handleLives(procRequest.getMess(), this);
+        sendBuffer = this->handleLives(procRequest.getMess());
+        break;
+    case GET_PAYMENT_CODE:
+        sendBuffer = this->handlePremiumPayment(procRequest.getMess());
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");

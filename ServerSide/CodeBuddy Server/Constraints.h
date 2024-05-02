@@ -15,6 +15,8 @@
 
 #define DAILY_XP_GIVEN			10
 
+#define PREMIUM_PRICE			25
+
 #define PAYLOAD_DELIM			'#'
 
 #define GET_LOGIN_CODE			'l'
@@ -26,3 +28,4 @@
 #define GET_LEADERBOARD_CODE	'a'
 #define LESSON_DONE_CODE		'd'
 #define GET_LIVES_CODE			'i'
+#define GET_PAYMENT_CODE		'p'

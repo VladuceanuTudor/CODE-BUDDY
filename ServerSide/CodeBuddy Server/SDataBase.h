@@ -46,12 +46,19 @@ private:
 	
 	bool checkIfInDatabase(std::string table, std::string columnName, std::string value);
 
+	ServerMessageContainer processGlobalRequest();
+	ServerMessageContainer processLocalRequest(const std::string& username, int xp);
+
+public:
+	static SDataBase& getInstance();
+	static void destroyInstance();
+
 	std::vector<std::vector<std::string>> selectFromDatabase(
 		const std::vector<std::string>& selectColumns,
 		const std::string& table,
-		const std::string& whereCondition,
-		const std::string& orderColumn,
-		bool orderDesc);
+		const std::string& whereCondition = "",
+		const std::string& orderColumn = "",
+		bool orderDesc = false);
 
 	void insertIntoDatabase(
 		const std::vector<std::string>& insertIntoColumn,
@@ -60,30 +67,19 @@ private:
 
 	void updateIntoDatabase(
 		const std::string& table,
-		const std::string& updateColumn, 
+		const std::string& updateColumn,
 		const std::string& updateValue,
 		const std::string& whereCondition,
-		bool command);
+		bool command = false);
 
-	ServerMessageContainer processGlobalRequest(CClientHandler* ch);
-	ServerMessageContainer processLocalRequest(CClientHandler* ch);
-
-public:
-	static SDataBase& getInstance();
-	static void destroyInstance();
-
-	bool processLoginRequest(std::string request);
 	ServerMessageContainer processRegisterRequest(std::string request);
-	ServerMessageContainer processGetLessonsTitleRequest(std::string request, CClientHandler* ch);
-	ServerMessageContainer processGetLessonContent(std::string request, CClientHandler* ch);
-	ServerMessageContainer processLeadearboardRequest(std::string request, CClientHandler* ch);
-	ServerMessageContainer handleLives(const std::string& request, CClientHandler* ch);
-
+	ServerMessageContainer processLeadearboardRequest(std::string request, const std::string& username, int xp);
+	int processPremiumPayment(const std::string& request, const std::string& username);
 	int getLastDayLogin(const std::string& username);
 
 	void updateLessonsDone(CClientHandler* ch, std::string language);
 
-	CUserHandler* getUserInfo(std::string request);
+	CUserHandler* getUserInfo(std::string email);
 
 
 	void updateUserXp(std::string username, int newXp);

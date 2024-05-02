@@ -16,6 +16,11 @@ private:
 
 	void processDailyLogin();
 	ServerMessageContainer successLogin();
+	ServerMessageContainer processGetLessonsTitleRequest(std::string request);
+	ServerMessageContainer processGetLessonContent(std::string request);
+	ServerMessageContainer handleLives(const std::string& request);
+	ServerMessageContainer handlePremiumPayment(const std::string& request);
+	ServerMessageContainer processLoginRequest(const std::string& request);
 public:
 	CClientHandler(SOCKET sock) : userSocket(sock) {}
 	~CClientHandler();

@@ -5,7 +5,7 @@
 #include "SDataBase.h"
 #include "CTCPServer.h"
 
-void handleClient(CTCPServer& server, SOCKET sock) {
+void handleClient(SOCKET sock) {
     char buffer[BUFFER_SEND_RECV_SIZE];
     CClientHandler ch(sock);
     while (true) {
@@ -23,6 +23,7 @@ void handleClient(CTCPServer& server, SOCKET sock) {
         }
         CTCPServer::sendData(message, sock);
     }
+    CTCPServer::getInstance().freeSocket(sock);
 }
 
 int main() 
@@ -34,8 +35,8 @@ int main()
 
     while (true)
     {
-        server.wait_connection();   // Asteapta conexiune
-        std::thread(handleClient, std::ref(server), server.getLastSocket()).detach();
+        SOCKET sock = server.wait_connection();   // Asteapta conexiune
+        std::thread(handleClient, sock).detach();
     }
     SDataBase::destroyInstance();
     return 0;

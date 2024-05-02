@@ -14,3 +14,13 @@ void CUserHandler::addXP(int xp)
 {
 	this->xp += xp;
 }
+
+void CUserHandler::makePremium()
+{
+	this->premiumUser = true;
+}
+
+bool CUserHandler::isPremium() const
+{
+	return this->premiumUser;
+}

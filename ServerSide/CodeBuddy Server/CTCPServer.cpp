@@ -51,7 +51,7 @@ CTCPServer::CTCPServer(short listen_port)
     }
 }
 
-void CTCPServer::wait_connection()
+SOCKET CTCPServer::wait_connection()
 {
     SOCKET sock = accept(listen_sock, NULL, NULL);
     if (sock == INVALID_SOCKET) {
@@ -60,8 +60,8 @@ void CTCPServer::wait_connection()
         WSACleanup();
         exit(-1);
     }
-    this->client_sock.push_back(sock);
     fprintf(stderr, "Connected on socket %llu\n", sock);
+    return sock;
 }
 
 int CTCPServer::send(const char const* send_buff, const int size, SOCKET sock)
@@ -76,12 +76,27 @@ int CTCPServer::recv(char* recv_buff, const int size, SOCKET sock)
     return recv_bytes;
 }
 
-SOCKET CTCPServer::getLastSocket() const
+void CTCPServer::addMail(SOCKET sock, std::string email)
 {
-    return this->client_sock.back();
+    this->socketMail[email] = sock;
 }
 
+bool CTCPServer::existsMail(std::string email)
+{
+    return this->socketMail.find(email) != this->socketMail.end();
+}
 
+void CTCPServer::freeSocket(SOCKET sock)
+{
+    for (const auto& it : this->socketMail)
+    {
+        if(it.second == sock)
+        {
+            this->socketMail.erase(it.first);
+            break; 
+        }
+    }
+}
 
 void CTCPServer::sendData(std::string message, SOCKET sock)
 {
