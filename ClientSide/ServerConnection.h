@@ -13,6 +13,7 @@
 #include "climbaj.h"
 #include "CLectie.h"
 #include <QLabel>
+#include "user.h"
 
 #define PAYLOAD_DELIM '#'
 
@@ -35,6 +36,10 @@ void send_Exercitiu_DONE(std::string numeLectie, std::string numeLimbaj);
 void send_Inimi_decrease();
 
 void _req_Inimi_nr(int& nrInimi, QLabel* label);
+
+void _req_GlobalLeaderB(std::list<User*>& leaderb);
+
+void _req_LocalLeaderB(std::list<User*>& leaderb);
 }
 
 #endif // SERVERCONNECTION_H

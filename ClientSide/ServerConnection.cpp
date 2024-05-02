@@ -205,4 +205,34 @@ namespace Connection{
         label->setText(QString::fromStdString(std::to_string(nrInimi)));
     }
 
+    void _req_GlobalLeaderB(std::list<User*>& leaderb){
+        ServerMessageContainer sendLBGreq('a', "g");
+        client->send(sendLBGreq.toSend().c_str(), sendLBGreq.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getLBG(buffer);
+
+        std::vector<std::string> mesajSpart = SeparateWords(getLBG.getMess(), '#');
+
+        for(int i=0; i < mesajSpart.size(); i+=2){
+            User* u = new User(mesajSpart[i], std::stoi(mesajSpart[i+1]));
+            leaderb.push_back(u);
+        }
+    }
+
+    void _req_LocalLeaderB(std::list<User*>& leaderb){
+        ServerMessageContainer sendLBLreq('a', "l");
+        client->send(sendLBLreq.toSend().c_str(), sendLBLreq.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getLBL(buffer);
+
+        std::vector<std::string> mesajSpart = SeparateWords(getLBL.getMess(), '#');
+
+        for(int i=0; i < mesajSpart.size(); i+=2){
+            leaderb.push_back(new User(mesajSpart[i], std::stoi(mesajSpart[i+1])));
+        }
+    }
 }

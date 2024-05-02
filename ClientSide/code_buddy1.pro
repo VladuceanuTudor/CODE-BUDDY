@@ -15,13 +15,15 @@ SOURCES += \
     StartMenuWindow.cpp \
     climbaj.cpp \
     iexercitiu.cpp \
+    leaderboard.cpp \
     main.cpp \
     mainwindow.cpp \
     TCPClient.cpp \
-    Utils.cpp #\
-    payment.cpp
-    startmenuwindow.cpp
-    startmenuwindow.cpp
+    Utils.cpp \
+    user.cpp
+    # payment.cpp
+    # startmenuwindow.cpp
+    # startmenuwindow.cpp
 
     #ServerConnection.cpp
 
@@ -35,11 +37,13 @@ HEADERS += \
     ServerMessageContainer.h \
     climbaj.h \
     iexercitiu.h \
+    leaderboard.h \
     mainwindow.h \
     TCPClient.h \
     Utils.h \
     ServerConnection.h \
-    startmenuwindow.h
+    startmenuwindow.h \
+    user.h
 
 FORMS += \
     mainwindow.ui \

@@ -8,6 +8,7 @@
 #include <QListWidget>
 #include <QButtonGroup>
 #include <QRadioButton>
+#include <QPixmap>
 
 int nrInimi=0;
 
@@ -17,8 +18,15 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QPixmap img_inima(":/img/pixelheart.jpg");
+    ui->imagine_inima->setPixmap(img_inima.scaled(30,30, Qt::KeepAspectRatio));
+
+
     // Set background color using linear gradient
-    QString styleSheet = "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(85, 85, 85, 255), stop:1 rgba(64, 64, 64, 255));";
+    QString styleSheet = "background-color: rgba(25,21,22,255)";
+    ui->label->setStyleSheet("background-color: rgba(0,0,0,0); color: white; font-size: 14px; font-family: 'YourPixelFont'");
+    ui->nrInimi->setStyleSheet("background-color: rgba(0,0,0,0); color: white; font-size: 20px; font-family: 'YourPixelFont'");
+    ui->imagine_inima->setStyleSheet("background-color: rgba(0,0,0,0); color: white;");
     ui->menuNavbar->setStyleSheet(styleSheet);
 
 
@@ -57,6 +65,7 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
     }
 
     Connection::_req_Inimi_nr(nrInimi,ui->nrInimi);
+
 }
 
 StartMenuWindow::~StartMenuWindow()
@@ -282,6 +291,34 @@ void StartMenuWindow::on_pushButton_clicked()
 void StartMenuWindow::on_pushButton_2_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
+    QLayout* currentLayout = ui->LeaderBoard->layout();
+
+    deleteLayout(currentLayout);
+
     ui->Title->setFont(QFont("Arial", 16));
+    QVBoxLayout *verticalLayout = new QVBoxLayout;
+
+    // Create QPushButton objects for the global and local buttons
+    QPushButton *globalButton = new QPushButton("Global");
+    QPushButton *localButton = new QPushButton("Local");
+
+    globalButton->setFixedSize(100, 30); // Adjust the size as needed
+    localButton->setFixedSize(100, 30);
+
+    // Add the buttons to the horizontal layout
+    verticalLayout->addWidget(globalButton);
+    verticalLayout->addWidget(localButton);
+
+    connect(globalButton, &QPushButton::clicked, this,
+            [verticalLayout] {
+                LeaderBoard::showGlobalLeaderboard(verticalLayout);
+            });
+    connect(localButton, &QPushButton::clicked, this,
+            [verticalLayout] {
+                LeaderBoard::showLocalLeaderboard(verticalLayout);
+            });
+
+    // Add the container widget to your main layout (e.g., a QVBoxLayout)
+    ui->LeaderBoard->setLayout(verticalLayout);
 }
 
