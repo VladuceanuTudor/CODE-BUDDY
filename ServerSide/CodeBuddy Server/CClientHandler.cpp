@@ -159,7 +159,6 @@ ServerMessageContainer CClientHandler::processLoginRequest(const std::string& re
     //request = EMAIL PASSWORD
     SDataBase& DB = SDataBase::getInstance();
 
-    bool found{ false };
     std::vector<std::string> inputs;
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
@@ -171,18 +170,9 @@ ServerMessageContainer CClientHandler::processLoginRequest(const std::string& re
     CTCPServer::getInstance().addMail(this->userSocket, inputs[0]);
 
     std::vector<std::string> selects = { "Email", "Password" };
-    std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users");
+    std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users", "Email = \'" + inputs[0] + "\'");
 
-    for (const auto& it : cols)
-    {
-        if (it[0] == inputs[0] && it[1] == inputs[1])
-        {
-            found = true;
-            break;
-        }
-    }
-
-    if (!found)
+    if (cols[0][0] != inputs[0] || cols[0][1] != inputs[1])
     {
         return ServerMessageContainer(GET_LOGIN_CODE, "Invalid Credentials");
     }
