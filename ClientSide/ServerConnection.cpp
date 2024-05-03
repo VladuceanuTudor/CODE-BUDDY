@@ -13,7 +13,7 @@ namespace Connection{
         client->connect(ip_dest, port_dest);
     }
 
-    void send_login(std::string username, std::string password, int& Status){
+    void send_login(std::string username, std::string password, int& Status, std::string& aux_username){
         std::string buffer;
         buffer = username;
         buffer += PAYLOAD_DELIM;
@@ -29,13 +29,14 @@ namespace Connection{
 
         ServerMessageContainer response(status);
 
+        std::stringstream ss(response.getMess());
+        std::string token;
 
-        qDebug() << status;
-
-        if(response.getMess() == "accepted")
+        std::getline(ss, token, PAYLOAD_DELIM);
+        if(token == "accepted")
             Status=1;
-        else
-            Status=0;
+        std::getline(ss, token, PAYLOAD_DELIM);
+            aux_username = token;
 
 
     }

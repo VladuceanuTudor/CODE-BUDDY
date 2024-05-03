@@ -55,10 +55,12 @@ void MainWindow::on_loginBTN_clicked()
         break;
     }
     int Status=0;
-    Connection::send_login(username.toStdString(), password.toStdString(), Status);
+    std::string aux_username;
+    Connection::send_login(username.toStdString(), password.toStdString(), Status, aux_username);
     if(Status==1){
         hide();
         startMenuWindow = new StartMenuWindow();
+        startMenuWindow->myUserName=aux_username;
         startMenuWindow->show();
     }else{
         QMessageBox::information(nullptr, "Login failed", "Incorect credentials used!");

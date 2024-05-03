@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "ServerConnection.h"
 #include "leaderboard.h"
+#include "Utils.h"
 
 namespace Ui {
 class StartMenuWindow;
@@ -16,6 +17,7 @@ class StartMenuWindow : public QDialog
 public:
     explicit StartMenuWindow(QWidget *parent = nullptr);
     ~StartMenuWindow();
+    std::string myUserName;
 
 private slots:
     void on_pushButton_4_clicked();
