@@ -8,8 +8,8 @@
 class LeaderBoard
 {
 public:
-    static void showGlobalLeaderboard(QVBoxLayout *verticalLayout);
-    static void showLocalLeaderboard(QVBoxLayout *verticalLayout);
+    static void showGlobalLeaderboard(QVBoxLayout *verticalLayout, std::string myUserName);
+    static void showLocalLeaderboard(QVBoxLayout *verticalLayout, std::string myUserName);
 };
 
 #endif // LEADERBOARD_H

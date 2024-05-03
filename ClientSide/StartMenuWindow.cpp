@@ -310,12 +310,12 @@ void StartMenuWindow::on_pushButton_2_clicked()
     verticalLayout->addWidget(localButton);
 
     connect(globalButton, &QPushButton::clicked, this,
-            [verticalLayout] {
-                LeaderBoard::showGlobalLeaderboard(verticalLayout);
+            [verticalLayout, this] {
+                LeaderBoard::showGlobalLeaderboard(verticalLayout, this->myUserName);
             });
     connect(localButton, &QPushButton::clicked, this,
-            [verticalLayout] {
-                LeaderBoard::showLocalLeaderboard(verticalLayout);
+            [verticalLayout, this] {
+                LeaderBoard::showLocalLeaderboard(verticalLayout, this->myUserName);
             });
 
     // Add the container widget to your main layout (e.g., a QVBoxLayout)

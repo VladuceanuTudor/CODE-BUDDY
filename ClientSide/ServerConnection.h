@@ -23,7 +23,7 @@ namespace Connection{
 
 void init_and_start_connection(char const* ip_dest, short port_dest);
 
-void send_login(std::string username, std::string password, int& Status);
+void send_login(std::string username, std::string password, int& Status, std::string& aux_username);
 
 void send_register(std::string email, std::string username, std::string password, int& Status);
 
