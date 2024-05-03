@@ -112,11 +112,25 @@ ServerMessageContainer CClientHandler::handleLives(const std::string& request)
     int minutes = std::stoi(cols[0][1]);
 
     ServerMessageContainer message{};
+
+    int timesAdded{};
     while (this->userHandler->getLives() < MAX_LIVES &&
         minutes >= LIVES_REGEN_INTERVAL)
     {
+        timesAdded++;
         this->userHandler->addLives(1);
         minutes -= LIVES_REGEN_INTERVAL;
+    }
+
+    if (this->userHandler->getLives() == MAX_LIVES)
+    {
+        DB.updateIntoDatabase("Users", "LivesTimeLost", "GETDATE()", "Username = \'" + this->userHandler->getUsername() + "\'", true);
+    }
+    else //In cazul in care utilizatorul nu are vietile la maxim, atunci adaugam minutele pe care acesta le-a folosit
+            //Ex Daca utilizatorul a fost inactiv 19 minute, si LIVES_REGEN = 10 atunci sa nu i se reseteze acele 9 minute, doar sa se adauge 10 la numaratoare
+    {
+        DB.updateIntoDatabase("Users", "LivesTimeLost", "DATEADD(MINUTE, " + std::to_string(LIVES_REGEN_INTERVAL * timesAdded) + 
+            ", LivesTimeLost)", "Username = \'" + this->userHandler->getUsername() + "\'", true);
     }
 
     if (request == "0")
@@ -125,17 +139,12 @@ ServerMessageContainer CClientHandler::handleLives(const std::string& request)
     }
     else if (request == "1")
     {
-        if (this->userHandler->getLives() == MAX_LIVES)
-        {
-            DB.updateIntoDatabase("Users", "LivesTimeLost", "GETDATE()", "Username = \'" + this->userHandler->getUsername() + "\'", true);
-        }
         this->userHandler->subtractLives();
 
         message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(this->userHandler->getLives()));
     }
     DB.updateIntoDatabase("Users", "Lives", std::to_string(this->userHandler->getLives()),
         "Username = \'" + this->userHandler->getUsername() + "\'");
-
     return message;
 }
 
