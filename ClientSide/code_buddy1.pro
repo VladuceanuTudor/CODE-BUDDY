@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp \
     TCPClient.cpp \
     Utils.cpp \
+    paymentdialog.cpp \
     user.cpp
     # payment.cpp
     # startmenuwindow.cpp
@@ -42,11 +43,13 @@ HEADERS += \
     TCPClient.h \
     Utils.h \
     ServerConnection.h \
+    paymentdialog.h \
     startmenuwindow.h \
     user.h
 
 FORMS += \
     mainwindow.ui \
+    paymentdialog.ui \
     startmenuwindow.ui
 
 RESOURCES += \

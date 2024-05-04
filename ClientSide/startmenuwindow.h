@@ -40,6 +40,8 @@ private slots:
 
     void finalizeLectia(ILectie* lectie, CLimbaj* limbaj, std::string numeLectie);
 
+    void on_pushButton_7_clicked();
+
 private:
     Ui::StartMenuWindow *ui;
 

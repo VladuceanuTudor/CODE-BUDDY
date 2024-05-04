@@ -9,6 +9,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QPixmap>
+#include "paymentdialog.h"
 
 int nrInimi=0;
 
@@ -47,16 +48,16 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
         // Assign different colors based on counter
         switch (buttonCount % 4) {
         case 0:
-            buttonStyle.append("background-color: lightblue;");
+            buttonStyle.append("background-color: lightblue; color: black;");
             break;
         case 1:
-            buttonStyle.append("background-color: lightgreen;");
+            buttonStyle.append("background-color: lightgreen; color: black;");
             break;
         case 2:
-            buttonStyle.append("background-color: lightyellow;");
+            buttonStyle.append("background-color: lightyellow; color: black;");
             break;
         case 3:
-            buttonStyle.append("background-color: lightcoral;");
+            buttonStyle.append("background-color: lightcoral; color: black;");
             break;
         }
 
@@ -242,9 +243,9 @@ void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
         // Set button background color based on completion status:
         if(done_for_color < limbaj->getCompleted())
-            button->setStyleSheet("background-color: lime");
+            button->setStyleSheet("background-color: lime; color: black;");
         if(done_for_color == limbaj->getCompleted())
-            button->setStyleSheet("background-color: yellow");
+            button->setStyleSheet("background-color: yellow; color: black;");
 
         // Connect the button to a slot that takes the button text as parameter:
         connect(button, &QPushButton::clicked, this,
@@ -320,5 +321,12 @@ void StartMenuWindow::on_pushButton_2_clicked()
 
     // Add the container widget to your main layout (e.g., a QVBoxLayout)
     ui->LeaderBoard->setLayout(verticalLayout);
+}
+
+
+void StartMenuWindow::on_pushButton_7_clicked()
+{
+    PaymentDialog* pDialog = new PaymentDialog();
+    pDialog->show();
 }
 
