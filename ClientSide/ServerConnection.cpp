@@ -37,6 +37,9 @@ namespace Connection{
             Status=1;
         std::getline(ss, token, PAYLOAD_DELIM);
             aux_username = token;
+        std::getline(ss, token, PAYLOAD_DELIM);
+        if(token == "p")
+            Status=2;
 
 
     }
@@ -235,5 +238,30 @@ namespace Connection{
         for(int i=0; i < mesajSpart.size(); i+=2){
             leaderb.push_back(new User(mesajSpart[i], std::stoi(mesajSpart[i+1])));
         }
+    }
+
+    int send_payment(std::string nr_card, std::string nume_prenume, std::string cvv, std::string an, std::string luna){
+        //Numar Card(ex: 5123987654321098) Nume de pe Card(ex: Bob Williams) Expiration Date(ex: 2026-03-31) CVV(ex: 795)
+        std::string _payload;
+        _payload += nr_card;
+        _payload += "#";
+        _payload += nume_prenume;
+        _payload += "#";
+        _payload += "20";
+        _payload += an;
+        _payload += "-";
+        _payload += luna;
+        _payload += "-15";
+        _payload += "#";
+        _payload += cvv;
+        ServerMessageContainer sendpayment('p', _payload);
+        client->send(sendpayment.toSend().c_str(), sendpayment.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getPaymentStatus(buffer);
+        if(getPaymentStatus.getMess() == "success")
+            return 1;
+        else return 0;
     }
 }

@@ -2,9 +2,9 @@
 #define STARTMENUWINDOW_H
 
 #include <QDialog>
-#include "ServerConnection.h"
 #include "leaderboard.h"
 #include "Utils.h"
+
 
 namespace Ui {
 class StartMenuWindow;
@@ -41,6 +41,8 @@ private slots:
     void finalizeLectia(ILectie* lectie, CLimbaj* limbaj, std::string numeLectie);
 
     void on_pushButton_7_clicked();
+
+    void on_pushButton_3_clicked();
 
 private:
     Ui::StartMenuWindow *ui;

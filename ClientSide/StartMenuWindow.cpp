@@ -10,6 +10,7 @@
 #include <QRadioButton>
 #include <QPixmap>
 #include "paymentdialog.h"
+#include "QLineEdit"
 
 int nrInimi=0;
 
@@ -64,8 +65,9 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
         buttonCount++;
         button->setStyleSheet(buttonStyle);
     }
-
+    this->setWindowTitle("CODE-BUDDY");
     Connection::_req_Inimi_nr(nrInimi,ui->nrInimi);
+    if(premium==true) ui->nrInimi->setText("∞");
 
 }
 
@@ -286,6 +288,7 @@ void StartMenuWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+    if(premium==true) ui->nrInimi->setText("∞");
 }
 
 
@@ -328,5 +331,37 @@ void StartMenuWindow::on_pushButton_7_clicked()
 {
     PaymentDialog* pDialog = new PaymentDialog();
     pDialog->show();
+}
+
+
+void StartMenuWindow::on_pushButton_3_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+    QLayout* currentLayout = ui->ChatPage->layout();
+
+    deleteLayout(currentLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+
+    // Create conversation list (on the left)
+    QListWidget *conversationList = new QListWidget;
+    mainLayout->addWidget(conversationList);
+
+    // Create a frame to contain message input and send button
+    QFrame *messageInputFrame = new QFrame;
+    QHBoxLayout *messageInputLayout = new QHBoxLayout(messageInputFrame);
+
+    // Create message input
+    QLineEdit *messageInput = new QLineEdit;
+    messageInputLayout->addWidget(messageInput);
+
+    // Create send button
+    QPushButton *sendButton = new QPushButton("Send");
+    messageInputLayout->addWidget(sendButton);
+
+    // Add message input frame to the layout
+    mainLayout->addWidget(messageInputFrame);
+
+    // Set currentLayout to use the new main layout
+    ui->stackedWidget->setLayout(mainLayout);
 }
 

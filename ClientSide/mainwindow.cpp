@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "paymentdialog.h"
 #include <QMessageBox>
 #include <QPixmap>
 //#include <QtSql/QSql>
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->groupBox_2->setStyleSheet("color: white");
     ui->ToRegisterBTN->setStyleSheet("color: white");
     ui->ToSignIn->setStyleSheet("color: white");
+    this->setWindowTitle("Log-in CODE BUDDY");
 
 }
 
@@ -62,6 +64,12 @@ void MainWindow::on_loginBTN_clicked()
         startMenuWindow = new StartMenuWindow();
         startMenuWindow->myUserName=aux_username;
         startMenuWindow->show();
+    }else if(Status == 2){
+        hide();
+        startMenuWindow = new StartMenuWindow();
+        startMenuWindow->myUserName=aux_username;
+        startMenuWindow->show();
+        premium=true;
     }else{
         QMessageBox::information(nullptr, "Login failed", "Incorect credentials used!");
     }

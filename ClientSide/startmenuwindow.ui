@@ -63,7 +63,7 @@
      <rect>
       <x>970</x>
       <y>30</y>
-      <width>16</width>
+      <width>41</width>
       <height>20</height>
      </rect>
     </property>
@@ -87,7 +87,7 @@
    <widget class="QLabel" name="imagine_inima">
     <property name="geometry">
      <rect>
-      <x>980</x>
+      <x>990</x>
       <y>20</y>
       <width>51</width>
       <height>41</height>
@@ -100,9 +100,9 @@
    <widget class="QPushButton" name="pushButton_7">
     <property name="geometry">
      <rect>
-      <x>870</x>
+      <x>850</x>
       <y>50</y>
-      <width>151</width>
+      <width>181</width>
       <height>31</height>
      </rect>
     </property>
@@ -110,7 +110,7 @@
      <string notr="true"/>
     </property>
     <property name="text">
-     <string>Buy Premiun Subscription</string>
+     <string>Cumpara abonament premium</string>
     </property>
    </widget>
   </widget>
@@ -136,7 +136,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="ChoicePage">
      <widget class="QWidget" name="layoutWidget">
@@ -189,6 +189,7 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="ChatPage"/>
    </widget>
   </widget>
  </widget>
