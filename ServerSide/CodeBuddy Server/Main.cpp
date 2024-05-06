@@ -11,14 +11,14 @@ void handleClient(SOCKET sock) {
     while (true) {
         if (CTCPServer::recvData(buffer, sock) < 0)
             break;
-        std::string message{};
+        ServerMessageContainer message{};
         try
         {
             message = ch.handleRequest(buffer);
         }
         catch (const std::exception& e)
         {
-            message = ServerMessageContainer(ERROR_CODE, "Error").getWholeString();
+            message = ServerMessageContainer(ERROR_CODE, "Error");
             std::cerr << e.what() << std::endl;
         }
         CTCPServer::sendData(message, sock);

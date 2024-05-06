@@ -39,7 +39,7 @@ int SDataBase::init()
     }
 
     // Connection string
-    SQLWCHAR connectionStr[] = L"DRIVER={SQL SERVER};SERVER=25.16.102.33,1433;DATABASE=CodeBuddy;UID=Doru;PWD=;Trusted_Connection=Yes;";
+    SQLWCHAR connectionStr[] = L"DRIVER={SQL SERVER};SERVER=localhost,1433;DATABASE=CodeBuddy;UID=Doru;PWD=;Trusted_Connection=Yes;";
     // Connect to SQL Server
     std::cout << "Connecting to DataBase...\n";
 
@@ -380,4 +380,22 @@ int SDataBase::processPremiumPayment(const std::string& request, const std::stri
     this->updateIntoDatabase("ClientsCards", "Balance", std::to_string(balance - PREMIUM_PRICE), "CardNumber = \'" + inputs[0] + "\'");
     this->updateIntoDatabase("Users", "IsPremium", "1", "Username = \'" + username + "\'");
     return 0;
+}
+
+ServerMessageContainer SDataBase::processGetFriendsRequest(const std::string& username)
+{
+    std::vector<std::string> selects = { "User1", "User2" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Friends",
+        "User1 = \'" + username + "\' OR User2 = \'" + username + "\'");
+    selects.clear();
+    
+    for (const auto& it : cols)
+    {
+        if (it[0] == username)
+            selects.push_back(it[1]);
+        else
+            selects.push_back(it[0]);
+    }
+
+    return ServerMessageContainer(GET_FRIENDS_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }

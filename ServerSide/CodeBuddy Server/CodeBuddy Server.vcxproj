@@ -171,6 +171,7 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="a-Tanase.txt" />
     <Text Include="Intcpp.txt" />
     <Text Include="DecVarcpp.txt" />
     <Text Include="IfStmtcpp.txt" />

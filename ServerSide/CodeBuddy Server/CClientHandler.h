@@ -21,10 +21,12 @@ private:
 	ServerMessageContainer handleLives(const std::string& request);
 	ServerMessageContainer handlePremiumPayment(const std::string& request);
 	ServerMessageContainer processLoginRequest(const std::string& request);
+	ServerMessageContainer processChatSendMessage(const std::string& request);
+	ServerMessageContainer processGetChatWithUser(const std::string& request);
 public:
 	CClientHandler(SOCKET sock) : userSocket(sock) {}
 	~CClientHandler();
-	std::string handleRequest(char request[MAX_BUFFER_LEN]);
+	ServerMessageContainer handleRequest(char request[MAX_BUFFER_LEN]);
 
 	void setLessonTileDone(int LessonsDone, std::vector<std::string> lessonTitles, const std::string& language);
 
@@ -33,7 +35,5 @@ public:
 	CUserHandler& getUserHandler() const;
 	CLessonManager& getLanguage(const std::string& language);
 	bool existsLesson(const std::string& language);
-
-	void sendExercices();
 };
 

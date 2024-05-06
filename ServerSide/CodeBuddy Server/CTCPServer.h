@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include <map>
+#include "ServerMessageContainer.h"
 
 class CTCPServer
 {
@@ -32,7 +33,7 @@ public:
 	void freeSocket(SOCKET sock);
 	SOCKET wait_connection();
 
-	static void sendData(std::string message, SOCKET sock);
+	static void sendData(ServerMessageContainer message, SOCKET sock);
 	static int recvData(char* buffer, SOCKET sock);
 };
 

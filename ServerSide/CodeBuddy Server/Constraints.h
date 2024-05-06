@@ -29,3 +29,5 @@
 #define LESSON_DONE_CODE		'd'
 #define GET_LIVES_CODE			'i'
 #define GET_PAYMENT_CODE		'p'
+#define GET_CHAT_CODE			'c'
+#define GET_FRIENDS_CODE		'f'

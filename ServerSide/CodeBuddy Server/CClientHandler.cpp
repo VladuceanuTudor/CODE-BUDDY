@@ -3,6 +3,7 @@
 #include "SDataBase.h"
 #include "CWordSeparator.h"
 #include "CTCPServer.h"
+#include "CFileHandler.h"
 
 ServerMessageContainer CClientHandler::sendExercices(std::string request)
 {
@@ -36,7 +37,7 @@ ServerMessageContainer CClientHandler::updateLessonDone(const std::string& reque
 
 ServerMessageContainer CClientHandler::successLogin()
 {
-    std::vector<std::string> sendData = { "accepted", this->userHandler->getUsername() };
+    std::vector<std::string> sendData = { "accepted", this->userHandler->getUsername() , this->userHandler->isPremium() ? "p" : "n"};
     return ServerMessageContainer(GET_LOGIN_CODE, CWordSeparator::encapsulateWords(sendData, PAYLOAD_DELIM));
 }
 
@@ -190,7 +191,32 @@ ServerMessageContainer CClientHandler::processLoginRequest(const std::string& re
     return this->successLogin();
 }
 
-std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
+ServerMessageContainer CClientHandler::processChatSendMessage(const std::string& request)
+{
+    return ServerMessageContainer();
+}
+
+ServerMessageContainer CClientHandler::processGetChatWithUser(const std::string& request)
+{
+    //request = USERNAME
+    std::string filename{};
+    if (this->userHandler->getUsername() > request)
+    {
+        filename = this->userHandler->getUsername() + "-" + request + ".txt";
+    }
+    else
+    {
+        filename = request + "-" + this->userHandler->getUsername() + ".txt";
+    }
+    if (!CFileHandler::fileExists(filename))
+    {
+        CFileHandler::createFile(filename);
+    }
+    
+    return CFileHandler::getMessages(filename);
+}
+
+ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
 {
     ServerMessageContainer procRequest(request);
     ServerMessageContainer sendBuffer(ERROR_CODE, "FailHandle");   //In cazul in care sendBuffer nu se modifica, inseamna ca a aparut o problema
@@ -226,11 +252,17 @@ std::string CClientHandler::handleRequest(char request[MAX_BUFFER_LEN])
     case GET_PAYMENT_CODE:
         sendBuffer = this->handlePremiumPayment(procRequest.getMess());
         break;
+    case GET_FRIENDS_CODE:
+        sendBuffer = SDataBase::getInstance().processGetFriendsRequest(this->userHandler->getUsername());
+        break;
+    case GET_CHAT_CODE:
+        sendBuffer = this->processGetChatWithUser(procRequest.getMess());
+        break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");
-        return errorBuffer.getWholeString();
+        return errorBuffer;
     }
-    return sendBuffer.getWholeString();
+    return sendBuffer;
 }
 
 CClientHandler::~CClientHandler()

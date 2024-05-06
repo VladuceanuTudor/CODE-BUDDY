@@ -98,16 +98,15 @@ void CTCPServer::freeSocket(SOCKET sock)
     }
 }
 
-void CTCPServer::sendData(std::string message, SOCKET sock)
+void CTCPServer::sendData(ServerMessageContainer message, SOCKET sock)
 {
-    char responsebuffer[1024]{};
 
-    strcpy_s(responsebuffer, message.c_str());
+    CTCPServer::send(message.getWholeString().c_str(), message.getSize(), sock);
+
 
     std::cout << "Response socket " << sock << ": ";
-    std::cout << responsebuffer << std::endl;
-
-    CTCPServer::send(responsebuffer, strlen(responsebuffer), sock);
+    fwrite(message.getWholeString().c_str(), sizeof(char), message.getSize(), stdout);
+    std::cout << "\n";
 }
 
 

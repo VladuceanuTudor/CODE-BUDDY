@@ -1,0 +1,9 @@
+﻿a: Salut Nepoate
+Tanase: Buna dimineata
+Tanase: Am venit sa iti urez ok
+Tanase: In rest ce mai faci?
+a: Ma plimn cu caini
+a: Si mai merg la gaini
+Tanase: Are broasca bani sa treaca marea?
+a: E o posibilitate
+a: Trebuie cercetat
