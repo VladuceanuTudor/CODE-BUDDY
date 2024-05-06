@@ -5,12 +5,12 @@
 #include <QVBoxLayout> // Assuming vertical layout
 #include <QMessageBox>
 #include <QTextEdit>
-#include <QListWidget>
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QPixmap>
 #include "paymentdialog.h"
 #include "QLineEdit"
+#include "QSplitter"
 
 int nrInimi=0;
 
@@ -337,31 +337,46 @@ void StartMenuWindow::on_pushButton_7_clicked()
 void StartMenuWindow::on_pushButton_3_clicked()
 {
     ui->stackedWidget->setCurrentIndex(3);
+    static int iter=0;
+
+    // Delete the existing layout
     QLayout* currentLayout = ui->ChatPage->layout();
-
     deleteLayout(currentLayout);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    ui->listWidget->clear();
 
-    // Create conversation list (on the left)
-    QListWidget *conversationList = new QListWidget;
-    mainLayout->addWidget(conversationList);
 
-    // Create a frame to contain message input and send button
-    QFrame *messageInputFrame = new QFrame;
-    QHBoxLayout *messageInputLayout = new QHBoxLayout(messageInputFrame);
+    if(iter++ == 0)
+    Connection::initChat(myUserName);
 
-    // Create message input
-    QLineEdit *messageInput = new QLineEdit;
-    messageInputLayout->addWidget(messageInput);
+    for(auto prieten : ChatApp::getInstance().getListaPrieteni())
+        ui->listWidget->addItem(QString::fromStdString(prieten));
 
-    // Create send button
-    QPushButton *sendButton = new QPushButton("Send");
-    messageInputLayout->addWidget(sendButton);
+    connect(ui->listWidget, &QListWidget::itemClicked, this, &StartMenuWindow::onListItemClicked);
 
-    // Add message input frame to the layout
-    mainLayout->addWidget(messageInputFrame);
 
-    // Set currentLayout to use the new main layout
-    ui->stackedWidget->setLayout(mainLayout);
+    ui->textEdit->setReadOnly(true);
+}
+
+void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
+
+    QString clickedText = item->text();
+    ui->textEdit->clear();
+    std::string conversatie = clickedText.toStdString();
+
+    for(auto mesaj : ChatApp::getInstance().getChatByPrieten(conversatie))
+    {
+        if(mesaj->getEmitator() == "eu")
+            appendLeftAlignedText(ui->textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+        else
+            appendRightAlignedText(ui->textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+    }
+
+    qDebug() << "Clicked item: " << clickedText;
+}
+
+void StartMenuWindow::on_pushButton_8_clicked()
+{
+    appendLeftAlignedText(ui->textEdit, "Eu:   " + ui->lineEdit->text());
+    ui->lineEdit->clear();
 }
 

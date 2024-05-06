@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "leaderboard.h"
 #include "Utils.h"
+#include <QListWidgetItem>
 
 
 namespace Ui {
@@ -43,6 +44,8 @@ private slots:
     void on_pushButton_7_clicked();
 
     void on_pushButton_3_clicked();
+    void on_pushButton_8_clicked();
+    void onListItemClicked(QListWidgetItem *item);
 
 private:
     Ui::StartMenuWindow *ui;

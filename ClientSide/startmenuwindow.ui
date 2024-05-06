@@ -100,9 +100,9 @@
    <widget class="QPushButton" name="pushButton_7">
     <property name="geometry">
      <rect>
-      <x>850</x>
+      <x>870</x>
       <y>50</y>
-      <width>181</width>
+      <width>151</width>
       <height>31</height>
      </rect>
     </property>
@@ -110,7 +110,7 @@
      <string notr="true"/>
     </property>
     <property name="text">
-     <string>Cumpara abonament premium</string>
+     <string>Cumpara cont premium</string>
     </property>
    </widget>
   </widget>
@@ -189,8 +189,59 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="ChatPage"/>
+    <widget class="QWidget" name="ChatPage">
+     <widget class="QListWidget" name="listWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>256</width>
+        <height>521</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>20</y>
+        <width>651</width>
+        <height>521</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTextEdit" name="textEdit"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="lineEdit"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_8">
+           <property name="text">
+            <string>Trimite</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </widget>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>2</width>
+     <height>2</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4"/>
   </widget>
  </widget>
  <resources/>

@@ -56,3 +56,27 @@ std::vector<std::string> SeparateWords(std::string source, char delim)
 }
 
 
+void appendLeftAlignedText(QTextEdit *textEdit, const QString &text) {
+    QTextCursor cursor(textEdit->textCursor());
+    cursor.movePosition(QTextCursor::End);
+
+    QTextBlockFormat blockFormat;
+    blockFormat.setAlignment(Qt::AlignLeft);
+    cursor.mergeBlockFormat(blockFormat);
+
+    cursor.insertText(text);
+    cursor.insertText("\n");
+}
+
+void appendRightAlignedText(QTextEdit *textEdit, const QString &text) {
+    QTextCursor cursor(textEdit->textCursor());
+    cursor.movePosition(QTextCursor::End);
+
+    QTextBlockFormat blockFormat;
+    blockFormat.setAlignment(Qt::AlignRight);
+    cursor.mergeBlockFormat(blockFormat);
+
+    cursor.insertText(text);
+    cursor.insertText("\n");
+}
+

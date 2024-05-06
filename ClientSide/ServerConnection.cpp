@@ -264,4 +264,56 @@ namespace Connection{
             return 1;
         else return 0;
     }
+
+    void initChat(std::string myUsername){
+        ServerMessageContainer sendFriendsReq('f', "");
+        client->send(sendFriendsReq.toSend().c_str(), sendFriendsReq.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getFriends(buffer);
+
+        std::vector<std::string> mesajSpart = SeparateWords(getFriends.getMess(), '#');
+
+        for(const auto& numePrieten : mesajSpart){
+            ChatApp::getInstance().initPrieten(numePrieten);
+            ChatApp::getInstance().initConversatie(numePrieten);
+        }
+
+        for(const auto& numePrieten : mesajSpart){
+            ServerMessageContainer sendConvosReq('c', numePrieten);
+            client->send(sendConvosReq.toSend().c_str(), sendConvosReq.getSize());
+
+            //buffer = "c";
+            client->recv(buffer, sizeof(buffer));
+            ServerMessageContainer getConvo(buffer);
+
+            std::vector<std::string> mesajSpart2 = SeparateWords(getConvo.getMess(), '#');
+
+            for(int i=0; i < mesajSpart2.size(); i+=2){
+                if(mesajSpart2[i] == myUsername)
+                        ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart2[i+1]);
+                    else
+                        ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart2[i+1], mesajSpart2[i]);
+            }
+
+        }
+
+        // ChatApp::getInstance().initPrieten("Prieten 1");
+        // ChatApp::getInstance().initPrieten("Prieten 2");
+        // ChatApp::getInstance().initPrieten("Prieten 3");
+        // ChatApp::getInstance().initPrieten("Prieten 4");
+
+        // ChatApp::getInstance().initConversatie("Prieten 1");
+        // ChatApp::getInstance().initConversatie("Prieten 2");
+        // ChatApp::getInstance().initConversatie("Prieten 3");
+        // ChatApp::getInstance().initConversatie("Prieten 4");
+
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Ce faci?", "Prieten 1");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Bine, tu?");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Bine si eu.", "Prieten 1");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Scriu cod.", "Prieten 1");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Super");
+
+    }
 }
