@@ -13,6 +13,7 @@ SOURCES += \
     ServerConnection.cpp \
     ServerMessageContainer.cpp \
     StartMenuWindow.cpp \
+    chatapp.cpp \
     climbaj.cpp \
     iexercitiu.cpp \
     leaderboard.cpp \
@@ -20,7 +21,10 @@ SOURCES += \
     mainwindow.cpp \
     TCPClient.cpp \
     Utils.cpp \
-    user.cpp
+    paymentdialog.cpp \
+    user.cpp \
+    userchat.cpp \
+    usermessage.cpp
     # payment.cpp
     # startmenuwindow.cpp
     # startmenuwindow.cpp
@@ -35,6 +39,7 @@ HEADERS += \
     CLectie.h \
     ILectie.h \
     ServerMessageContainer.h \
+    chatapp.h \
     climbaj.h \
     iexercitiu.h \
     leaderboard.h \
@@ -42,11 +47,15 @@ HEADERS += \
     TCPClient.h \
     Utils.h \
     ServerConnection.h \
+    paymentdialog.h \
     startmenuwindow.h \
-    user.h
+    user.h \
+    userchat.h \
+    usermessage.h
 
 FORMS += \
     mainwindow.ui \
+    paymentdialog.ui \
     startmenuwindow.ui
 
 RESOURCES += \

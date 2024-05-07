@@ -2,9 +2,11 @@
 #define STARTMENUWINDOW_H
 
 #include <QDialog>
-#include "ServerConnection.h"
 #include "leaderboard.h"
 #include "Utils.h"
+#include <QListWidgetItem>
+#include <QThread>
+
 
 namespace Ui {
 class StartMenuWindow;
@@ -39,6 +41,12 @@ private slots:
     QWidget* createExerciseWidget(IExercitiu* ex);
 
     void finalizeLectia(ILectie* lectie, CLimbaj* limbaj, std::string numeLectie);
+
+    void on_pushButton_7_clicked();
+
+    void on_pushButton_3_clicked();
+    void on_pushButton_8_clicked();
+    void onListItemClicked(QListWidgetItem *item);
 
 private:
     Ui::StartMenuWindow *ui;

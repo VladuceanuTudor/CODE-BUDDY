@@ -37,6 +37,9 @@ namespace Connection{
             Status=1;
         std::getline(ss, token, PAYLOAD_DELIM);
             aux_username = token;
+        std::getline(ss, token, PAYLOAD_DELIM);
+        if(token == "p")
+            Status=2;
 
 
     }
@@ -234,6 +237,125 @@ namespace Connection{
 
         for(int i=0; i < mesajSpart.size(); i+=2){
             leaderb.push_back(new User(mesajSpart[i], std::stoi(mesajSpart[i+1])));
+        }
+    }
+
+    int send_payment(std::string nr_card, std::string nume_prenume, std::string cvv, std::string an, std::string luna){
+        //Numar Card(ex: 5123987654321098) Nume de pe Card(ex: Bob Williams) Expiration Date(ex: 2026-03-31) CVV(ex: 795)
+        std::string _payload;
+        _payload += nr_card;
+        _payload += "#";
+        _payload += nume_prenume;
+        _payload += "#";
+        _payload += "20";
+        _payload += an;
+        _payload += "-";
+        _payload += luna;
+        _payload += "-15";
+        _payload += "#";
+        _payload += cvv;
+        ServerMessageContainer sendpayment('p', _payload);
+        client->send(sendpayment.toSend().c_str(), sendpayment.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getPaymentStatus(buffer);
+        if(getPaymentStatus.getMess() == "success")
+            return 1;
+        else return 0;
+    }
+
+    void initChat(std::string myUsername){
+        ServerMessageContainer sendFriendsReq('f', "");
+        client->send(sendFriendsReq.toSend().c_str(), sendFriendsReq.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getFriends(buffer);
+
+        std::vector<std::string> mesajSpart = SeparateWords(getFriends.getMess(), '#');
+
+        for(const auto& numePrieten : mesajSpart){
+            ChatApp::getInstance().initPrieten(numePrieten);
+            ChatApp::getInstance().initConversatie(numePrieten);
+        }
+
+        for(const auto& numePrieten : mesajSpart){
+            ServerMessageContainer sendConvosReq('c', numePrieten);
+            client->send(sendConvosReq.toSend().c_str(), sendConvosReq.getSize());
+
+            //buffer = "c";
+            client->recv(buffer, sizeof(buffer));
+            ServerMessageContainer getConvo(buffer);
+
+            std::vector<std::string> mesajSpart2 = SeparateWords(getConvo.getMess(), '#');
+
+            for(int i=0; i < mesajSpart2.size(); i+=2){
+                if(mesajSpart2[i] == myUsername)
+                        ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart2[i+1]);
+                    else
+                        ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart2[i+1], mesajSpart2[i]);
+            }
+
+        }
+
+        // ChatApp::getInstance().initPrieten("Prieten 1");
+        // ChatApp::getInstance().initPrieten("Prieten 2");
+        // ChatApp::getInstance().initPrieten("Prieten 3");
+        // ChatApp::getInstance().initPrieten("Prieten 4");
+
+        // ChatApp::getInstance().initConversatie("Prieten 1");
+        // ChatApp::getInstance().initConversatie("Prieten 2");
+        // ChatApp::getInstance().initConversatie("Prieten 3");
+        // ChatApp::getInstance().initConversatie("Prieten 4");
+
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Ce faci?", "Prieten 1");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Bine, tu?");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Bine si eu.", "Prieten 1");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Scriu cod.", "Prieten 1");
+        // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Super");
+
+    }
+
+
+    void sendNewMessage(std::string message, std::string conv){
+        conv+="#";
+        conv+=message;
+        ServerMessageContainer sendNM('N', conv);
+        client->send(sendNM.toSend().c_str(), sendNM.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getAck(buffer);
+        if(getAck.getMess() != "Done")
+            throw 1;
+    }
+
+    void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEdit *textEdit){
+        ServerMessageContainer sendNM('n', numePrieten);
+        client->send(sendNM.toSend().c_str(), sendNM.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getConvo(buffer);
+
+        std::vector<std::string> mesajSpart = SeparateWords(getConvo.getMess(), '#');
+
+        for(int i=0; i < mesajSpart.size(); i+=2){
+            if(mesajSpart[i] == myUsername)
+                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i+1]);
+            else
+                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i+1], mesajSpart[i]);
+        }
+
+        textEdit->clear();
+
+        for(auto mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
+        {
+            if(mesaj->getEmitator() == "eu")
+                appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+            else
+                appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
         }
     }
 }

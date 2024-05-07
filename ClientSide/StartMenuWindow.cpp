@@ -5,10 +5,12 @@
 #include <QVBoxLayout> // Assuming vertical layout
 #include <QMessageBox>
 #include <QTextEdit>
-#include <QListWidget>
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QPixmap>
+#include "paymentdialog.h"
+#include "QLineEdit"
+#include "QSplitter"
 
 int nrInimi=0;
 
@@ -47,24 +49,25 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
         // Assign different colors based on counter
         switch (buttonCount % 4) {
         case 0:
-            buttonStyle.append("background-color: lightblue;");
+            buttonStyle.append("background-color: lightblue; color: black;");
             break;
         case 1:
-            buttonStyle.append("background-color: lightgreen;");
+            buttonStyle.append("background-color: lightgreen; color: black;");
             break;
         case 2:
-            buttonStyle.append("background-color: lightyellow;");
+            buttonStyle.append("background-color: lightyellow; color: black;");
             break;
         case 3:
-            buttonStyle.append("background-color: lightcoral;");
+            buttonStyle.append("background-color: lightcoral; color: black;");
             break;
         }
 
         buttonCount++;
         button->setStyleSheet(buttonStyle);
     }
-
+    this->setWindowTitle("CODE-BUDDY");
     Connection::_req_Inimi_nr(nrInimi,ui->nrInimi);
+    if(premium == true) ui->nrInimi->setText("∞");
 
 }
 
@@ -122,6 +125,7 @@ QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
                 }else{
                     Connection::send_Inimi_decrease();
                     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+                    if(premium==true) ui->nrInimi->setText("∞");
                     if(nrInimi==0){
                         QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
                         StartMenuWindow::on_pushButton_clicked();
@@ -230,6 +234,7 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
 void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+    if(premium==true) ui->nrInimi->setText("∞");
     QLayout* currentLayout = ui->Language1Page->layout();
 
     deleteLayout(currentLayout);
@@ -242,9 +247,9 @@ void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
         // Set button background color based on completion status:
         if(done_for_color < limbaj->getCompleted())
-            button->setStyleSheet("background-color: lime");
+            button->setStyleSheet("background-color: lime; color: black;");
         if(done_for_color == limbaj->getCompleted())
-            button->setStyleSheet("background-color: yellow");
+            button->setStyleSheet("background-color: yellow; color: black;");
 
         // Connect the button to a slot that takes the button text as parameter:
         connect(button, &QPushButton::clicked, this,
@@ -285,6 +290,7 @@ void StartMenuWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+    if(premium==true) ui->nrInimi->setText("∞");
 }
 
 
@@ -320,5 +326,79 @@ void StartMenuWindow::on_pushButton_2_clicked()
 
     // Add the container widget to your main layout (e.g., a QVBoxLayout)
     ui->LeaderBoard->setLayout(verticalLayout);
+}
+
+
+void StartMenuWindow::on_pushButton_7_clicked()
+{
+    PaymentDialog* pDialog = new PaymentDialog();
+    pDialog->show();
+}
+
+
+void StartMenuWindow::on_pushButton_3_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+    static int iter=0;
+
+    // Delete the existing layout
+    QLayout* currentLayout = ui->ChatPage->layout();
+    deleteLayout(currentLayout);
+    ui->listWidget->clear();
+
+
+    if(iter++ == 0)
+    Connection::initChat(myUserName);
+
+    for(auto prieten : ChatApp::getInstance().getListaPrieteni())
+        ui->listWidget->addItem(QString::fromStdString(prieten));
+
+    connect(ui->listWidget, &QListWidget::itemClicked, this, &StartMenuWindow::onListItemClicked);
+
+
+    ui->textEdit->setReadOnly(true);
+}
+
+void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
+
+    QString clickedText = item->text();
+    ui->textEdit->clear();
+    std::string conversatie = clickedText.toStdString();
+
+    for(auto mesaj : ChatApp::getInstance().getChatByPrieten(conversatie))
+    {
+        if(mesaj->getEmitator() == "eu")
+            appendLeftAlignedText(ui->textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+        else
+            appendRightAlignedText(ui->textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+    }
+
+    QThread* thread = new QThread();
+
+    QObject::connect(thread, &QThread::started, [=]() {
+
+        while (item && item->isSelected()) {
+            Connection::receiveNewMessages(myUserName, conversatie, ui->textEdit);
+            QThread::sleep(1);
+        }
+        qDebug() << "Thread stopped.";
+        thread->quit();
+    });
+
+    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
+
+    qDebug() << "Clicked item: " << clickedText;
+}
+
+void StartMenuWindow::on_pushButton_8_clicked()
+{
+    appendLeftAlignedText(ui->textEdit, "Eu:   " + ui->lineEdit->text());
+    try{
+        Connection::sendNewMessage(ui->lineEdit->text().toStdString(), ui->listWidget->currentItem()->text().toStdString());
+    }catch(int i){
+        QMessageBox::information(nullptr, "Server ERROR", "Serverul nu a primit mesajul!");
+    }
+    ui->lineEdit->clear();
 }
 

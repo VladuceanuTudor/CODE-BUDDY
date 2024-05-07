@@ -14,6 +14,7 @@
 #include "CLectie.h"
 #include <QLabel>
 #include "user.h"
+#include "chatapp.h"
 
 #define PAYLOAD_DELIM '#'
 
@@ -40,6 +41,14 @@ void _req_Inimi_nr(int& nrInimi, QLabel* label);
 void _req_GlobalLeaderB(std::list<User*>& leaderb);
 
 void _req_LocalLeaderB(std::list<User*>& leaderb);
+
+int send_payment(std::string nr_card, std::string nume_prenume, std::string cvv, std::string an, std::string luna);
+
+void initChat(std::string myUsername);
+
+void sendNewMessage(std::string message, std::string conv);
+
+void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEdit *textEdit);
 }
 
 #endif // SERVERCONNECTION_H
