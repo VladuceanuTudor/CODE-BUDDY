@@ -1,1 +1,9 @@
 a: cf
+eu1: Vrei sa te ajut cu lectiile?
+eu1: :)
+eu1: Mai baiete
+eu1: Ma auzi?
+a: cf
+a: haha
+a: sal
+a: esti fresh?

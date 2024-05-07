@@ -233,11 +233,9 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
         sendBuffer = SDataBase::getInstance().processRegisterRequest(procRequest.getMess());
         break;
     case GET_LESSON_TITLES_CODE:
-        //sendBuffer = SDataBase::getInstance().processGetLessonsTitleRequest(procRequest.getMess(), this);
         sendBuffer = this->processGetLessonsTitleRequest(procRequest.getMess());
         break;
     case GET_LESSON_CONTENT:
-        //sendBuffer = SDataBase::getInstance().processGetLessonContent(procRequest.getMess(), this);
         sendBuffer = this->processGetLessonContent(procRequest.getMess());
         break;
     case GET_EXERCICE_CODE:
@@ -250,7 +248,6 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
         sendBuffer = SDataBase::getInstance().processLeadearboardRequest(procRequest.getMess(), this->userHandler->getUsername(), this->userHandler->getXp());
         break;
     case GET_LIVES_CODE:
-        //sendBuffer = SDataBase::getInstance().handleLives(procRequest.getMess(), this);
         sendBuffer = this->handleLives(procRequest.getMess());
         break;
     case GET_PAYMENT_CODE:

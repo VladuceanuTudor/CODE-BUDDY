@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="a-Tanase.txt" />
+    <Text Include="a-Username.txt" />
     <Text Include="eu1-a.txt" />
     <Text Include="Intcpp.txt" />
     <Text Include="DecVarcpp.txt" />

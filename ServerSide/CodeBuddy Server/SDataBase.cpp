@@ -149,14 +149,14 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     std::vector<std::vector<std::string>> result;
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS) {
         std::vector<std::string> row;
-        for (int i = 0; i < selectColumns.size(); ++i) {
+        for (int i = 0; i < selectColumns.size(); i++) {
             row.emplace_back(reinterpret_cast<char*>(colBindings[i]));
         }
         result.push_back(row);
     }
 
     // Clean up resources
-    for (int i = 0; i < colBindings.size(); ++i) {
+    for (int i = 0; i < colBindings.size(); i++) {
         delete[] colBindings[i];
     }
     SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
@@ -366,15 +366,18 @@ void SDataBase::updateUserXp(std::string username, int newXp)
 
 int SDataBase::processPremiumPayment(const std::string& request, const std::string& username)
 {
-    // request = NUMBER_CARD NAME EXP_DATE CVV
+    // request = NUMBER_CARD NAME YEAR MONTH CVV
     std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
-    std::vector<std::string> selects = { "CardNumber", "CardName", "ExpirationDate", "CVV", "Balance" };
+    std::vector<std::string> selects = { "CardNumber", "CardName", "YEAR(ExpirationDate)", "MONTH(ExpirationDate)", "CVV", "Balance" };
     std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "ClientsCards", "CardNumber = \'" + inputs[0] + "\'");
 
-    for (int i = 0; i < 4; i++)
-        if (inputs[i] != cols[0][i])
+    if (cols.empty())
+        return 2;
+
+    for (int i = 0; i < 5; i++)
+        if (inputs[i] != cols[0][i] && inputs[i] != ("0" + cols[0][i]))
             return 2;
-    int balance = std::stoi(cols[0][4]);
+    int balance = std::stoi(cols[0][5]);
     if (balance < PREMIUM_PRICE)
         return 1;
     this->updateIntoDatabase("ClientsCards", "Balance", std::to_string(balance - PREMIUM_PRICE), "CardNumber = \'" + inputs[0] + "\'");
