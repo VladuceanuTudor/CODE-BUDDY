@@ -15,6 +15,7 @@
 #include <QLabel>
 #include "user.h"
 #include "chatapp.h"
+#include <QApplication>
 
 #define PAYLOAD_DELIM '#'
 

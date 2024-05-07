@@ -365,6 +365,7 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
     ui->textEdit->clear();
     std::string conversatie = clickedText.toStdString();
 
+
     for(auto mesaj : ChatApp::getInstance().getChatByPrieten(conversatie))
     {
         if(mesaj->getEmitator() == "eu")
@@ -380,6 +381,7 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
         while (item && item->isSelected()) {
             Connection::receiveNewMessages(myUserName, conversatie, ui->textEdit);
             QThread::sleep(1);
+
         }
         qDebug() << "Thread stopped.";
         thread->quit();
