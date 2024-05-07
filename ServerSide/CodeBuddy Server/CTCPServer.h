@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include <map>
+#include "CChatManager.h"
 #include "ServerMessageContainer.h"
 
 class CTCPServer
@@ -17,6 +18,7 @@ private:
 	struct addrinfo hints{};
 	SOCKET listen_sock = NULL;
 	std::map<std::string, SOCKET> socketMail{};
+	CChatManager* chatManager{ nullptr };
 	static CTCPServer* instance;
 
 	static int send(const char const* send_buf, const int size, SOCKET sock);
@@ -24,6 +26,8 @@ private:
 
 	CTCPServer(short listen_port);
 	CTCPServer(const CTCPServer& other) = delete;
+
+	~CTCPServer();
 
 public:
 	static CTCPServer& getInstance();
@@ -36,6 +40,7 @@ public:
 	static void sendData(ServerMessageContainer message, SOCKET sock);
 	static int recvData(char* buffer, SOCKET sock);
 
-	void sendMessage(const std::string& user, const std::string& message);
+	void addMessage(const std::string& user, const std::string& message);
+	ServerMessageContainer getNewMessagesFromUser(const std::string& user);
 };
 

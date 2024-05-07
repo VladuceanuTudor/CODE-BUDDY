@@ -2,6 +2,7 @@
 #include "CUserHandler.h"
 #include "Constraints.h"
 #include "CLessonManager.h"
+#include "CChatManager.h"
 #include <WinSock2.h>
 #include <map>
 
@@ -21,7 +22,7 @@ private:
 	ServerMessageContainer handleLives(const std::string& request);
 	ServerMessageContainer handlePremiumPayment(const std::string& request);
 	ServerMessageContainer processLoginRequest(const std::string& request);
-	ServerMessageContainer processChatSendMessage(const std::string& request);
+	ServerMessageContainer processChatAddMessage(const std::string& request);
 	ServerMessageContainer processGetChatWithUser(const std::string& request);
 public:
 	CClientHandler(SOCKET sock) : userSocket(sock) {}

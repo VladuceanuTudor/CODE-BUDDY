@@ -191,12 +191,12 @@ ServerMessageContainer CClientHandler::processLoginRequest(const std::string& re
     return this->successLogin();
 }
 
-ServerMessageContainer CClientHandler::processChatSendMessage(const std::string& request)
+ServerMessageContainer CClientHandler::processChatAddMessage(const std::string& request)
 {
     //request = USER MESSAGE
     std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
     CFileHandler::addMessage(this->userHandler->getUsername(), inputs[0], inputs[1]);
-    CTCPServer::getInstance().sendMessage(inputs[0], inputs[1]);
+    CTCPServer::getInstance().addMessage(inputs[0], inputs[1]);
     return ServerMessageContainer(SEND_MESSAGE_CODE, "Done");
 }
 
@@ -263,7 +263,10 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
         sendBuffer = this->processGetChatWithUser(procRequest.getMess());
         break;
     case SEND_MESSAGE_CODE:
-        sendBuffer = this->processChatSendMessage(procRequest.getMess());
+        sendBuffer = this->processChatAddMessage(procRequest.getMess());
+        break;
+    case GET_NEW_MESSAGES_CODE:
+        sendBuffer = CTCPServer::getInstance().getNewMessagesFromUser(procRequest.getMess());
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");
@@ -276,6 +279,7 @@ CClientHandler::~CClientHandler()
 {
     if (this->userHandler)
         delete this->userHandler;
+    this->userHandler = nullptr;
     for (const auto& it : this->lessons)
         if(it.second)
             delete it.second;

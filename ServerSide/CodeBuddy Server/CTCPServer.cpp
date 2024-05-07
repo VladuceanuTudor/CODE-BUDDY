@@ -9,6 +9,9 @@ CTCPServer* CTCPServer::instance = nullptr;
 
 CTCPServer::CTCPServer(short listen_port)
 {
+    this->chatManager = new CChatManager();
+
+
     int iResult;
 
     ZeroMemory(&hints, sizeof(hints));
@@ -138,14 +141,19 @@ void CTCPServer::destroyInstance()
     CTCPServer::instance = nullptr;
 }
 
-void CTCPServer::sendMessage(const std::string& user, const std::string& message)
+void CTCPServer::addMessage(const std::string& user, const std::string& message)
 {
-    SDataBase& DB = SDataBase::getInstance();
-    std::vector<std::string> selects = { "Username", "Email" };
-    std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users", "Username = \'" + user + "\'");
-    if (this->existsMail(cols[0][1]))
-    {
-        ServerMessageContainer sendMessage(SEND_MESSAGE_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
-        this->sendData(sendMessage, this->socketMail[cols[0][1]]);
-    }
+    this->chatManager->addMessage(user, message);
+}
+
+ServerMessageContainer CTCPServer::getNewMessagesFromUser(const std::string& user)
+{
+    return this->chatManager->getMessages(user);
+}
+
+CTCPServer::~CTCPServer()
+{
+    if (this->chatManager)
+        delete this->chatManager;
+    this->chatManager = nullptr;
 }
