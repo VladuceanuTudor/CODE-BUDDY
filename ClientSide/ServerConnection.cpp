@@ -341,21 +341,21 @@ namespace Connection{
 
         std::vector<std::string> mesajSpart = SeparateWords(getConvo.getMess(), '#');
 
-        for(int i=0; i < mesajSpart.size(); i+=2){
-            if(mesajSpart[i] == myUsername)
-                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i+1]);
-            else
-                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i+1], mesajSpart[i]);
-        }
+        std::vector<QString> messagesToDisplay; // Store messages in a separate vector
 
-        textEdit->clear();
+        for(int i=0; i < mesajSpart.size(); i++)
+                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i], numePrieten);
 
-        for(auto mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
-        {
-            if(mesaj->getEmitator() == "eu")
-                appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
-            else
-                appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
-        }
+        // Update the textEdit in the main thread using a queued connection
+        QObject::connect(qApp, &QApplication::aboutToQuit, qApp, [textEdit, numePrieten]() {
+                textEdit->clear();
+                for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
+                    if(mesaj->getEmitator() == "eu")
+                        appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+                    else
+                        appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+
+            }, Qt::QueuedConnection);
+
     }
 }
