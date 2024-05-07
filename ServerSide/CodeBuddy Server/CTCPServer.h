@@ -35,5 +35,7 @@ public:
 
 	static void sendData(ServerMessageContainer message, SOCKET sock);
 	static int recvData(char* buffer, SOCKET sock);
+
+	void sendMessage(const std::string& user, const std::string& message);
 };
 

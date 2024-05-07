@@ -31,3 +31,4 @@
 #define GET_PAYMENT_CODE		'p'
 #define GET_CHAT_CODE			'c'
 #define GET_FRIENDS_CODE		'f'
+#define SEND_MESSAGE_CODE		'N'

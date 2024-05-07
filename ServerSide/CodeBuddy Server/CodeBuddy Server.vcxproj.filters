@@ -214,5 +214,8 @@
     <Text Include="a-Tanase.txt">
       <Filter>Resource Files\Chat</Filter>
     </Text>
+    <Text Include="eu1-a.txt">
+      <Filter>Resource Files\Chat</Filter>
+    </Text>
   </ItemGroup>
 </Project>

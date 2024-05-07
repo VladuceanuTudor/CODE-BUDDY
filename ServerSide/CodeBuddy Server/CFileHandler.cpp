@@ -100,3 +100,30 @@ ServerMessageContainer CFileHandler::getMessages(const std::string& filename)
 	return ServerMessageContainer(GET_CHAT_CODE, CWordSeparator::encapsulateWords(buffer, PAYLOAD_DELIM));
 
 }
+
+
+void CFileHandler::addMessage(const std::string& user1, const std::string& user2, const std::string& message)
+{
+	//se stie ca user1 a trimis mesajul
+	std::string filename{};
+	if (user1 > user2)
+	{
+		filename = user1 + "-" + user2 + ".txt";
+	}
+	else
+	{
+		filename = user2 + "-" + user1 + ".txt";
+	}
+
+	std::ofstream g(filename, std::ios::app);
+
+	if (!g.is_open())
+	{
+		std::cerr << "Error opening file " << filename << std::endl;
+		exit(-1);
+	}
+
+	g << user1 << ": " << message;
+
+	g.close();
+}

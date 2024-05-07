@@ -193,7 +193,11 @@ ServerMessageContainer CClientHandler::processLoginRequest(const std::string& re
 
 ServerMessageContainer CClientHandler::processChatSendMessage(const std::string& request)
 {
-    return ServerMessageContainer();
+    //request = USER MESSAGE
+    std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+    CFileHandler::addMessage(this->userHandler->getUsername(), inputs[0], inputs[1]);
+    CTCPServer::getInstance().sendMessage(inputs[0], inputs[1]);
+    return ServerMessageContainer(SEND_MESSAGE_CODE, "Done");
 }
 
 ServerMessageContainer CClientHandler::processGetChatWithUser(const std::string& request)
@@ -257,6 +261,9 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
         break;
     case GET_CHAT_CODE:
         sendBuffer = this->processGetChatWithUser(procRequest.getMess());
+        break;
+    case SEND_MESSAGE_CODE:
+        sendBuffer = this->processChatSendMessage(procRequest.getMess());
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");

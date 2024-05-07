@@ -2,6 +2,7 @@
 #include "SDataBase.h"
 #include "CClientHandler.h"
 #include "Constraints.h"
+#include "CWordSeparator.h"
 #include <iostream>
 
 CTCPServer* CTCPServer::instance = nullptr;
@@ -135,4 +136,16 @@ void CTCPServer::destroyInstance()
     if (CTCPServer::instance)
         delete CTCPServer::instance;
     CTCPServer::instance = nullptr;
+}
+
+void CTCPServer::sendMessage(const std::string& user, const std::string& message)
+{
+    SDataBase& DB = SDataBase::getInstance();
+    std::vector<std::string> selects = { "Username", "Email" };
+    std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users", "Username = \'" + user + "\'");
+    if (this->existsMail(cols[0][1]))
+    {
+        ServerMessageContainer sendMessage(SEND_MESSAGE_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
+        this->sendData(sendMessage, this->socketMail[cols[0][1]]);
+    }
 }
