@@ -316,4 +316,46 @@ namespace Connection{
         // ChatApp::getInstance().initMesajToConversatie("Prieten 1", "Super");
 
     }
+
+
+    void sendNewMessage(std::string message, std::string conv){
+        conv+="#";
+        conv+=message;
+        ServerMessageContainer sendNM('N', conv);
+        client->send(sendNM.toSend().c_str(), sendNM.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getAck(buffer);
+        if(getAck.getMess() != "Done")
+            throw 1;
+    }
+
+    void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEdit *textEdit){
+        ServerMessageContainer sendNM('n', numePrieten);
+        client->send(sendNM.toSend().c_str(), sendNM.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getConvo(buffer);
+
+        std::vector<std::string> mesajSpart = SeparateWords(getConvo.getMess(), '#');
+
+        for(int i=0; i < mesajSpart.size(); i+=2){
+            if(mesajSpart[i] == myUsername)
+                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i+1]);
+            else
+                ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i+1], mesajSpart[i]);
+        }
+
+        textEdit->clear();
+
+        for(auto mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
+        {
+            if(mesaj->getEmitator() == "eu")
+                appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+            else
+                appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+        }
+    }
 }

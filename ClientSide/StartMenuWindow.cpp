@@ -67,7 +67,7 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
     }
     this->setWindowTitle("CODE-BUDDY");
     Connection::_req_Inimi_nr(nrInimi,ui->nrInimi);
-    if(premium==true) ui->nrInimi->setText("∞");
+    if(premium == true) ui->nrInimi->setText("∞");
 
 }
 
@@ -125,6 +125,7 @@ QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
                 }else{
                     Connection::send_Inimi_decrease();
                     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+                    if(premium==true) ui->nrInimi->setText("∞");
                     if(nrInimi==0){
                         QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
                         StartMenuWindow::on_pushButton_clicked();
@@ -233,6 +234,7 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
 void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+    if(premium==true) ui->nrInimi->setText("∞");
     QLayout* currentLayout = ui->Language1Page->layout();
 
     deleteLayout(currentLayout);
@@ -371,12 +373,32 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
             appendRightAlignedText(ui->textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
     }
 
+    QThread* thread = new QThread();
+
+    QObject::connect(thread, &QThread::started, [=]() {
+
+        while (item && item->isSelected()) {
+            Connection::receiveNewMessages(myUserName, conversatie, ui->textEdit);
+            QThread::sleep(1);
+        }
+        qDebug() << "Thread stopped.";
+        thread->quit();
+    });
+
+    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
+
     qDebug() << "Clicked item: " << clickedText;
 }
 
 void StartMenuWindow::on_pushButton_8_clicked()
 {
     appendLeftAlignedText(ui->textEdit, "Eu:   " + ui->lineEdit->text());
+    try{
+        Connection::sendNewMessage(ui->lineEdit->text().toStdString(), ui->listWidget->currentItem()->text().toStdString());
+    }catch(int i){
+        QMessageBox::information(nullptr, "Server ERROR", "Serverul nu a primit mesajul!");
+    }
     ui->lineEdit->clear();
 }
 

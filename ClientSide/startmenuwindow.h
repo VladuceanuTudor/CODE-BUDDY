@@ -5,6 +5,7 @@
 #include "leaderboard.h"
 #include "Utils.h"
 #include <QListWidgetItem>
+#include <QThread>
 
 
 namespace Ui {

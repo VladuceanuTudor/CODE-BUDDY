@@ -46,6 +46,9 @@ int send_payment(std::string nr_card, std::string nume_prenume, std::string cvv,
 
 void initChat(std::string myUsername);
 
+void sendNewMessage(std::string message, std::string conv);
+
+void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEdit *textEdit);
 }
 
 #endif // SERVERCONNECTION_H

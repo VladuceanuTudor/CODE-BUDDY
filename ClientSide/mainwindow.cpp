@@ -66,10 +66,10 @@ void MainWindow::on_loginBTN_clicked()
         startMenuWindow->show();
     }else if(Status == 2){
         hide();
+        premium=true;
         startMenuWindow = new StartMenuWindow();
         startMenuWindow->myUserName=aux_username;
-        startMenuWindow->show();
-        premium=true;
+        startMenuWindow->show(); 
     }else{
         QMessageBox::information(nullptr, "Login failed", "Incorect credentials used!");
     }
