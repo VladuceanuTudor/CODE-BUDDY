@@ -7,13 +7,13 @@
 class CChatManager
 {
 private:
-	std::map<std::string, std::vector<std::string>> chat;	//Username = std::vector<Messages>
+	std::map<std::pair<std::string, std::string>, std::vector<std::string>> chat;	//Username = std::vector<Messages>
 
 public:
 	CChatManager();
 	~CChatManager();
-	ServerMessageContainer getMessages(const std::string& username);
-	void addMessage(const std::string& username, const std::string& message);
+	ServerMessageContainer getMessages(const std::string& userSending, const std::string& userRecieving);
+	void addMessage(const std::string& userSending, const std::string& userRecieving, const std::string& message);
 
 };
 

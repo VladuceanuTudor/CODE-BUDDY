@@ -182,7 +182,7 @@ ServerMessageContainer CClientHandler::processLoginRequest(const std::string& re
     std::vector<std::string> selects = { "Email", "Password" };
     std::vector<std::vector<std::string>> cols = DB.selectFromDatabase(selects, "Users", "Email = \'" + inputs[0] + "\'");
 
-    if (cols[0][0] != inputs[0] || cols[0][1] != inputs[1])
+    if (cols.empty() || (cols[0][0] != inputs[0] || cols[0][1] != inputs[1]))
     {
         return ServerMessageContainer(GET_LOGIN_CODE, "Invalid Credentials");
     }
@@ -196,7 +196,7 @@ ServerMessageContainer CClientHandler::processChatAddMessage(const std::string& 
     //request = USER MESSAGE
     std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
     CFileHandler::addMessage(this->userHandler->getUsername(), inputs[0], inputs[1]);
-    CTCPServer::getInstance().addMessage(inputs[0], inputs[1]);
+    CTCPServer::getInstance().addMessage(this->userHandler->getUsername(), inputs[0], inputs[1]);
     return ServerMessageContainer(SEND_MESSAGE_CODE, "Done");
 }
 
@@ -266,7 +266,7 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
         sendBuffer = this->processChatAddMessage(procRequest.getMess());
         break;
     case GET_NEW_MESSAGES_CODE:
-        sendBuffer = CTCPServer::getInstance().getNewMessagesFromUser(procRequest.getMess());
+        sendBuffer = CTCPServer::getInstance().getNewMessagesFromUser(procRequest.getMess(), this->userHandler->getUsername());
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");

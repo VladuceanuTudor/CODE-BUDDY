@@ -123,7 +123,7 @@ void CFileHandler::addMessage(const std::string& user1, const std::string& user2
 		exit(-1);
 	}
 
-	g << user1 << ": " << message;
+	g << std::endl << user1 << ": " << message;
 
 	g.close();
 }

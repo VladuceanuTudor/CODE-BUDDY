@@ -40,7 +40,7 @@ public:
 	static void sendData(ServerMessageContainer message, SOCKET sock);
 	static int recvData(char* buffer, SOCKET sock);
 
-	void addMessage(const std::string& user, const std::string& message);
-	ServerMessageContainer getNewMessagesFromUser(const std::string& user);
+	void addMessage(const std::string& userSenging, const std::string& userReceiving, const std::string& message);
+	ServerMessageContainer getNewMessagesFromUser(const std::string& userSenging, const std::string& userReceiving);
 };
 

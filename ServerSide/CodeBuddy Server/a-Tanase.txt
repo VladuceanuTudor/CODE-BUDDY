@@ -6,4 +6,11 @@ a: Ma plimn cu caini
 a: Si mai merg la gaini
 Tanase: Are broasca bani sa treaca marea?
 a: E o posibilitate
-a: Trebuie cercetat
+a: Trebuie cercetata: aaa
+a: ce faci?
+Tanase: Mesaj
+Tanase: Salut!
+a: Salut
+Tanase: Bimbilici
+Tanase: Boloboc
+a: sal

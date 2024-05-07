@@ -141,14 +141,14 @@ void CTCPServer::destroyInstance()
     CTCPServer::instance = nullptr;
 }
 
-void CTCPServer::addMessage(const std::string& user, const std::string& message)
+void CTCPServer::addMessage(const std::string& userSenging, const std::string& userReceiveing, const std::string& message)
 {
-    this->chatManager->addMessage(user, message);
+    this->chatManager->addMessage(userSenging, userReceiveing, message);
 }
 
-ServerMessageContainer CTCPServer::getNewMessagesFromUser(const std::string& user)
+ServerMessageContainer CTCPServer::getNewMessagesFromUser(const std::string& userSenging, const std::string& userReceiving)
 {
-    return this->chatManager->getMessages(user);
+    return this->chatManager->getMessages(userSenging, userReceiving);
 }
 
 CTCPServer::~CTCPServer()
