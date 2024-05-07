@@ -19,6 +19,7 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
     , ui(new Ui::StartMenuWindow)
 {
     ui->setupUi(this);
+    chat_thread = nullptr;
 
     QPixmap img_inima(":/img/pixelheart.jpg");
     ui->imagine_inima->setPixmap(img_inima.scaled(30,30, Qt::KeepAspectRatio));
@@ -67,7 +68,10 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
     }
     this->setWindowTitle("CODE-BUDDY");
     Connection::_req_Inimi_nr(nrInimi,ui->nrInimi);
-    if(premium == true) ui->nrInimi->setText("∞");
+    if(premium == true){
+        ui->nrInimi->setText("∞");
+        ui->pushButton_7->hide();
+    }
 
 }
 
@@ -125,7 +129,10 @@ QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
                 }else{
                     Connection::send_Inimi_decrease();
                     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
-                    if(premium==true) ui->nrInimi->setText("∞");
+                    if(premium==true){
+                        ui->nrInimi->setText("∞");
+                        ui->pushButton_7->hide();
+                    }
                     if(nrInimi==0){
                         QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
                         StartMenuWindow::on_pushButton_clicked();
@@ -234,7 +241,10 @@ void StartMenuWindow::onLessonButtonClicked(const QString& buttonText, CLimbaj* 
 void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
 
     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
-    if(premium==true) ui->nrInimi->setText("∞");
+    if(premium==true){
+        ui->nrInimi->setText("∞");
+        ui->pushButton_7->hide();
+    }
     QLayout* currentLayout = ui->Language1Page->layout();
 
     deleteLayout(currentLayout);
@@ -289,14 +299,20 @@ void StartMenuWindow::on_pushButton_6_clicked()
 void StartMenuWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+
     Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
-    if(premium==true) ui->nrInimi->setText("∞");
+    if(premium==true){
+        ui->pushButton_7->hide();
+        ui->nrInimi->setText("∞");
+    }
+
 }
 
 
 void StartMenuWindow::on_pushButton_2_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
+
     QLayout* currentLayout = ui->LeaderBoard->layout();
 
     deleteLayout(currentLayout);
@@ -332,6 +348,7 @@ void StartMenuWindow::on_pushButton_2_clicked()
 void StartMenuWindow::on_pushButton_7_clicked()
 {
     PaymentDialog* pDialog = new PaymentDialog();
+
     pDialog->show();
 }
 
@@ -339,6 +356,7 @@ void StartMenuWindow::on_pushButton_7_clicked()
 void StartMenuWindow::on_pushButton_3_clicked()
 {
     ui->stackedWidget->setCurrentIndex(3);
+
     static int iter=0;
 
     // Delete the existing layout
@@ -374,28 +392,28 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
             appendRightAlignedText(ui->textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
     }
 
-    QThread* thread = new QThread();
+    chat_thread = new QThread();
 
-    QObject::connect(thread, &QThread::started, [=]() {
+    QObject::connect(chat_thread, &QThread::started, [=]() {
 
-        while (item && item->isSelected()) {
+        while (item && item->isSelected() && ui->stackedWidget->currentIndex()==3) {
             Connection::receiveNewMessages(myUserName, conversatie, ui->textEdit);
             QThread::sleep(1);
 
         }
         qDebug() << "Thread stopped.";
-        thread->quit();
+        chat_thread->quit();
     });
 
-    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
+    QObject::connect(chat_thread, &QThread::finished, chat_thread, &QThread::deleteLater);
+    chat_thread->start();
 
-    qDebug() << "Clicked item: " << clickedText;
 }
 
 void StartMenuWindow::on_pushButton_8_clicked()
 {
     appendLeftAlignedText(ui->textEdit, "Eu:   " + ui->lineEdit->text());
+    ChatApp::getInstance().initMesajToConversatie(ui->listWidget->currentItem()->text().toStdString(), ui->lineEdit->text().toStdString());
     try{
         Connection::sendNewMessage(ui->lineEdit->text().toStdString(), ui->listWidget->currentItem()->text().toStdString());
     }catch(int i){

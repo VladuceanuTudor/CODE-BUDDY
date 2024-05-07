@@ -249,9 +249,8 @@ namespace Connection{
         _payload += "#";
         _payload += "20";
         _payload += an;
-        _payload += "-";
+        _payload += "#";
         _payload += luna;
-        _payload += "-15";
         _payload += "#";
         _payload += cvv;
         ServerMessageContainer sendpayment('p', _payload);
@@ -347,15 +346,15 @@ namespace Connection{
                 ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i], numePrieten);
 
         // Update the textEdit in the main thread using a queued connection
-        QObject::connect(qApp, &QApplication::aboutToQuit, qApp, [textEdit, numePrieten]() {
-                textEdit->clear();
-                for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
-                    if(mesaj->getEmitator() == "eu")
-                        appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
-                    else
-                        appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+        // QObject::connect(qApp, &QApplication::aboutToQuit, qApp, [textEdit, numePrieten]() {
+        //         textEdit->clear();
+        //         for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
+        //             if(mesaj->getEmitator() == "eu")
+        //                 appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+        //             else
+        //                 appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
 
-            }, Qt::QueuedConnection);
+        //     }, Qt::QueuedConnection);
 
     }
 }

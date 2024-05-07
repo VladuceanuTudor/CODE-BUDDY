@@ -40,7 +40,8 @@ void PaymentDialog::on_btnCumpara_clicked()
 
     int status = Connection::send_payment(imputNrCard.toStdString(), imputNume.toStdString(), imputCVV.toStdString(), imputAnExp.toStdString(), imputLunaExp.toStdString());
     if(status==1)
-        premium = true;
+    {premium = true;
+        this->hide();}
     else
         QMessageBox::information(nullptr, "Tranzactie refuzata", "Cardul nu este valid!");
 }

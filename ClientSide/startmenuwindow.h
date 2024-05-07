@@ -20,6 +20,7 @@ public:
     explicit StartMenuWindow(QWidget *parent = nullptr);
     ~StartMenuWindow();
     std::string myUserName;
+    QThread* chat_thread;
 
 private slots:
     void on_pushButton_4_clicked();
