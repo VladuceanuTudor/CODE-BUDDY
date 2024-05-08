@@ -15,3 +15,8 @@ Tanase: Mesaj
 a: asd
 a: dadsa
 a: sad
+Tanase: Boloboc
+a: salut doru
+Tanase: :)
+Tanase: fsdf
+Tanase: gggg
