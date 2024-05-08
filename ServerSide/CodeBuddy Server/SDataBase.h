@@ -75,6 +75,7 @@ public:
 	ServerMessageContainer processRegisterRequest(std::string request);
 	ServerMessageContainer processLeadearboardRequest(std::string request, const std::string& username, int xp);
 	ServerMessageContainer processGetFriendsRequest(const std::string& username);
+	ServerMessageContainer processGetUsersByNameRequest(const std::string& request);
 	int processPremiumPayment(const std::string& request, const std::string& username);
 	int getLastDayLogin(const std::string& username);
 

@@ -22,3 +22,14 @@ int sock_init() {
 
     return 0;
 }
+
+std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, int i)
+{
+    std::vector<std::string> column;
+    for (const auto& row : mat) {
+        if (!row.empty()) {
+            column.push_back(row[i]);
+        }
+    }
+    return column;
+}

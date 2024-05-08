@@ -3,6 +3,7 @@
 #include "CWordSeparator.h"
 #include "CClientHandler.h"
 #include "CTCPServer.h"
+#include "Utils.h"
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -401,4 +402,15 @@ ServerMessageContainer SDataBase::processGetFriendsRequest(const std::string& us
     }
 
     return ServerMessageContainer(GET_FRIENDS_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
+}
+
+ServerMessageContainer SDataBase::processGetUsersByNameRequest(const std::string& request)
+{
+    //request = USERNAME(sau nume din username)
+    std::vector<std::string> selects = { "TOP(10) Username" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username LIKE \' %" + request + "%\'");
+    /*if (cols.empty())
+        return ServerMessageContainer(GET_USERS_CODE, "");*/
+
+    return ServerMessageContainer(GET_USERS_CODE, CWordSeparator::encapsulateWords(getColumn(cols, 0), PAYLOAD_DELIM));
 }

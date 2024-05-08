@@ -11,7 +11,7 @@
 #define MAX_BUFFER_LEN			1024
 
 #define MAX_LIVES				7
-#define LIVES_REGEN_INTERVAL	1
+#define LIVES_REGEN_INTERVAL	1		//Min
 
 #define DAILY_XP_GIVEN			10
 
@@ -21,8 +21,8 @@
 
 #define GET_LOGIN_CODE			'l'
 #define ERROR_CODE				'E'
-#define REGISTER_CODE			'r'
-#define GET_LESSON_TITLES_CODE	'b'
+#define REGISTER_CODE			'r'	
+#define GET_LESSON_TITLES_CODE	'b'		
 #define GET_LESSON_CONTENT		'L'
 #define GET_EXERCICE_CODE		'e'
 #define GET_LEADERBOARD_CODE	'a'
@@ -33,3 +33,4 @@
 #define GET_FRIENDS_CODE		'f'
 #define SEND_MESSAGE_CODE		'N'
 #define GET_NEW_MESSAGES_CODE	'n'
+#define GET_USERS_CODE			'u'

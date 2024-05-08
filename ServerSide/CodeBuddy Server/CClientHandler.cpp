@@ -4,6 +4,7 @@
 #include "CWordSeparator.h"
 #include "CTCPServer.h"
 #include "CFileHandler.h"
+#include "Utils.h"
 
 ServerMessageContainer CClientHandler::sendExercices(std::string request)
 {
@@ -41,16 +42,7 @@ ServerMessageContainer CClientHandler::successLogin()
     return ServerMessageContainer(GET_LOGIN_CODE, CWordSeparator::encapsulateWords(sendData, PAYLOAD_DELIM));
 }
 
-std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, int i)
-{
-    std::vector<std::string> column;
-    for (const auto& row : mat) {
-        if (!row.empty()) {
-            column.push_back(row[i]);
-        }
-    }
-    return column;
-}
+
 
 ServerMessageContainer CClientHandler::processGetLessonsTitleRequest(std::string request)
 {
@@ -264,6 +256,9 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
         break;
     case GET_NEW_MESSAGES_CODE:
         sendBuffer = CTCPServer::getInstance().getNewMessagesFromUser(procRequest.getMess(), this->userHandler->getUsername());
+        break;
+    case GET_USERS_CODE:
+        sendBuffer = SDataBase::getInstance().processGetUsersByNameRequest(procRequest.getMess());
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");
