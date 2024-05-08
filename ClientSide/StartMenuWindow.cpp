@@ -11,6 +11,7 @@
 #include "paymentdialog.h"
 #include "QLineEdit"
 #include "QSplitter"
+#include <QObject>
 
 int nrInimi=0;
 
@@ -100,48 +101,85 @@ QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
     QLabel* questionLabel = new QLabel(QString::fromStdString(ex->getCerinta()));
     layout->addWidget(questionLabel);
 
-    QButtonGroup* answerGroup = new QButtonGroup(widget);
-    for (const std::string& answer : ex->getListaRasp()) {
-        QRadioButton* radioButton = new QRadioButton(QString::fromStdString(answer));
-        layout->addWidget(radioButton);
-        answerGroup->addButton(radioButton);
-    }
-
-    QPushButton* verifyButton = new QPushButton("Verify", widget);
-    layout->addWidget(verifyButton);
-
-    QObject::connect(verifyButton, &QPushButton::clicked, [=]() {
-        for (QAbstractButton* abstractButton : answerGroup->buttons()) {
-            QRadioButton* radioButton = qobject_cast
-                <QRadioButton*>(abstractButton);
-            if (radioButton && radioButton->isChecked()) {
-                std::string selectedAnswer = radioButton->text().toStdString();
-                bool isCorrect = (selectedAnswer == ex->getRaspCorect());
-                if(isCorrect == true){
-                    ex->setRezolvat();
-                    widget->setStyleSheet("color: rgb(0, 185, 0)");
-                    deleteLayout(layout);
-                    QVBoxLayout* layout = new QVBoxLayout(widget);
-                    QLabel *label = new QLabel(QString::fromStdString(ex->getCerinta() + "\n" + "Raspunsul corect:  " + ex->getRaspCorect()));
-
-                    layout->addWidget(label);
-
-                }else{
-                    Connection::send_Inimi_decrease();
-                    Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
-                    if(premium==true){
-                        ui->nrInimi->setText("∞");
-                        ui->pushButton_7->hide();
-                    }
-                    if(nrInimi==0){
-                        QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
-                        StartMenuWindow::on_pushButton_clicked();
-                    }
-                }
-                break;
-            }
+    if(ex->getType()=='G'){
+        QButtonGroup* answerGroup = new QButtonGroup(widget);
+        for (const std::string& answer : ex->getListaRasp()) {
+            QRadioButton* radioButton = new QRadioButton(QString::fromStdString(answer));
+            layout->addWidget(radioButton);
+            answerGroup->addButton(radioButton);
         }
-    });
+
+        QPushButton* verifyButton = new QPushButton("Verify", widget);
+        layout->addWidget(verifyButton);
+
+        QObject::connect(verifyButton, &QPushButton::clicked, [=]() {
+            for (QAbstractButton* abstractButton : answerGroup->buttons()) {
+                QRadioButton* radioButton = qobject_cast
+                    <QRadioButton*>(abstractButton);
+                if (radioButton && radioButton->isChecked()) {
+                    std::string selectedAnswer = radioButton->text().toStdString();
+                    bool isCorrect = (selectedAnswer == ex->getRaspCorect());
+                    if(isCorrect == true){
+                        ex->setRezolvat();
+                        widget->setStyleSheet("color: rgb(0, 185, 0)");
+                        deleteLayout(layout);
+                        QVBoxLayout* layout = new QVBoxLayout(widget);
+                        QLabel *label = new QLabel(QString::fromStdString(ex->getCerinta() + "\n" + "Raspunsul corect:  " + ex->getRaspCorect()));
+
+                        layout->addWidget(label);
+
+                    }else{
+                        Connection::send_Inimi_decrease();
+                        Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+                        if(premium==true){
+                            ui->nrInimi->setText("∞");
+                            ui->pushButton_7->hide();
+                        }
+                        if(nrInimi==0){
+                            QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
+                            StartMenuWindow::on_pushButton_clicked();
+                        }
+                    }
+                    break;
+                }
+            }
+        });
+    }else if(ex->getType() == 'T'){
+        QLineEdit *lineEdit = new QLineEdit();
+        lineEdit->setPlaceholderText("Scrie raspunsul aici..");
+        layout->addWidget(lineEdit);
+
+        QPushButton* verifyButton = new QPushButton("Verify", widget);
+        layout->addWidget(verifyButton);
+
+        QObject::connect(verifyButton, &QPushButton::clicked, [=]() {
+
+
+                    std::string selectedAnswer = lineEdit->text().toStdString();
+                    bool isCorrect = (selectedAnswer == ex->getRaspCorect());
+                    if(isCorrect == true){
+                        ex->setRezolvat();
+                        widget->setStyleSheet("color: rgb(0, 185, 0)");
+                        deleteLayout(layout);
+                        QVBoxLayout* layout = new QVBoxLayout(widget);
+                        QLabel *label = new QLabel(QString::fromStdString(ex->getCerinta() + "\n" + "Raspunsul corect:  " + ex->getRaspCorect()));
+
+                        layout->addWidget(label);
+
+                    }else{
+                        Connection::send_Inimi_decrease();
+                        Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+                        if(premium==true){
+                            ui->nrInimi->setText("∞");
+                            ui->pushButton_7->hide();
+                        }
+                        if(nrInimi==0){
+                            QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
+                            StartMenuWindow::on_pushButton_clicked();
+                        }
+                    }
+        });
+    }
 
     widget->setLayout(layout);
     return widget;
@@ -306,6 +344,7 @@ void StartMenuWindow::on_pushButton_clicked()
         ui->nrInimi->setText("∞");
     }
 
+
 }
 
 
@@ -353,8 +392,24 @@ void StartMenuWindow::on_pushButton_7_clicked()
 }
 
 
+
 void StartMenuWindow::on_pushButton_3_clicked()
 {
+    if(ui->stackedWidget->currentIndex() == 3)
+    {
+        if(chat_thread)
+        {
+            ui->stackedWidget->setCurrentIndex(2);
+            chat_thread->wait();
+
+            // Delete the thread
+            chat_thread->deleteLater();
+            chat_thread = nullptr; // Reset
+
+            ui->stackedWidget->setCurrentIndex(3);
+        }
+        return;
+    }
     ui->stackedWidget->setCurrentIndex(3);
 
     static int iter=0;
@@ -367,22 +422,37 @@ void StartMenuWindow::on_pushButton_3_clicked()
 
 
     if(iter++ == 0)
-    Connection::initChat(myUserName);
+        Connection::initChat(myUserName);
 
     for(auto prieten : ChatApp::getInstance().getListaPrieteni())
         ui->listWidget->addItem(QString::fromStdString(prieten));
 
+    if(ui->listWidget->metaObject()->indexOfSignal("itemClicked(QListWidgetItem*)") != -1)
+        disconnect(ui->listWidget, &QListWidget::itemClicked, this, &StartMenuWindow::onListItemClicked);
     connect(ui->listWidget, &QListWidget::itemClicked, this, &StartMenuWindow::onListItemClicked);
 
 
     ui->textEdit->setReadOnly(true);
 }
 
+
 void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
 
     QString clickedText = item->text();
     ui->textEdit->clear();
     std::string conversatie = clickedText.toStdString();
+
+    if(chat_thread)
+    {
+        ui->stackedWidget->setCurrentIndex(2);
+        chat_thread->wait();
+
+        // Delete the thread
+        chat_thread->deleteLater();
+        chat_thread = nullptr; // Reset
+
+        ui->stackedWidget->setCurrentIndex(3);
+    }
 
 
     for(auto mesaj : ChatApp::getInstance().getChatByPrieten(conversatie))
@@ -394,39 +464,22 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
     }
 
 
-    // UIThread uiThread;
-    // QThread thread;
-
-    // // Move the UIThread object to a separate thread
-    // uiThread.moveToThread(&thread);
-
-    // //Connect the started signal of the thread to the updateUI slot of uiThread
-    // QObject::connect(&thread, &QThread::started, [&]() {
-    //     uiThread.updateUI(ui->textEdit, item->text().toStdString());
-    // });
-
-    // Start the event loop of the QThread
-    //thread.start();
-
     chat_thread = new QThread();
 
     QObject::connect(chat_thread, &QThread::started, [=]() {
-
-        while (item && item->isSelected() && ui->stackedWidget->currentIndex()==3) {
+        while (item && item->isSelected() && ui->stackedWidget->currentIndex() == 3) {
             Connection::receiveNewMessages(myUserName, conversatie, ui->textEdit);
             QThread::sleep(1);
-
         }
         qDebug() << "Thread stopped.";
         chat_thread->quit();
     });
-
-    QObject::connect(chat_thread, &QThread::finished, chat_thread, &QThread::deleteLater);
     chat_thread->start();
 
     qDebug()<<"ok";
 
 }
+
 
 void StartMenuWindow::on_pushButton_8_clicked()
 {
@@ -438,5 +491,22 @@ void StartMenuWindow::on_pushButton_8_clicked()
         QMessageBox::information(nullptr, "Server ERROR", "Serverul nu a primit mesajul!");
     }
     ui->lineEdit->clear();
+}
+
+
+void StartMenuWindow::on_AdaugaPrietenBTN_clicked()
+{
+    std::string numePrieten;
+    numePrieten = ui->inputADDprieten->text().toStdString();
+    try{
+        Connection::addFriend(numePrieten);
+    }catch(int i){
+        if(i==1){
+            ui->listWidget->addItem(QString::fromStdString(numePrieten));
+            ChatApp::getInstance().initPrieten(numePrieten);
+            ChatApp::getInstance().initConversatie(numePrieten);
+        }else
+            QMessageBox::information(nullptr, "Adaugarea a esuat", "Utilizatorul nu exista!");
+    }
 }
 
