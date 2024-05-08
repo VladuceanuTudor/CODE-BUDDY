@@ -24,6 +24,11 @@ ServerMessageContainer CClientHandler::updateLessonDone(const std::string& reque
 {
     //request = LIMBAJ TITLU_LECTIE
     std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+    if (this->lessons[inputs[0]]->getLessonsNumber() == (this->lessons[inputs[0]]->getLessonsDone() - 1))
+        //Daca utilizatorul reface ultima lectia, si aceasta era completata anterior, iese din functie fara sa faca ceva
+    {
+        return ServerMessageContainer(LESSON_DONE_CODE, "ok");
+    }
     if (this->lessons[inputs[0]]->getLesson(this->lessons[inputs[0]]->getLessonsDone() - 1).getTitle() == inputs[1])
     {
         this->lessons[inputs[0]]->addLessonDone();

@@ -15,6 +15,7 @@ public:
 	CLessonHandler& getLesson(const std::string& lessonName) const;
 	CLessonHandler& getLesson(int index) const;
 	int getLessonsDone() const;
+	int getLessonsNumber() const;
 
 	ServerMessageContainer getSendMessageTitles();
 

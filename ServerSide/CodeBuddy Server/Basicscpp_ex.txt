@@ -6,14 +6,14 @@ Varianta2
 Varianta3
 Varianta4
 Varianta3
-S
+T
 Cum scriem cod pentru a atribui lui a o valoare?\nint a _ 25;
 Varianta1
 Varianta2
 =
 Varianta4
 =
-B
+T
 Cum scriem cod pentru a atribui lui a o valoare?\nint a _ 25; (Varianta Bloc)
 Varianta1
 Varianta2

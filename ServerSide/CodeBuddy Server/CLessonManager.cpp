@@ -57,3 +57,8 @@ void CLessonManager::addLessonDone()
 {
 	this->lessonsDone++;
 }
+
+int CLessonManager::getLessonsNumber() const
+{
+	return this->lessons.size();
+}
