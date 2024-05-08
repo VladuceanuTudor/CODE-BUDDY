@@ -16,6 +16,7 @@ public:
 	const std::string& getFilename() const;
 	ServerMessageContainer getSendMessage();
 	std::list<CExercice*> getExercices() const;
+	int getXp() const;
 
 	CLessonHandler(const std::string& title);
 	~CLessonHandler();

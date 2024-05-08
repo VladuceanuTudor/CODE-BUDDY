@@ -2,6 +2,8 @@
 #include "SDataBase.h"
 #include "CWordSeparator.h"
 #include "CClientHandler.h"
+#include "CTCPServer.h"
+#include "Utils.h"
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -38,7 +40,7 @@ int SDataBase::init()
     }
 
     // Connection string
-    SQLWCHAR connectionStr[] = L"DRIVER={SQL SERVER};SERVER=25.16.102.33,1433;DATABASE=CodeBuddy;UID=Doru;PWD=;Trusted_Connection=Yes;";
+    SQLWCHAR connectionStr[] = L"DRIVER={SQL SERVER};SERVER=localhost,1433;DATABASE=CodeBuddy;UID=Doru;PWD=;Trusted_Connection=Yes;";
     // Connect to SQL Server
     std::cout << "Connecting to DataBase...\n";
 
@@ -97,9 +99,9 @@ void SDataBase::AllocPrepare(SQLWCHAR* query)
 std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     const std::vector<std::string>& selectColumns,
     const std::string& table,
-    const std::string& whereCondition = "",
-    const std::string& orderColumn = "",
-    bool orderDesc = false)
+    const std::string& whereCondition,
+    const std::string& orderColumn,
+    bool orderDesc)
 {
     // Construct the SELECT query
     std::string selectString = "SELECT ";
@@ -148,14 +150,14 @@ std::vector<std::vector<std::string>> SDataBase::selectFromDatabase(
     std::vector<std::vector<std::string>> result;
     while (SQLFetch(SDataBase::sqlStmtHandle) == SQL_SUCCESS) {
         std::vector<std::string> row;
-        for (int i = 0; i < selectColumns.size(); ++i) {
+        for (int i = 0; i < selectColumns.size(); i++) {
             row.emplace_back(reinterpret_cast<char*>(colBindings[i]));
         }
         result.push_back(row);
     }
 
     // Clean up resources
-    for (int i = 0; i < colBindings.size(); ++i) {
+    for (int i = 0; i < colBindings.size(); i++) {
         delete[] colBindings[i];
     }
     SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
@@ -212,7 +214,7 @@ void SDataBase::updateIntoDatabase(
     const std::string& updateColumn,
     const std::string& updateValue,
     const std::string& whereCondition,
-    bool command = false)
+    bool command)
 {
     std::string updateString;
     if(!command)
@@ -244,29 +246,6 @@ bool SDataBase::checkIfInDatabase(std::string table, std::string columnName, std
     std::vector<std::string> selects; selects.push_back(columnName);
 
     return !this->selectFromDatabase(selects, table, columnName + " = \'" + value + "\'").empty();
-}
-
-bool SDataBase::processLoginRequest(std::string request)
-{
-    bool found{ false };
-    std::vector<std::string> inputs;
-    inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
-
-    SQLFreeStmt(SDataBase::sqlStmtHandle, SQL_DROP);
-
-    std::vector<std::string> selects; selects.push_back("Email"); selects.push_back("Password");
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users");
-
-    for (const auto& it : cols)
-    {
-        if (it[0] == inputs[0] && it[1] == inputs[1])
-        {
-            found = true;
-            break;
-        }
-    }
-
-    return found;
 }
 
 SDataBase& SDataBase::getInstance()
@@ -302,17 +281,6 @@ ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
     return ServerMessageContainer(REGISTER_CODE, "accepted");
 }
 
-std::vector<std::string> getColumn(std::vector<std::vector<std::string>> mat, int i)
-{
-    std::vector<std::string> column;
-    for (const auto& row : mat) {
-        if (!row.empty()) {
-            column.push_back(row[i]);
-        }
-    }
-    return column;
-}
-
 void SDataBase::updateLessonsDone(CClientHandler* ch, std::string language)
 {
     std::string updateColumn = "LessonsDone" + language;
@@ -321,68 +289,21 @@ void SDataBase::updateLessonsDone(CClientHandler* ch, std::string language)
         "Username = \'" + ch->getUserHandler().getUsername() + "\'");
 }
 
-
-ServerMessageContainer SDataBase::processGetLessonsTitleRequest(std::string request, CClientHandler* ch)
+CUserHandler* SDataBase::getUserInfo(std::string email)
 {
-    if (!ch->existsLesson(request))
-    {
+    //request = EMAIL
 
-        std::vector<std::string> selects; selects.push_back("LessonTitle");
-        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "Language = \'" + request + "\'", "LessonNumber");
-
-        std::string buffer = "LessonsDone" + request;
-        selects.clear();
-        selects.push_back(buffer);
-        std::string lessonsDone = this->selectFromDatabase(selects, "Users", "Username = \'" + ch->getUserHandler().getUsername() + "\'")[0][0];
-
-        ch->setLessonTileDone(std::stoi(lessonsDone), getColumn(cols, 0), request);
-    }
-
-    return ch->getLanguage(request).getSendMessageTitles();
-}
-
-ServerMessageContainer SDataBase::processGetLessonContent(std::string request, CClientHandler* ch)
-{
-    std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);   
-
-    if (ch->getLanguage(words[1]).getLesson(words[0]).getFilename().empty())
-    {
-        std::vector<std::string> selects = { "Language", "Filename", "XpGiven" };
-        std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Lessons", "LessonTitle = \'" + words[0] + "\'");
-        for (const auto& it : cols)
-        {
-            if (it[0] == words[1])  //Punem Lectia cu care vrem sa lucram pe prima pozitie
-            {
-                cols[0] = it;
-                break;
-            }
-        }
-
-        ch->getLanguage(words[1]).getLesson(words[0]).setFilename(cols[0][1]);
-        ch->getLanguage(words[1]).getLesson(words[0]).extractExercices();
-        ch->getLanguage(words[1]).getLesson(words[0]).setXp(std::stoi(cols[0][2]));
-    }
-
-    return ch->getLanguage(words[1]).getLesson(words[0]).getSendMessage();
-}
-
-CUserHandler* SDataBase::getUserInfo(std::string request)
-{
     CUserHandler* ch{nullptr};
 
-    std::vector<std::string> inputs;
+    std::vector<std::string> selects = { "Username", "Xp", "Lives", "IsPremium"};
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Email = \'" + email + "\'");
 
-    inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
-
-    std::vector<std::string> selects = { "Username", "Xp", "Lives"};
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Email = \'" +  inputs[0] + "\'");
-
-    ch = new CUserHandler(cols[0][0], std::stoi(cols[0][1]), std::stoi(cols[0][2]));
+    ch = new CUserHandler(cols[0][0], std::stoi(cols[0][1]), std::stoi(cols[0][2]), std::stoi(cols[0][3]));
 
     return ch;
 }
 
-ServerMessageContainer SDataBase::processGlobalRequest(CClientHandler* ch)
+ServerMessageContainer SDataBase::processGlobalRequest()
 {
     std::vector<std::string> selects = {"TOP(10) Xp", "Username"};
     std::vector<std::vector<std::string>> cols = SDataBase::selectFromDatabase(selects, "Users", "", "Xp", true);
@@ -396,14 +317,15 @@ ServerMessageContainer SDataBase::processGlobalRequest(CClientHandler* ch)
     return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }
 
-ServerMessageContainer SDataBase::processLocalRequest(CClientHandler* ch)
+ServerMessageContainer SDataBase::processLocalRequest(const std::string& username, int xp)
 {
     std::vector<std::string> selects = { "Xp", "Username" };
     std::vector<std::vector<std::string>> currentUserCols = SDataBase::selectFromDatabase(selects, "Users",
-        "Username = \'" + ch->getUserHandler().getUsername() + "\'");
+        "Username = \'" + username + "\'");
     selects = { "TOP(9) Xp", "Username" };
     std::vector<std::vector<std::string>> othersCols = SDataBase::selectFromDatabase(selects, "Users",
-        "Xp <= " + std::to_string(ch->getUserHandler().getXp()) + " AND Username != \'" + ch->getUserHandler().getUsername() + "\'");
+        "Xp <= " + std::to_string(xp) + " AND Username != \'" + username + "\'", 
+        "Xp", true);
 
     selects.clear();
     selects.push_back(currentUserCols[0][1]);
@@ -416,53 +338,17 @@ ServerMessageContainer SDataBase::processLocalRequest(CClientHandler* ch)
     return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }
 
-ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, CClientHandler* ch)
+ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, const std::string& username, int xp)
 {
     if (request == "g")
     {
-        return this->processGlobalRequest(ch);
+        return this->processGlobalRequest();
     }
     else if (request == "l")
     {
-        return this->processLocalRequest(ch);
+        return this->processLocalRequest(username, xp);
     }
     return ServerMessageContainer(ERROR_CODE, "Invalid option for leaderboard request");
-}
-
-ServerMessageContainer SDataBase::handleLives(const std::string& request, CClientHandler* ch)
-{
-    std::vector<std::string> selects = { "Lives", "DATEDIFF(MINUTE, LivesTimeLost, GETDATE()) AS Minutes" };
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username = \'"
-        + ch->getUserHandler().getUsername() + "\'");
-
-    int minutes = std::stoi(cols[0][1]);
-
-    ServerMessageContainer message{};
-    while (ch->getUserHandler().getLives() < MAX_LIVES &&
-            minutes >= LIVES_REGEN_INTERVAL)
-    {
-        ch->getUserHandler().addLives(1);
-        minutes -= LIVES_REGEN_INTERVAL;
-    }
-    
-    if (request == "0")
-    {
-        message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(ch->getUserHandler().getLives()));
-    }
-    else if (request == "1")
-    {
-        if (ch->getUserHandler().getLives() == MAX_LIVES)
-        {
-            this->updateIntoDatabase("Users", "LivesTimeLost", "GETDATE()", "Username = \'" + ch->getUserHandler().getUsername() + "\'", true);
-        }
-        ch->getUserHandler().subtractLives();
-
-        message = ServerMessageContainer(GET_LIVES_CODE, std::to_string(ch->getUserHandler().getLives()));
-    }
-    this->updateIntoDatabase("Users", "Lives", std::to_string(ch->getUserHandler().getLives()),
-        "Username = \'" + ch->getUserHandler().getUsername() + "\'");
-
-    return message;
 }
 
 int SDataBase::getLastDayLogin(const std::string& username)
@@ -477,4 +363,63 @@ int SDataBase::getLastDayLogin(const std::string& username)
 void SDataBase::updateUserXp(std::string username, int newXp)
 {
     this->updateIntoDatabase("Users", "Xp", std::to_string(newXp), "Username = \'" + username + "\'");
+}
+
+int SDataBase::processPremiumPayment(const std::string& request, const std::string& username)
+{
+    // request = NUMBER_CARD NAME YEAR MONTH CVV
+    std::vector<std::string> inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
+    std::vector<std::string> selects = { "CardNumber", "CardName", "YEAR(ExpirationDate)", "MONTH(ExpirationDate)", "CVV", "Balance" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "ClientsCards", "CardNumber = \'" + inputs[0] + "\'");
+
+    if (cols.empty())
+        return 2;
+
+    for (int i = 0; i < 5; i++)
+        if (inputs[i] != cols[0][i] && inputs[i] != ("0" + cols[0][i]))
+            return 2;
+    int balance = std::stoi(cols[0][5]);
+    if (balance < PREMIUM_PRICE)
+        return 1;
+    this->updateIntoDatabase("ClientsCards", "Balance", std::to_string(balance - PREMIUM_PRICE), "CardNumber = \'" + inputs[0] + "\'");
+    this->updateIntoDatabase("Users", "IsPremium", "1", "Username = \'" + username + "\'");
+    return 0;
+}
+
+ServerMessageContainer SDataBase::processGetFriendsRequest(const std::string& username)
+{
+    std::vector<std::string> selects = { "User1", "User2" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Friends",
+        "User1 = \'" + username + "\' OR User2 = \'" + username + "\'");
+    selects.clear();
+    
+    for (const auto& it : cols)
+    {
+        if (it[0] == username)
+            selects.push_back(it[1]);
+        else
+            selects.push_back(it[0]);
+    }
+
+    return ServerMessageContainer(GET_FRIENDS_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
+}
+
+ServerMessageContainer SDataBase::addFriendToUser(const std::string& user1, const std::string& user2)
+{
+    //request = user1 user2 (user1 da cerere lui user2)
+    std::vector<std::string> selects = { "Username" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username = \'" + user2 + "\'");
+    
+    if (cols.empty())
+        return ServerMessageContainer(ADD_FRIEND_CODE, "NotFound");
+
+    std::string whereCondition = "(User1 = \'" + user1 + "\'" + "AND User2 = \'" + user2 + "\') OR (User1 = \'" + user2 + "\' AND User2 = \'" + user1 + "\')";
+    cols = this->selectFromDatabase(selects, "Users", whereCondition);
+    if(!cols.empty())
+        return ServerMessageContainer(ADD_FRIEND_CODE, "AlreadyFriends");
+
+    selects = { "User1", "User2" };
+    std::vector<std::string>insertValues = { user1, user2 };
+    this->insertIntoDatabase(selects, "Friends", insertValues);
+    return ServerMessageContainer(ADD_FRIEND_CODE, "Accepted");
 }

@@ -59,3 +59,8 @@ std::list<CExercice*> CLessonHandler::getExercices() const
 {
 	return this->exercices;
 }
+
+int CLessonHandler::getXp() const
+{
+	return this->xp;
+}

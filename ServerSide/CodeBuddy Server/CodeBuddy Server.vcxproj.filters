@@ -22,6 +22,9 @@
     <Filter Include="Resource Files\Java">
       <UniqueIdentifier>{d6e4fee3-8f28-46e4-bb26-0a9d49b04f85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Chat">
+      <UniqueIdentifier>{f50082c6-857f-42fa-8a58-592d7516b7cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -207,6 +210,15 @@
     </Text>
     <Text Include="StructOfjava_ex.txt">
       <Filter>Resource Files\Java</Filter>
+    </Text>
+    <Text Include="a-Tanase.txt">
+      <Filter>Resource Files\Chat</Filter>
+    </Text>
+    <Text Include="eu1-a.txt">
+      <Filter>Resource Files\Chat</Filter>
+    </Text>
+    <Text Include="a-Username.txt">
+      <Filter>Resource Files\Chat</Filter>
     </Text>
   </ItemGroup>
 </Project>

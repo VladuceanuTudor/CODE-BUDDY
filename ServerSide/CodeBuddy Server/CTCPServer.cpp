@@ -2,12 +2,16 @@
 #include "SDataBase.h"
 #include "CClientHandler.h"
 #include "Constraints.h"
+#include "CWordSeparator.h"
 #include <iostream>
 
 CTCPServer* CTCPServer::instance = nullptr;
 
 CTCPServer::CTCPServer(short listen_port)
 {
+    this->chatManager = new CChatManager();
+
+
     int iResult;
 
     ZeroMemory(&hints, sizeof(hints));
@@ -51,7 +55,7 @@ CTCPServer::CTCPServer(short listen_port)
     }
 }
 
-void CTCPServer::wait_connection()
+SOCKET CTCPServer::wait_connection()
 {
     SOCKET sock = accept(listen_sock, NULL, NULL);
     if (sock == INVALID_SOCKET) {
@@ -60,8 +64,8 @@ void CTCPServer::wait_connection()
         WSACleanup();
         exit(-1);
     }
-    this->client_sock.push_back(sock);
     fprintf(stderr, "Connected on socket %llu\n", sock);
+    return sock;
 }
 
 int CTCPServer::send(const char const* send_buff, const int size, SOCKET sock)
@@ -76,23 +80,37 @@ int CTCPServer::recv(char* recv_buff, const int size, SOCKET sock)
     return recv_bytes;
 }
 
-SOCKET CTCPServer::getLastSocket() const
+void CTCPServer::addMail(SOCKET sock, std::string email)
 {
-    return this->client_sock.back();
+    this->socketMail[email] = sock;
 }
 
-
-
-void CTCPServer::sendData(std::string message, SOCKET sock)
+bool CTCPServer::existsMail(std::string email)
 {
-    char responsebuffer[1024]{};
+    return this->socketMail.find(email) != this->socketMail.end();
+}
 
-    strcpy_s(responsebuffer, message.c_str());
+void CTCPServer::freeSocket(SOCKET sock)
+{
+    for (const auto& it : this->socketMail)
+    {
+        if(it.second == sock)
+        {
+            this->socketMail.erase(it.first);
+            break; 
+        }
+    }
+}
+
+void CTCPServer::sendData(ServerMessageContainer message, SOCKET sock)
+{
+
+    CTCPServer::send(message.getWholeString().c_str(), message.getSize(), sock);
+
 
     std::cout << "Response socket " << sock << ": ";
-    std::cout << responsebuffer << std::endl;
-
-    CTCPServer::send(responsebuffer, strlen(responsebuffer), sock);
+    fwrite(message.getWholeString().c_str(), sizeof(char), message.getSize(), stdout);
+    std::cout << "\n";
 }
 
 
@@ -121,4 +139,21 @@ void CTCPServer::destroyInstance()
     if (CTCPServer::instance)
         delete CTCPServer::instance;
     CTCPServer::instance = nullptr;
+}
+
+void CTCPServer::addMessage(const std::string& userSenging, const std::string& userReceiveing, const std::string& message)
+{
+    this->chatManager->addMessage(userSenging, userReceiveing, message);
+}
+
+ServerMessageContainer CTCPServer::getNewMessagesFromUser(const std::string& userSenging, const std::string& userReceiving)
+{
+    return this->chatManager->getMessages(userSenging, userReceiving);
+}
+
+CTCPServer::~CTCPServer()
+{
+    if (this->chatManager)
+        delete this->chatManager;
+    this->chatManager = nullptr;
 }
