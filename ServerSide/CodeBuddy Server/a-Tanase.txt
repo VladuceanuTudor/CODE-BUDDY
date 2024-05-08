@@ -20,3 +20,16 @@ a: salut doru
 Tanase: :)
 Tanase: fsdf
 Tanase: gggg
+a: Bomboloc
+a: sfdsfdfsf
+a: Test
+Tanase: Mesaj test
+Tanase: Mesaj test 2
+a: Salut
+Tanase: Malala
+Tanase: asdasdasda
+a: ce faci
+Tanase: Uite bine
+Tanase: :))
+Tanase: asdfasdf
+Tanase: asdfasdf
