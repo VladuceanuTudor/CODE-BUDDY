@@ -261,7 +261,7 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
     lessonTextEdit->setReadOnly(true); // Set text edit to read-only
     lessonTextEdit->setText(QString::fromStdString(lectie->getText()));
     //lessonTextEdit->setSizeHint(QSize(130, 200));
-    lessonTextEdit->setFixedSize(725, 145);
+    lessonTextEdit->setFixedSize(992, 200);
     layout->addWidget(lessonTextEdit);
 
     // Add a label for exercises
@@ -270,18 +270,22 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
 
     // Add a QListWidget to display the exercises
     QListWidget* exercisesListWidget = new QListWidget;
+    exercisesListWidget->setFixedSize(992, 330);
     for (IExercitiu* exercitiu : lectie->getEx()) {
         QListWidgetItem* item = new QListWidgetItem(exercisesListWidget);
-        item->setSizeHint(QSize(200, 200)); // Set the size of each item
+        item->setSizeHint(QSize(200, 240)); // Set the size of each item
+        //exercisesListWidget->setItemDelegate(new QItemDelegate(exercisesListWidget));
         exercisesListWidget->addItem(item);
         exercisesListWidget->setItemWidget(item, createExerciseWidget(exercitiu));
     }
 
     layout->addWidget(exercisesListWidget);
-
+    layout->addSpacerItem(new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
     QPushButton* finalizeButton = new QPushButton("Finalizeaza Lectia");
-    finalizeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout->addWidget(finalizeButton, 0, Qt::AlignBottom | Qt::AlignRight); // Align button to bottom-right corner
+    finalizeButton->setFixedSize(992, 20);
+    layout->addWidget(finalizeButton); // Align button to bottom-right corner
+
+
 
     // Connect button clicked signal to a slot
     connect(finalizeButton, &QPushButton::clicked, [=]() {
@@ -354,6 +358,9 @@ void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
     int done_for_color = 1;
     for (const auto& numeLectie : limbaj->getNumeLectii()) {
         QPushButton* button = new QPushButton(QString::fromStdString(numeLectie));
+        button->setFixedSize(992, 30);
+
+        button->setStyleSheet("border-radius: 5px; antialiasing: on;");
 
         // Set button background color based on completion status:
         if(done_for_color < limbaj->getCompleted())
