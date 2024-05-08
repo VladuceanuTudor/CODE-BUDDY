@@ -50,6 +50,8 @@ private slots:
     void on_pushButton_8_clicked();
     void onListItemClicked(QListWidgetItem *item);
 
+    void on_AdaugaPrietenBTN_clicked();
+
 private:
     Ui::StartMenuWindow *ui;
 

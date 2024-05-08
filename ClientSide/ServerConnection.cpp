@@ -358,5 +358,19 @@ namespace Connection{
                 appendRightAlignedText(textEdit, QString::fromStdString(numePrieten + ":   " + mesajSpart[i]));}
     }
 
+    void addFriend(std::string nume_prieten){
+        ServerMessageContainer sendADDfriend('u', nume_prieten);
+        client->send(sendADDfriend.toSend().c_str(), sendADDfriend.getSize());
+
+        char buffer[1024];
+        client->recv(buffer, sizeof(buffer));
+        ServerMessageContainer getResp(buffer);
+
+        if(getResp.getMess() == "Accepted")
+            throw 1;
+        else
+            throw 2;
+    }
+
 }
 

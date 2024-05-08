@@ -196,7 +196,7 @@
         <x>20</x>
         <y>20</y>
         <width>256</width>
-        <height>521</height>
+        <height>411</height>
        </rect>
       </property>
      </widget>
@@ -222,6 +222,39 @@
           <widget class="QPushButton" name="pushButton_8">
            <property name="text">
             <string>Trimite</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>470</y>
+        <width>261</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>ADAUGA PRIETENI:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLineEdit" name="inputADDprieten"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="AdaugaPrietenBTN">
+           <property name="text">
+            <string>Adauga</string>
            </property>
           </widget>
          </item>

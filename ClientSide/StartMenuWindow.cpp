@@ -440,3 +440,20 @@ void StartMenuWindow::on_pushButton_8_clicked()
     ui->lineEdit->clear();
 }
 
+
+void StartMenuWindow::on_AdaugaPrietenBTN_clicked()
+{
+    std::string numePrieten;
+    numePrieten = ui->inputADDprieten->text().toStdString();
+    try{
+        Connection::addFriend(numePrieten);
+    }catch(int i){
+        if(i==1){
+            ui->listWidget->addItem(QString::fromStdString(numePrieten));
+            ChatApp::getInstance().initPrieten(numePrieten);
+            ChatApp::getInstance().initConversatie(numePrieten);
+        }else
+            QMessageBox::information(nullptr, "Adaugarea a esuat", "Utilizatorul nu exista!");
+    }
+}
+

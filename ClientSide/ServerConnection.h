@@ -54,15 +54,9 @@ void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEd
 
 void messagesReceived(std::string numePrieten, QTextEdit *textEdit);
 
+void addFriend(std::string nume_prieten);
+
 }
 
-// class UIThread : public QObject {
-//     Q_OBJECT
-// public:
-//     explicit UIThread(QObject *parent = nullptr);
-
-// public slots:
-//     void updateUI(QTextEdit *textEdit, std::string numePrieten);
-// };
 
 #endif // SERVERCONNECTION_H
