@@ -33,4 +33,4 @@
 #define GET_FRIENDS_CODE		'f'
 #define SEND_MESSAGE_CODE		'N'
 #define GET_NEW_MESSAGES_CODE	'n'
-#define GET_USERS_CODE			'u'
+#define ADD_FRIEND_CODE			'u'

@@ -257,8 +257,8 @@ ServerMessageContainer CClientHandler::handleRequest(char request[MAX_BUFFER_LEN
     case GET_NEW_MESSAGES_CODE:
         sendBuffer = CTCPServer::getInstance().getNewMessagesFromUser(procRequest.getMess(), this->userHandler->getUsername());
         break;
-    case GET_USERS_CODE:
-        sendBuffer = SDataBase::getInstance().processGetUsersByNameRequest(procRequest.getMess());
+    case ADD_FRIEND_CODE:
+        sendBuffer = SDataBase::getInstance().addFriendToUser(this->userHandler->getUsername(), procRequest.getMess());
         break;
     default:
         ServerMessageContainer errorBuffer(ERROR_CODE, "Invalid Option given.");

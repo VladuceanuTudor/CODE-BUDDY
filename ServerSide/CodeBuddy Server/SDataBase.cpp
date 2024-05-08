@@ -404,13 +404,22 @@ ServerMessageContainer SDataBase::processGetFriendsRequest(const std::string& us
     return ServerMessageContainer(GET_FRIENDS_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
 }
 
-ServerMessageContainer SDataBase::processGetUsersByNameRequest(const std::string& request)
+ServerMessageContainer SDataBase::addFriendToUser(const std::string& user1, const std::string& user2)
 {
-    //request = USERNAME(sau nume din username)
-    std::vector<std::string> selects = { "TOP(10) Username" };
-    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username LIKE \' %" + request + "%\'");
-    /*if (cols.empty())
-        return ServerMessageContainer(GET_USERS_CODE, "");*/
+    //request = user1 user2 (user1 da cerere lui user2)
+    std::vector<std::string> selects = { "Username" };
+    std::vector<std::vector<std::string>> cols = this->selectFromDatabase(selects, "Users", "Username = \'" + user2 + "\'");
+    
+    if (cols.empty())
+        return ServerMessageContainer(ADD_FRIEND_CODE, "NotFound");
 
-    return ServerMessageContainer(GET_USERS_CODE, CWordSeparator::encapsulateWords(getColumn(cols, 0), PAYLOAD_DELIM));
+    std::string whereCondition = "(User1 = \'" + user1 + "\'" + "AND User2 = \'" + user2 + "\') OR (User1 = \'" + user2 + "\' AND User2 = \'" + user1 + "\')";
+    cols = this->selectFromDatabase(selects, "Users", whereCondition);
+    if(!cols.empty())
+        return ServerMessageContainer(ADD_FRIEND_CODE, "AlreadyFriends");
+
+    selects = { "User1", "User2" };
+    std::vector<std::string>insertValues = { user1, user2 };
+    this->insertIntoDatabase(selects, "Friends", insertValues);
+    return ServerMessageContainer(ADD_FRIEND_CODE, "Accepted");
 }
