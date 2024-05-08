@@ -1,5 +1,6 @@
 1
 G
+1
 Numiti o instructiune de loop
 While
 If

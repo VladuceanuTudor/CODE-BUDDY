@@ -319,23 +319,31 @@ ServerMessageContainer SDataBase::processGlobalRequest()
 
 ServerMessageContainer SDataBase::processLocalRequest(const std::string& username, int xp)
 {
-    std::vector<std::string> selects = { "Xp", "Username" };
-    std::vector<std::vector<std::string>> currentUserCols = SDataBase::selectFromDatabase(selects, "Users",
-        "Username = \'" + username + "\'");
+
+    std::vector<std::string> selects = { "COUNT(*) + 1" };
+
+    std::vector<std::vector<std::string>> cols = SDataBase::selectFromDatabase(selects, "Users",
+        "XP > (SELECT XP FROM Users WHERE UserName = '" + username + "')");
+
+    if (cols[0][0].empty())
+        return ServerMessageContainer(ERROR_CODE, "User Local Place not found");
+
+    std::vector<std::string> sendMessage{};
+
     selects = { "TOP(9) Xp", "Username" };
     std::vector<std::vector<std::string>> othersCols = SDataBase::selectFromDatabase(selects, "Users",
         "Xp <= " + std::to_string(xp) + " AND Username != \'" + username + "\'", 
         "Xp", true);
 
-    selects.clear();
-    selects.push_back(currentUserCols[0][1]);
-    selects.push_back(currentUserCols[0][0]);
+    sendMessage.push_back(cols[0][0]);
+    sendMessage.push_back(username);
+    sendMessage.push_back(std::to_string(xp));
     for (const auto& it : othersCols)
     {
-        selects.push_back(it[1]);
-        selects.push_back(it[0]);
+        sendMessage.push_back(it[1]);
+        sendMessage.push_back(it[0]);
     }
-    return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(selects, PAYLOAD_DELIM));
+    return ServerMessageContainer(GET_LEADERBOARD_CODE, CWordSeparator::encapsulateWords(sendMessage, PAYLOAD_DELIM));
 }
 
 ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, const std::string& username, int xp)
@@ -413,8 +421,9 @@ ServerMessageContainer SDataBase::addFriendToUser(const std::string& user1, cons
     if (cols.empty())
         return ServerMessageContainer(ADD_FRIEND_CODE, "NotFound");
 
-    std::string whereCondition = "(User1 = \'" + user1 + "\'" + "AND User2 = \'" + user2 + "\') OR (User1 = \'" + user2 + "\' AND User2 = \'" + user1 + "\')";
-    cols = this->selectFromDatabase(selects, "Users", whereCondition);
+    selects = { "*" };
+    std::string whereCondition = "(User1 = \'" + user1 + "\' AND User2 = \'" + user2 + "\') OR (User1 = \'" + user2 + "\' AND User2 = \'" + user1 + "\')";
+    cols = this->selectFromDatabase(selects, "Friends", whereCondition);
     if(!cols.empty())
         return ServerMessageContainer(ADD_FRIEND_CODE, "AlreadyFriends");
 

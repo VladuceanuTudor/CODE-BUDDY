@@ -1,5 +1,6 @@
 1
 G
+1
 Cu facem o instructiune if?
 Cu if(...)
 cu if(...) then

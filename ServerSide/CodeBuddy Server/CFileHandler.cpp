@@ -14,20 +14,30 @@ std::list<CExercice*> CFileHandler::getExercises(const std::string& filename)
 
 	std::string line;
 	std::getline(f, line);
-	int exercises = std::stoi(line);
+	int nrExercises = std::stoi(line);
 	std::string question;
+	std::string buffer;
 	char type;
 	std::string realAnswer;
 	std::list<std::string> answers;
 
 	std::list<CExercice*> exercices;
 
-	for (int i = 0; i < exercises; i++)
+	for (int i = 0; i < nrExercises; i++)
 	{
+		question = "";
 		answers.clear();
 		std::getline(f, line);
 		type = line[0];
-		std::getline(f, question);
+		std::getline(f, line);
+		for (int j = 0; j < std::stoi(line); j++)
+		{
+			std::getline(f, buffer);
+			question += buffer;
+			if (j != std::stoi(line))
+				question += '\n';
+
+		}
 		for (int j = 0; j < 4; j++)
 		{
 			std::getline(f, line);

@@ -1,5 +1,6 @@
 2
 G
+1
 Ce limbaj am facut?
 Cpp
 Csharp
@@ -7,6 +8,7 @@ Java
 Ruby
 Cpp
 G
+1
 Al doilea exercitiu: Cine este predecesorul lui c++?
 C
 Java
