@@ -332,7 +332,6 @@ namespace Connection{
     }
 
     void messagesReceived(std::string numePrieten, QTextEdit *textEdit){
-        textEdit->clear();
         for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
             if(mesaj->getEmitator() == "eu")
                 appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
@@ -354,24 +353,10 @@ namespace Connection{
 
         std::vector<QString> messagesToDisplay; // Store messages in a separate vector
 
-        for(int i=0; i < mesajSpart.size(); i++)
+        for(int i=0; i < mesajSpart.size(); i++){
                 ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i], numePrieten);
-
-          //Connection::messagesReceived(numePrieten, textEdit);
+                appendRightAlignedText(textEdit, QString::fromStdString(numePrieten + ":   " + mesajSpart[i]));}
     }
 
 }
 
-    // UIThread::UIThread(QObject *parent) : QObject(parent) {;}
-    // void UIThread::updateUI(QTextEdit *textEdit, std::string numePrieten) {
-    //     while (true) {
-    //         textEdit->clear();
-    //         for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
-    //             if(mesaj->getEmitator() == "eu")
-    //                 appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
-    //             else
-    //                 appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
-
-    //         QThread::sleep(1); // Sleep for 1 second before updating UI again
-    //     }
-    // }

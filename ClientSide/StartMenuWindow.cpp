@@ -394,16 +394,16 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
     }
 
 
-    UIThread uiThread;
-    QThread thread;
+    // UIThread uiThread;
+    // QThread thread;
 
-    // Move the UIThread object to a separate thread
-    uiThread.moveToThread(&thread);
+    // // Move the UIThread object to a separate thread
+    // uiThread.moveToThread(&thread);
 
-    //Connect the started signal of the thread to the updateUI slot of uiThread
-    QObject::connect(&thread, &QThread::started, [&]() {
-        uiThread.updateUI(ui->textEdit, item->text().toStdString());
-    });
+    // //Connect the started signal of the thread to the updateUI slot of uiThread
+    // QObject::connect(&thread, &QThread::started, [&]() {
+    //     uiThread.updateUI(ui->textEdit, item->text().toStdString());
+    // });
 
     // Start the event loop of the QThread
     //thread.start();
