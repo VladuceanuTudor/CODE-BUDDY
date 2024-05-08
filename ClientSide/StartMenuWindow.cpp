@@ -363,6 +363,7 @@ void StartMenuWindow::on_pushButton_3_clicked()
     QLayout* currentLayout = ui->ChatPage->layout();
     deleteLayout(currentLayout);
     ui->listWidget->clear();
+    ui->textEdit->clear();
 
 
     if(iter++ == 0)
@@ -392,6 +393,21 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
             appendRightAlignedText(ui->textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
     }
 
+
+    UIThread uiThread;
+    QThread thread;
+
+    // Move the UIThread object to a separate thread
+    uiThread.moveToThread(&thread);
+
+    //Connect the started signal of the thread to the updateUI slot of uiThread
+    QObject::connect(&thread, &QThread::started, [&]() {
+        uiThread.updateUI(ui->textEdit, item->text().toStdString());
+    });
+
+    // Start the event loop of the QThread
+    //thread.start();
+
     chat_thread = new QThread();
 
     QObject::connect(chat_thread, &QThread::started, [=]() {
@@ -407,6 +423,8 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
 
     QObject::connect(chat_thread, &QThread::finished, chat_thread, &QThread::deleteLater);
     chat_thread->start();
+
+    qDebug()<<"ok";
 
 }
 

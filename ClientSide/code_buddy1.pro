@@ -22,6 +22,7 @@ SOURCES += \
     TCPClient.cpp \
     Utils.cpp \
     paymentdialog.cpp \
+    uithread.cpp \
     user.cpp \
     userchat.cpp \
     usermessage.cpp
@@ -49,6 +50,7 @@ HEADERS += \
     ServerConnection.h \
     paymentdialog.h \
     startmenuwindow.h \
+    uithread.h \
     user.h \
     userchat.h \
     usermessage.h

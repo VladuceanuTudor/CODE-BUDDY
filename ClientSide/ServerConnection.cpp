@@ -4,6 +4,7 @@
 #include "CExercitiuBlocuri.h"
 #include <sstream>
 
+
 namespace Connection{
 
     void init_and_start_connection(char const* ip_dest, short port_dest){
@@ -330,6 +331,17 @@ namespace Connection{
             throw 1;
     }
 
+    void messagesReceived(std::string numePrieten, QTextEdit *textEdit){
+        textEdit->clear();
+        for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
+            if(mesaj->getEmitator() == "eu")
+                appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+            else
+                appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+
+    }
+
+
     void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEdit *textEdit){
         ServerMessageContainer sendNM('n', numePrieten);
         client->send(sendNM.toSend().c_str(), sendNM.getSize());
@@ -345,16 +357,21 @@ namespace Connection{
         for(int i=0; i < mesajSpart.size(); i++)
                 ChatApp::getInstance().initMesajToConversatie(numePrieten, mesajSpart[i], numePrieten);
 
-        // Update the textEdit in the main thread using a queued connection
-        // QObject::connect(qApp, &QApplication::aboutToQuit, qApp, [textEdit, numePrieten]() {
-        //         textEdit->clear();
-        //         for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
-        //             if(mesaj->getEmitator() == "eu")
-        //                 appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
-        //             else
-        //                 appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
-
-        //     }, Qt::QueuedConnection);
-
+          //Connection::messagesReceived(numePrieten, textEdit);
     }
+
 }
+
+    // UIThread::UIThread(QObject *parent) : QObject(parent) {;}
+    // void UIThread::updateUI(QTextEdit *textEdit, std::string numePrieten) {
+    //     while (true) {
+    //         textEdit->clear();
+    //         for (userMessage* mesaj : ChatApp::getInstance().getChatByPrieten(numePrieten))
+    //             if(mesaj->getEmitator() == "eu")
+    //                 appendLeftAlignedText(textEdit, QString::fromStdString("Eu:   " + mesaj->getContinut()));
+    //             else
+    //                 appendRightAlignedText(textEdit, QString::fromStdString(mesaj->getEmitator() + ":   " + mesaj->getContinut()));
+
+    //         QThread::sleep(1); // Sleep for 1 second before updating UI again
+    //     }
+    // }
