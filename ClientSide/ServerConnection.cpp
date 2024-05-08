@@ -226,7 +226,7 @@ namespace Connection{
         }
     }
 
-    void _req_LocalLeaderB(std::list<User*>& leaderb){
+    void _req_LocalLeaderB(std::list<User*>& leaderb, int& myPos){
         ServerMessageContainer sendLBLreq('a', "l");
         client->send(sendLBLreq.toSend().c_str(), sendLBLreq.getSize());
 
@@ -235,8 +235,8 @@ namespace Connection{
         ServerMessageContainer getLBL(buffer);
 
         std::vector<std::string> mesajSpart = SeparateWords(getLBL.getMess(), '#');
-
-        for(int i=0; i < mesajSpart.size(); i+=2){
+        myPos = std::stoi(mesajSpart[0]);
+        for(int i=1; i < mesajSpart.size(); i+=2){
             leaderb.push_back(new User(mesajSpart[i], std::stoi(mesajSpart[i+1])));
         }
     }

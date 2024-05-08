@@ -42,7 +42,7 @@ void _req_Inimi_nr(int& nrInimi, QLabel* label);
 
 void _req_GlobalLeaderB(std::list<User*>& leaderb);
 
-void _req_LocalLeaderB(std::list<User*>& leaderb);
+void _req_LocalLeaderB(std::list<User*>& leaderb, int& myPos);
 
 int send_payment(std::string nr_card, std::string nume_prenume, std::string cvv, std::string an, std::string luna);
 
