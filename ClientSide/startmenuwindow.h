@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include <QListWidgetItem>
 #include <QThread>
+#include "uithread.h"
 
 
 namespace Ui {

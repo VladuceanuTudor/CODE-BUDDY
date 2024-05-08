@@ -16,6 +16,7 @@
 #include "user.h"
 #include "chatapp.h"
 #include <QApplication>
+#include <qthread.h>
 
 #define PAYLOAD_DELIM '#'
 
@@ -50,6 +51,18 @@ void initChat(std::string myUsername);
 void sendNewMessage(std::string message, std::string conv);
 
 void receiveNewMessages(std::string myUsername, std::string numePrieten, QTextEdit *textEdit);
+
+void messagesReceived(std::string numePrieten, QTextEdit *textEdit);
+
 }
+
+// class UIThread : public QObject {
+//     Q_OBJECT
+// public:
+//     explicit UIThread(QObject *parent = nullptr);
+
+// public slots:
+//     void updateUI(QTextEdit *textEdit, std::string numePrieten);
+// };
 
 #endif // SERVERCONNECTION_H
