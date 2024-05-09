@@ -28,6 +28,10 @@ private slots:
 
     void on_CreateAccBTN_clicked();
 
+    void on_passwIN_returnPressed();
+
+    void on_userIN_returnPressed();
+
 private:
     Ui::MainWindow *ui;
     StartMenuWindow* startMenuWindow;
