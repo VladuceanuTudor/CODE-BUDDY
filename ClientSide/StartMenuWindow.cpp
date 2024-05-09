@@ -98,8 +98,10 @@ QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
     QWidget* widget = new QWidget;
     QVBoxLayout* layout = new QVBoxLayout(widget);
 
-    QLabel* questionLabel = new QLabel(QString::fromStdString(ex->getCerinta()));
-    layout->addWidget(questionLabel);
+    QTextEdit *questionTextbox = new QTextEdit(this);
+    questionTextbox->setText(QString::fromStdString(ex->getCerinta()));
+    questionTextbox->setReadOnly(true);
+    layout->addWidget(questionTextbox);
 
     if(ex->getType()=='G'){
         QButtonGroup* answerGroup = new QButtonGroup(widget);
@@ -179,6 +181,64 @@ QWidget* StartMenuWindow::createExerciseWidget(IExercitiu* ex) {
                         }
                     }
         });
+    }else if(ex->getType() == 'B'){
+        QListWidget *newListWidget = new QListWidget(this);
+
+        for(auto bloc : ex->getListaRasp())
+            newListWidget->addItem(QString::fromStdString(bloc));
+        // Add strings to the list
+
+        // Enable drag-and-drop
+        newListWidget->setDragEnabled(true);
+        newListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+
+        // Optionally, set other properties for better user experience
+        newListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+        newListWidget->setDefaultDropAction(Qt::MoveAction);
+
+        layout->addWidget(newListWidget);
+
+        QPushButton* verifyButton = new QPushButton("Verify", widget);
+        layout->addWidget(verifyButton);
+
+        QObject::connect(verifyButton, &QPushButton::clicked, [=]() {
+            std::string selectedAnswer;
+
+            // Iterate through each item in the list
+            for (int i = 0; i < newListWidget->count(); ++i) {
+                // Get the item at the current index
+                QListWidgetItem *item = newListWidget->item(i);
+
+                // Get the text of the item and add it to the itemOrder vector
+                selectedAnswer+= item->text().toStdString();
+
+                if(i!=newListWidget->count()-1)
+                    selectedAnswer+= " ";
+            }
+
+            bool isCorrect = (selectedAnswer == ex->getRaspCorect());
+            if(isCorrect == true){
+                ex->setRezolvat();
+                widget->setStyleSheet("color: rgb(0, 185, 0)");
+                deleteLayout(layout);
+                QVBoxLayout* layout = new QVBoxLayout(widget);
+                QLabel *label = new QLabel(QString::fromStdString(ex->getCerinta() + "\n" + "Raspunsul corect:  " + ex->getRaspCorect()));
+
+                layout->addWidget(label);
+
+            }else{
+                Connection::send_Inimi_decrease();
+                Connection::_req_Inimi_nr(nrInimi, ui->nrInimi);
+                if(premium==true){
+                    ui->nrInimi->setText("∞");
+                    ui->pushButton_7->hide();
+                }
+                if(nrInimi==0){
+                    QMessageBox::information(nullptr, "Indisponibil", "Ai ramas fara vieti!!");
+                    StartMenuWindow::on_pushButton_clicked();
+                }
+            }
+        });
     }
 
     widget->setLayout(layout);
@@ -200,6 +260,8 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
     QTextEdit* lessonTextEdit = new QTextEdit;
     lessonTextEdit->setReadOnly(true); // Set text edit to read-only
     lessonTextEdit->setText(QString::fromStdString(lectie->getText()));
+    //lessonTextEdit->setSizeHint(QSize(130, 200));
+    lessonTextEdit->setFixedSize(992, 200);
     layout->addWidget(lessonTextEdit);
 
     // Add a label for exercises
@@ -208,18 +270,22 @@ void StartMenuWindow::displayLectie_Exercitii(ILectie* lectie, std::string numeL
 
     // Add a QListWidget to display the exercises
     QListWidget* exercisesListWidget = new QListWidget;
+    exercisesListWidget->setFixedSize(992, 330);
     for (IExercitiu* exercitiu : lectie->getEx()) {
         QListWidgetItem* item = new QListWidgetItem(exercisesListWidget);
-        item->setSizeHint(QSize(200, 200)); // Set the size of each item
+        item->setSizeHint(QSize(200, 240)); // Set the size of each item
+        //exercisesListWidget->setItemDelegate(new QItemDelegate(exercisesListWidget));
         exercisesListWidget->addItem(item);
         exercisesListWidget->setItemWidget(item, createExerciseWidget(exercitiu));
     }
 
     layout->addWidget(exercisesListWidget);
-
+    layout->addSpacerItem(new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
     QPushButton* finalizeButton = new QPushButton("Finalizeaza Lectia");
-    finalizeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout->addWidget(finalizeButton, 0, Qt::AlignBottom | Qt::AlignRight); // Align button to bottom-right corner
+    finalizeButton->setFixedSize(992, 20);
+    layout->addWidget(finalizeButton); // Align button to bottom-right corner
+
+
 
     // Connect button clicked signal to a slot
     connect(finalizeButton, &QPushButton::clicked, [=]() {
@@ -292,6 +358,9 @@ void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
     int done_for_color = 1;
     for (const auto& numeLectie : limbaj->getNumeLectii()) {
         QPushButton* button = new QPushButton(QString::fromStdString(numeLectie));
+        button->setFixedSize(992, 30);
+
+        button->setStyleSheet("border-radius: 5px; antialiasing: on;");
 
         // Set button background color based on completion status:
         if(done_for_color < limbaj->getCompleted())

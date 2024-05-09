@@ -41,7 +41,8 @@ void LeaderBoard::showGlobalLeaderboard(QVBoxLayout *verticalLayout, std::string
 
 void LeaderBoard::showLocalLeaderboard(QVBoxLayout *verticalLayout, std::string myUserName){
     std::list<User*> _localLeaderBoard;
-    Connection::_req_LocalLeaderB(_localLeaderBoard);
+    int myPos = 0;
+    Connection::_req_LocalLeaderB(_localLeaderBoard, myPos);
 
     if (verticalLayout) {
         // Clear all layout items:
@@ -56,10 +57,9 @@ void LeaderBoard::showLocalLeaderboard(QVBoxLayout *verticalLayout, std::string 
         }
     }
 
-
     verticalLayout->setAlignment(Qt::AlignCenter);
 
-    int position = 1; // Initialize position counter
+    int position = myPos; // Initialize position counter
 
     for (User* user : _localLeaderBoard) {
 
