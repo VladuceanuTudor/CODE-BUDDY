@@ -21,7 +21,7 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
 {
     ui->setupUi(this);
     chat_thread = nullptr;
-
+    //this->setDefaultButton();
     QPixmap img_inima(":/img/pixelheart.jpg");
     ui->imagine_inima->setPixmap(img_inima.scaled(30,30, Qt::KeepAspectRatio));
 
@@ -57,7 +57,7 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
             buttonStyle.append("background-color: lightgreen; color: black;");
             break;
         case 2:
-            buttonStyle.append("background-color: lightyellow; color: black;");
+            buttonStyle.append("background-color: purple; color: black;");
             break;
         case 3:
             buttonStyle.append("background-color: lightcoral; color: black;");
@@ -73,7 +73,6 @@ StartMenuWindow::StartMenuWindow(QWidget *parent)
         ui->nrInimi->setText("∞");
         ui->pushButton_7->hide();
     }
-
 }
 
 StartMenuWindow::~StartMenuWindow()
@@ -360,7 +359,7 @@ void StartMenuWindow::printLimbajLessonsMenu(CLimbaj* limbaj){
         QPushButton* button = new QPushButton(QString::fromStdString(numeLectie));
         button->setFixedSize(992, 30);
 
-        button->setStyleSheet("border-radius: 5px; antialiasing: on;");
+
 
         // Set button background color based on completion status:
         if(done_for_color < limbaj->getCompleted())
@@ -481,7 +480,7 @@ void StartMenuWindow::on_pushButton_3_clicked()
     }
     ui->stackedWidget->setCurrentIndex(3);
 
-    static int iter=0;
+
 
     // Delete the existing layout
     QLayout* currentLayout = ui->ChatPage->layout();
@@ -489,9 +488,9 @@ void StartMenuWindow::on_pushButton_3_clicked()
     ui->listWidget->clear();
     ui->textEdit->clear();
 
-
-    if(iter++ == 0)
-        Connection::initChat(myUserName);
+    // static int iter=0;
+    // if(iter++ == 0)
+    //     Connection::initChat(myUserName);
 
     for(auto prieten : ChatApp::getInstance().getListaPrieteni())
         ui->listWidget->addItem(QString::fromStdString(prieten));
@@ -552,6 +551,7 @@ void StartMenuWindow::onListItemClicked(QListWidgetItem *item) {
 
 void StartMenuWindow::on_pushButton_8_clicked()
 {
+    if(ui->lineEdit->text().toStdString() != ""){
     appendLeftAlignedText(ui->textEdit, "Eu:   " + ui->lineEdit->text());
     ChatApp::getInstance().initMesajToConversatie(ui->listWidget->currentItem()->text().toStdString(), ui->lineEdit->text().toStdString());
     try{
@@ -559,7 +559,7 @@ void StartMenuWindow::on_pushButton_8_clicked()
     }catch(int i){
         QMessageBox::information(nullptr, "Server ERROR", "Serverul nu a primit mesajul!");
     }
-    ui->lineEdit->clear();
+    ui->lineEdit->clear();}
 }
 
 
@@ -577,5 +577,17 @@ void StartMenuWindow::on_AdaugaPrietenBTN_clicked()
         }else
             QMessageBox::information(nullptr, "Adaugarea a esuat", "Utilizatorul nu exista!");
     }
+}
+
+
+void StartMenuWindow::on_lineEdit_returnPressed()
+{
+    StartMenuWindow::on_pushButton_8_clicked();
+}
+
+
+void StartMenuWindow::on_inputADDprieten_returnPressed()
+{
+    StartMenuWindow::on_AdaugaPrietenBTN_clicked();
 }
 

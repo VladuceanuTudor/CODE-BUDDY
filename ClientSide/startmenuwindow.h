@@ -52,6 +52,10 @@ private slots:
 
     void on_AdaugaPrietenBTN_clicked();
 
+    void on_lineEdit_returnPressed();
+
+    void on_inputADDprieten_returnPressed();
+
 private:
     Ui::StartMenuWindow *ui;
 

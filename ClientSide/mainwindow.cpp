@@ -64,12 +64,18 @@ void MainWindow::on_loginBTN_clicked()
         startMenuWindow = new StartMenuWindow();
         startMenuWindow->myUserName=aux_username;
         startMenuWindow->show();
+        static int iter=0;
+        if(iter++ == 0)
+            Connection::initChat(aux_username);
     }else if(Status == 2){
         hide();
         premium=true;
         startMenuWindow = new StartMenuWindow();
         startMenuWindow->myUserName=aux_username;
-        startMenuWindow->show(); 
+        startMenuWindow->show();
+        static int iter=0;
+        if(iter++ == 0)
+            Connection::initChat(aux_username);
     }else{
         QMessageBox::information(nullptr, "Login failed", "Incorect credentials used!");
     }
@@ -128,5 +134,17 @@ void MainWindow::on_CreateAccBTN_clicked()
     }else{
         QMessageBox::information(nullptr, "Register failed!", "Server error!");
     }
+}
+
+
+void MainWindow::on_passwIN_returnPressed()
+{
+    MainWindow::on_loginBTN_clicked();
+}
+
+
+void MainWindow::on_userIN_returnPressed()
+{
+    MainWindow::on_loginBTN_clicked();
 }
 
