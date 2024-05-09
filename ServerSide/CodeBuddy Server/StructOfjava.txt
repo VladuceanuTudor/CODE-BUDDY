@@ -1,2 +1,15 @@
-Every well-built program needs a foundation. 
-This lesson delves into the basic structure of Java programs, including classes, objects, and methods, forming the backbone of your Java code.
+Cod folosind conditia if:
+
+public class InstructiiDecizie {
+    public static void main(String[] args) {
+        int numar = 10;
+
+        if (numar > 0) {
+            System.out.println("Numarul este pozitiv.");
+        } else if (numar < 0) {
+            System.out.println("Numarul este negativ.");
+        } else {
+            System.out.println("Numarul este zero.");
+        }
+    }
+}

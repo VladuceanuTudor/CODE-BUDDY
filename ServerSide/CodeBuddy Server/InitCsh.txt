@@ -1,3 +1,13 @@
-Ready to explore a new horizon? 
-Csharp awaits! 
-This lesson will introduce you to Csharp, highlighting its similarities to C++ and Java while revealing its unique strengths.
+Acest curs va ofera o introducere rapida in C#, un limbaj de programare popular pentru aplicatii web, mobile si multe altele.
+
+
+Un program in Csharp arata astfel:
+using System;
+
+public class SalutLume
+{
+  public static void Main(string[] args)
+  {
+    Console.WriteLine("Salut Lume!");
+  }
+}

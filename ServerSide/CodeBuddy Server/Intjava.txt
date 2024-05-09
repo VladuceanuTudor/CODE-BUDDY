@@ -1,1 +1,15 @@
-Java, another powerhouse language, takes center stage! We'll begin by understanding the core ideas of Java, its applications, and how it differs from C++.
+Acest curs va fi ghidul vostru in calatoria spre stapanirea unuia dintre cele mai populare limbaje de programare din lume. Java este utilizat pentru a crea o gama larga de aplicatii, de la jocuri si aplicatii mobile pana la programe complexe pentru afaceri.
+
+Primul program in java:
+public class SalutLume {
+
+    public static void main(String[] args) {
+        System.out.println("Salut Lume!");
+    }
+}
+
+Explicatie:
+
+public class SalutLume: Definiti o clasa publica numita "SalutLume" care reprezinta programul nostru.
+public static void main(String[] args): Aceasta este metoda principala (punctul de intrare) a programului. "public" inseamna ca metoda este accesibila din exteriorul clasei, "static" indica faptul ca metoda apartine clasei si nu obiectelor ei, iar "void" specifica ca metoda nu returneaza nicio valoare. Sirul de caractere "String[] args" reprezinta argumentele programului (optional in acest caz).
+System.out.println("Salut Lume!");: Utilizam clasa System pentru a interactiona cu utilizatorul. Metoda "println" afiseaza textul pe ecran, urmat de un salt la linia urmatoare.

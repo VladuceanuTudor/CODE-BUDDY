@@ -171,11 +171,8 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="a-Tanase.txt" />
-    <Text Include="a-Username.txt" />
     <Text Include="control_statements.txt" />
     <Text Include="control_statements_ex.txt" />
-    <Text Include="eu1-a.txt" />
     <Text Include="functions_modularity.txt" />
     <Text Include="functions_modularity_ex.txt" />
     <Text Include="Intjava.txt" />

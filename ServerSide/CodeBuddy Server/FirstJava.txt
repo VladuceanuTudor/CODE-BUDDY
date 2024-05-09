@@ -1,1 +1,9 @@
-Let's get coding! In this exciting lesson, you'll write your very first Java program, experiencing the thrill of creating something from scratch.
+Program folosind bucla for
+
+public class BucleFor {
+    public static void main(String[] args) {
+        for (int i = 1; i <= 10; i++) {
+            System.out.println(i);
+        }
+    }
+}

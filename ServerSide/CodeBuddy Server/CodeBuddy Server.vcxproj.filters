@@ -181,15 +181,6 @@
     <Text Include="StructOfjava_ex.txt">
       <Filter>Resource Files\Java</Filter>
     </Text>
-    <Text Include="a-Tanase.txt">
-      <Filter>Resource Files\Chat</Filter>
-    </Text>
-    <Text Include="eu1-a.txt">
-      <Filter>Resource Files\Chat</Filter>
-    </Text>
-    <Text Include="a-Username.txt">
-      <Filter>Resource Files\Chat</Filter>
-    </Text>
     <Text Include="intro_cplusplus_basic_syntax.txt">
       <Filter>Resource Files\Cpp</Filter>
     </Text>

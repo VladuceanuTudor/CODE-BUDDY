@@ -1,2 +1,11 @@
-Let's lay the groundwork for Csharp development! 
-We'll cover the fundamental concepts of Csharp, including variables, data types, operators, and control flow, preparing you to write effective Csharp code.
+Buclele for sunt folosite pentru a executa un bloc de cod de un numar fix de ori.
+
+Sintaxa:
+
+for (initializare; conditie; incrementare/decrementare) {
+  // Bloc de instructiuni care se executa de fiecare iteratie
+}
+
+initializare: Se executa o singura data la inceputul buclei (ex: initializarea unei variabile contor).
+conditie: O expresie logica care trebuie sa fie adevarata (true) pentru ca blocul de instructiuni sa fie executat. Daca devine falsa (false), bucla se opreste.
+incrementare/decrementare: Se executa dupa fiecare iteratie a buclei (ex: incrementarea sau decrementarea unei variabile contor).
