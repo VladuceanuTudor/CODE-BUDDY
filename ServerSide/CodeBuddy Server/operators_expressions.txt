@@ -1,0 +1,22 @@
+In aceasta lectie, veti invata despre operatori si expresii in limbajul de programare C++. Operatorii sunt simboluri specializate care efectueaza operatii asupra unor variabile sau a altor valori pentru a produce un rezultat. Expresiile, pe de alta parte, sunt combinatii de variabile, valori si operatori care pot fi evaluate pentru a produce un rezultat.
+
+Operatori aritmetici
+Operatorii aritmetici sunt folositi pentru a efectua operatii matematice de baza, cum ar fi adunarea, scaderea, inmultirea si impartirea.
+Exemple de operatori aritmetici includ: + (adunare), - (scadere), * (inmultire), / (impartire), % (restul impartirii).
+Operatori de atribuire
+Operatorii de atribuire sunt folositi pentru a atribui valori variabilelor.
+Operatorul de atribuire fundamental este "=" care atribuie o valoare variabilei.
+Exemple de operatori de atribuire includ: =, +=, -=, *=, /=.
+Operatori de comparatie
+Operatorii de comparatie sunt folositi pentru a compara valori.
+Acesti operatori returneaza rezultatul sub forma de valori booleane (adevarat sau fals).
+Exemple de operatori de comparatie includ: == (egal), != (diferit), < (mai mic), > (mai mare), <= (mai mic sau egal), >= (mai mare sau egal).
+Operatori logici
+Operatorii logici sunt folositi pentru a efectua operatii logice intre expresii booleane.
+Exemple de operatori logici includ: && (si logic), || (sau logic), ! (negare logica).
+Operatori de incrementare si decrementare
+Operatorii de incrementare (++), respectiv decrementare (--), sunt utilizati pentru a creste, respectiv scadea, o variabila cu o unitate.
+Acesti operatori pot fi utilizati fie inainte de variabila (++x), fie dupa variabila (x++).
+Precedenta operatorilor
+Precedenta operatorilor stabileste ordinea in care sunt efectuate operatiile intr-o expresie.
+Operatorii cu precedenta mai mare sunt evaluati inaintea celor cu precedenta mai mica.

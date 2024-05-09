@@ -1,0 +1,30 @@
+3
+B
+1
+Puneti in ordine urmatorarea secventa de cod pentru a realiza o bucla for:
+cout << "i = " << i << endl;
+{
+}
+for(int i = 0; i < 100; i++)
+for(int i = 0; i < 100; i++) { cout << "i = " << i << endl; }
+G
+1
+Care dintre urmatoarele este o instructiune de decizie?
+do
+if
+while
+for
+if
+T
+6
+Scrieti rezultatul urmatoarei secvente de cod:
+int s = 0;
+for(int i = 0; i < 4; i++)
+{
+	s = s + i;
+}
+1
+1
+1
+1
+6

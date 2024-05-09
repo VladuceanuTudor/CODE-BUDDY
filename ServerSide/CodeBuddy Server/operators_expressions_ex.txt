@@ -1,0 +1,17 @@
+2
+T
+1
+Folosind un operator, cum incrementam valoarea lui x cu 1?(postincremetnare)
+1
+1
+1
+1
+x++
+B
+1
+Cum asignam in variabila 'a' patratul acesteia?
+*
+a =
+a
+a
+a = a * a

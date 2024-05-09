@@ -1,0 +1,12 @@
+Instructiuni de Decizie
+Instructiunile de decizie permit programului sa aleaga intre diferite cai de executie bazate pe adevarul sau falsul unei conditii. Exista doua tipuri principale:
+
+if-else: Permite programarea alternativa. Se executa un bloc de cod daca o conditie este adevarata si un alt bloc daca este falsa.
+switch: Permite compararea unei valori cu mai multe optiuni predefinite. Se executa un bloc de cod specific in functie de valoarea coincidente.
+Bucle
+Buclele permit repetarea unui bloc de cod de un anumit numar de ori sau pana cand o conditie devine falsa. Exista mai multe tipuri de bucle:
+
+for: Permite repetarea unui bloc de cod de un numar fix de ori, controlat de o variabila contor.
+while: Permite repetarea unui bloc de cod atata vreme cat o conditie specificata este adevarata.
+do-while: Similar cu while, dar asigura executarea blocului de cod cel putin o data inainte de verificarea conditiei.
+Utilizarea instructiunilor de decizie si a buclelor este esentiala pentru a crea programe care pot reactiona la diferite situatii si pot executa instructiuni in mod repetat.

@@ -1,0 +1,18 @@
+In aceasta lectie, veti invata despre variabile si tipuri de date in limbajul de programare C++. Variabilele sunt utilizate pentru a stoca si manipula date intr-un program, iar tipurile de date stabilesc natura datelor care pot fi stocate in variabile. In C++, exista mai multe tipuri de date disponibile, fiecare avand un anumit domeniu de utilizare si o anumita precizie.
+
+Variabile in C++
+O variabila reprezinta o zona de memorie care este folosita pentru a stoca si manipula date intr-un program.
+Pentru a declara o variabila in C++, trebuie sa specificam tipul de date al variabilei si sa alocam un nume acesteia.
+Tipuri de date intregi
+In C++, tipurile de date intregi sunt utilizate pentru a stoca numere intregi fara zecimala.
+Exemple de tipuri de date intregi includ: int, short, long si long long.
+Tipuri de date in virgula mobila
+Tipurile de date in virgula mobila sunt utilizate pentru a stoca numere cu zecimale.
+Exemple de tipuri de date in virgula mobila includ: float si double.
+Alte tipuri de date
+In afara de tipurile de date intregi si in virgula mobila, C++ ofera si alte tipuri de date, cum ar fi char pentru caractere si bool pentru valori de adevar.
+Initializarea variabilelor
+Variabilele pot fi initializate in momentul declaratiei sau ulterior, in cadrul programului.
+Initializarea unei variabile atribuie o valoare initiala variabilei.
+Conversii de tipuri de date
+C++ permite conversii intre diferite tipuri de date, atat implicite, cat si explicite, in functie de contextul si cerintele programului.

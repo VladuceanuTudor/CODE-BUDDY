@@ -1,0 +1,17 @@
+2
+G
+1
+Ce concepte fundamentale ale limbajului C++ vor fi abordate in aceasta lectie?
+a) Variabile si tipuri de date
+b) Structura programului C++
+c) Ambele variante a) si b)
+d) Niciuna dintre variantele de mai sus
+c) Ambele variante a) si b)
+G
+1
+Care este scopul lectiei introductive?
+a) Prezentarea limbajului C++ si a aplicatiilor sale
+b) Invatarea elementelor esentiale ale limbajului C++
+c) Dezvoltarea de software folosind C++
+d) Explorarea sintaxii si structurii de baza a C++
+b) Invatarea elementelor esentiale ale limbajului C++

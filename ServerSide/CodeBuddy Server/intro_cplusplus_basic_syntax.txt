@@ -1,0 +1,10 @@
+Bine ati venit la prima lectie din cursul nostru de programare in limbajul C++!
+In aceasta lectie introductiva, ne vom concentra pe intelegerea sintaxei si structurii de baza a limbajului C++.
+C++ este un limbaj puternic si versatil, utilizat pe scara larga in dezvoltarea de software. In aceasta lectie, veti invata elementele esentiale ale limbajului, care va vor ajuta sa construiti si sa intelegeti codul C++.
+Vom explora concepte precum:
+Declaratii de variabile
+Tipuri de date
+Structura programului C++
+Si altele
+Intelegerea acestor concepte fundamentale este cruciala pentru a construi o baza solida in C++ si pentru a progresa catre concepte mai avansate in cursul nostru.
+Prin urmare, haideti sa incepem aceasta calatorie palpitanta in lumea programarii C++ si sa exploram impreuna sintaxa si structura de baza a acestui limbaj de programare fascinant!

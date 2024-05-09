@@ -1,0 +1,29 @@
+Functiile sunt elemente fundamentale ale programarii in C++. Ele permit organizarea codului in module logice separate, imbunatatind lizibilitatea, reutilizarea si modularitatea programelor. O functie este un bloc reutilizabil de cod care executa o sarcina specifica. Functiile pot primi parametri de intrare si pot returna valori.
+
+Definirea Functiilor:
+
+O functie este definita folosind urmatoarea structura:
+
+tip_retur nume_functie(parametrii_functie) {
+  // Bloc de cod al functiei
+  return valoare_returnata;
+}
+
+tip_retur: Specifica tipul de date returnat de functie (ex: int, float, void).
+nume_functie: Identificatorul unic al functiei.
+parametrii_functie: O lista de parametri separati prin virgule, fiecare specificand tipul si numele variabilei.
+bloc_cod: Instructiunile care definesc comportamentul functiei.
+valoare_returnata: Optional, o valoare returnata de functie catre programul principal.
+
+O functie este apelata din programul principal folosind numele functiei urmat de paranteze care contin parametrii actuali:
+
+int main() {
+  afiseazaMesaj(); // Apelarea functiei afiseazaMesaj
+  int rezultat = suma(10, 20); // Apelarea functiei suma si stocarea rezultatului
+  if (estePar(rezultat)) {
+    cout << rezultat << " este un numar par." << endl;
+  } else {
+    cout << rezultat << " este un numar impar." << endl;
+  }
+  return 0;
+}

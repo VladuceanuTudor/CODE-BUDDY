@@ -1,0 +1,9 @@
+1
+G
+1
+Care este o functie scrisa corect?
+func() {}
+function func() {}
+void func {}
+void func() {}
+void func() {}
