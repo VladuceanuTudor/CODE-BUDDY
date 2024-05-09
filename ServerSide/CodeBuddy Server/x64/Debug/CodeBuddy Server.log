@@ -1,4 +1,1 @@
-﻿  CFileHandler.cpp
-C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(16,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\CodeBuddy Server\ServerMessageContainer.h(41,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe
+﻿  CodeBuddy Server.vcxproj -> C:\Users\Doru\Desktop\Proiect POO\CodeBuddy Server\CODE-BUDDY\ServerSide\x64\Debug\CodeBuddy Server.exe
