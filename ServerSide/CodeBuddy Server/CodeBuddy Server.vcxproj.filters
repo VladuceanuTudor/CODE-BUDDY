@@ -145,36 +145,6 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Intcpp.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="Basicscpp.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="DecVarcpp.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="IfStmtcpp.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="LoopStmtcpp.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="Basicscpp_ex.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="DecVarcpp_ex.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="IfStmtcpp_ex.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="LoopStmtcpp_ex.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
-    <Text Include="Intcpp_ex.txt">
-      <Filter>Resource Files\Cpp</Filter>
-    </Text>
     <Text Include="BasicsCsh_ex.txt">
       <Filter>Resource Files\Csh</Filter>
     </Text>
@@ -219,6 +189,36 @@
     </Text>
     <Text Include="a-Username.txt">
       <Filter>Resource Files\Chat</Filter>
+    </Text>
+    <Text Include="intro_cplusplus_basic_syntax.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="variables_data_types.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="operators_expressions.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="control_statements.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="functions_modularity.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="control_statements_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="functions_modularity_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="intro_cplusplus_basic_syntax_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="operators_expressions_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
+    </Text>
+    <Text Include="variables_data_types_ex.txt">
+      <Filter>Resource Files\Cpp</Filter>
     </Text>
   </ItemGroup>
 </Project>

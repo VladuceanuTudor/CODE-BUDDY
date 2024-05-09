@@ -158,7 +158,7 @@ namespace Connection{
         client->send(getLectieReq.toSend().c_str(), getLectieReq.getSize());
 
         //lectie = new CLectie("Acesta este contentul de probaal unui curs \njajdnkjkja afoinva nfafjbje \nnafjbae fkjj af naef a", 30);
-        char buffer[1024];
+        char buffer[5000];
         client->recv(buffer, sizeof(buffer));
         ServerMessageContainer getLectie(buffer);
 

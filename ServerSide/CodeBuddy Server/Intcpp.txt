@@ -1,2 +1,0 @@
-Welcome to the world of C++! 
-This lesson will unveil the fundamentals of C++, giving you a taste of its power and versatility. We'll explore what C++ is, why it's popular, and what exciting things you can create with it.

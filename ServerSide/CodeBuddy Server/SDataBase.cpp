@@ -265,6 +265,7 @@ void SDataBase::destroyInstance()
 
 ServerMessageContainer SDataBase::processRegisterRequest(std::string request)
 {
+    //Request = USERNAME EMAIL PASSWORD
     std::vector<std::string> inputs;
 
     inputs = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
@@ -348,6 +349,7 @@ ServerMessageContainer SDataBase::processLocalRequest(const std::string& usernam
 
 ServerMessageContainer SDataBase::processLeadearboardRequest(std::string request, const std::string& username, int xp)
 {
+    //request = g
     if (request == "g")
     {
         return this->processGlobalRequest();

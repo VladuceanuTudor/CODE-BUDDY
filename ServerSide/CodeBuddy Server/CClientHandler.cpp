@@ -8,9 +8,8 @@
 
 ServerMessageContainer CClientHandler::sendExercices(std::string request)
 {
+    //request = LESSON_TITLE LANGUAGE
     std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
-    //words[0] = LessonName
-    //words[1] = Language
     for (const auto& it : this->getLanguage(words[1]).getLesson(words[0]).getExercices())
     {
         CTCPServer::sendData(it->getSendData(), this->userSocket);
@@ -51,6 +50,7 @@ ServerMessageContainer CClientHandler::successLogin()
 
 ServerMessageContainer CClientHandler::processGetLessonsTitleRequest(std::string request)
 {
+    //request = LIMBAJ
     SDataBase& DB = SDataBase::getInstance();
     if (!this->existsLesson(request))
     {
@@ -71,6 +71,7 @@ ServerMessageContainer CClientHandler::processGetLessonsTitleRequest(std::string
 
 ServerMessageContainer CClientHandler::processGetLessonContent(std::string request)
 {
+    //request = TITLU_LECTIE LIMBAJ
     SDataBase& DB = SDataBase::getInstance();
     std::vector<std::string> words = CWordSeparator::SeparateWords(request, PAYLOAD_DELIM);
 
@@ -97,6 +98,7 @@ ServerMessageContainer CClientHandler::processGetLessonContent(std::string reque
 
 ServerMessageContainer CClientHandler::handleLives(const std::string& request)
 {
+    //request = 0/1
     if (this->userHandler->isPremium())
     {
         return ServerMessageContainer(GET_LIVES_CODE, std::to_string(MAX_LIVES + 1));
@@ -148,6 +150,7 @@ ServerMessageContainer CClientHandler::handleLives(const std::string& request)
 
 ServerMessageContainer CClientHandler::handlePremiumPayment(const std::string& request)
 {
+    //request = CARD_NUMBER CARD_NAME DATE_EXP CVV
     SDataBase& DB = SDataBase::getInstance();
     switch (DB.processPremiumPayment(request, this->userHandler->getUsername()))
     {

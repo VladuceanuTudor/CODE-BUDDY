@@ -1,9 +1,0 @@
-1
-G
-1
-Cum declaram o variabila de tip integer?
-int
-float
-char
-Varianta4
-int

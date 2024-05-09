@@ -11,7 +11,7 @@
 #define MAX_BUFFER_LEN			1024
 
 #define MAX_LIVES				7
-#define LIVES_REGEN_INTERVAL	1		//Min
+#define LIVES_REGEN_INTERVAL	1		//Minute
 
 #define DAILY_XP_GIVEN			10
 

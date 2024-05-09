@@ -1,1 +1,0 @@
-Variables are the workhorses of programming. In this lesson, you'll discover how to declare variables in C++, giving them names and assigning values to perform calculations and store data.
